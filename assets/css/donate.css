@@ -1,0 +1,411 @@
+:root{
+  --primary:#ff6b00;
+  --secondary:#003b73;
+  --yellow:#ffd166;
+  --light:#fff7ed;
+  --white:#fff;
+  --text:#1f2937;
+  --muted:#6b7280;
+  --shadow:0 18px 45px rgba(0,0,0,.12);
+  --radius:26px;
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family:Poppins, Arial, sans-serif;
+  background:var(--light);
+  color:var(--text);
+}
+
+.container{
+  width:90%;
+  max-width:1200px;
+  margin:auto;
+}
+
+.navbar{
+  background:rgba(255,255,255,.95);
+  position:sticky;
+  top:0;
+  z-index:1000;
+  box-shadow:0 8px 25px rgba(0,0,0,.08);
+}
+
+.nav-inner{
+  min-height:80px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:20px;
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  font-weight:800;
+  color:var(--secondary);
+  font-size:22px;
+}
+
+.logo-icon{
+  width:48px;
+  height:48px;
+  border-radius:50%;
+  background:linear-gradient(135deg,var(--primary),var(--yellow));
+  color:#fff;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.nav-links{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+.nav-links a{
+  text-decoration:none;
+  color:var(--text);
+  font-weight:600;
+  padding:10px 16px;
+  border-radius:30px;
+  transition:.3s;
+}
+
+.nav-links a i{
+  color:var(--primary);
+  margin-right:6px;
+}
+
+.nav-links a:hover{
+  background:#fff1e6;
+  color:var(--primary);
+}
+
+section{
+  padding:90px 0;
+}
+
+.donate-hero{
+  background:linear-gradient(135deg,#fff7ed,#ffffff);
+}
+
+.hero-inner{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:50px;
+  align-items:center;
+}
+
+.tag{
+  display:inline-block;
+  background:#fff1e6;
+  color:var(--primary);
+  padding:10px 18px;
+  border-radius:30px;
+  font-weight:700;
+  margin-bottom:18px;
+}
+
+.hero-text h1{
+  font-size:clamp(2.8rem,6vw,5.5rem);
+  color:var(--secondary);
+  line-height:1.05;
+  margin-bottom:20px;
+}
+
+.hero-text p{
+  color:var(--muted);
+  font-size:1.2rem;
+  line-height:1.8;
+  margin-bottom:30px;
+}
+
+.hero-image img{
+  width:100%;
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  animation:float 4s ease-in-out infinite;
+}
+
+.btn{
+  display:inline-block;
+  border:none;
+  padding:15px 30px;
+  border-radius:50px;
+  text-decoration:none;
+  font-weight:800;
+  cursor:pointer;
+  transition:.3s;
+}
+
+.btn-primary{
+  background:linear-gradient(135deg,var(--primary),#ff9f1c);
+  color:#fff;
+  box-shadow:0 12px 28px rgba(255,107,0,.35);
+}
+
+.btn-primary:hover{
+  transform:translateY(-5px);
+}
+
+h2{
+  text-align:center;
+  color:var(--secondary);
+  font-size:2.6rem;
+  margin-bottom:18px;
+}
+
+.section-subtitle{
+  text-align:center;
+  color:var(--muted);
+  margin-bottom:45px;
+}
+
+.card-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:25px;
+}
+
+.info-card{
+  background:#fff;
+  padding:35px 25px;
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  text-align:center;
+  transition:.3s;
+}
+
+.info-card:hover{
+  transform:translateY(-10px);
+}
+
+.info-card i{
+  width:70px;
+  height:70px;
+  border-radius:50%;
+  background:#fff1e6;
+  color:var(--primary);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:30px;
+  margin:0 auto 18px;
+}
+
+.info-card h3{
+  color:var(--primary);
+  margin-bottom:10px;
+}
+
+.info-card p{
+  color:var(--muted);
+  line-height:1.7;
+}
+
+.donation-section{
+  background:#fff;
+}
+
+.donation-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:25px;
+}
+
+.donation-card{
+  position:relative;
+  background:#fff7ed;
+  padding:35px;
+  border-radius:var(--radius);
+  text-align:center;
+  border:2px solid #ffe0c2;
+  box-shadow:var(--shadow);
+  transition:.3s;
+}
+
+.donation-card:hover{
+  transform:translateY(-10px) scale(1.02);
+  border-color:var(--primary);
+}
+
+.donation-card.featured{
+  background:linear-gradient(135deg,#fff7ed,#ffffff);
+  border:3px solid var(--primary);
+}
+
+.badge{
+  position:absolute;
+  top:-14px;
+  left:50%;
+  transform:translateX(-50%);
+  background:var(--primary);
+  color:#fff;
+  padding:7px 18px;
+  border-radius:30px;
+  font-size:13px;
+  font-weight:800;
+}
+
+.donation-card h3{
+  font-size:3rem;
+  color:var(--primary);
+  margin-bottom:10px;
+}
+
+.donation-card p{
+  color:var(--muted);
+  margin-bottom:22px;
+}
+
+.paypal-btn{
+  display:inline-block;
+  background:#003087;
+  color:#fff;
+  text-decoration:none;
+  padding:13px 24px;
+  border-radius:40px;
+  font-weight:800;
+  transition:.3s;
+}
+
+.paypal-btn:hover{
+  background:#0070ba;
+  transform:translateY(-4px);
+}
+
+.support-section{
+  background:var(--light);
+}
+
+.support-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:18px;
+}
+
+.support-grid div{
+  background:#fff;
+  padding:22px;
+  border-radius:18px;
+  box-shadow:var(--shadow);
+  font-weight:700;
+  color:var(--secondary);
+  transition:.3s;
+}
+
+.support-grid div:hover{
+  transform:translateY(-8px);
+  color:var(--primary);
+}
+
+.support-grid i{
+  color:var(--primary);
+  margin-right:8px;
+}
+
+.secure-payment{
+  background:#fff;
+}
+
+.payment-card{
+  max-width:750px;
+  margin:auto;
+  background:linear-gradient(135deg,#fff7ed,#ffffff);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  padding:50px;
+  text-align:center;
+}
+
+.paypal-icon{
+  font-size:70px;
+  color:#003087;
+  margin-bottom:20px;
+}
+
+.payment-card p{
+  color:var(--muted);
+  line-height:1.8;
+  margin-bottom:30px;
+}
+
+.thank-you{
+  background:linear-gradient(135deg,var(--primary),#ff9f1c);
+  color:#fff;
+  text-align:center;
+}
+
+.thank-you h2{
+  color:#fff;
+}
+
+.thank-you p{
+  max-width:800px;
+  margin:auto;
+  line-height:1.8;
+  font-size:1.15rem;
+}
+
+.footer{
+  background:#e85f00;
+  color:#fff;
+  text-align:center;
+  padding:25px;
+}
+
+@keyframes float{
+  0%,100%{
+    transform:translateY(0);
+  }
+  50%{
+    transform:translateY(-18px);
+  }
+}
+
+@media(max-width:900px){
+  .hero-inner{
+    grid-template-columns:1fr;
+  }
+
+  .card-grid,
+  .donation-grid,
+  .support-grid{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .nav-inner{
+    flex-direction:column;
+    padding:18px 0;
+  }
+}
+
+@media(max-width:600px){
+  section{
+    padding:60px 0;
+  }
+
+  .card-grid,
+  .donation-grid,
+  .support-grid{
+    grid-template-columns:1fr;
+  }
+
+  .payment-card{
+    padding:30px 22px;
+  }
+
+  .btn,
+  .paypal-btn{
+    width:100%;
+    text-align:center;
+  }
+}

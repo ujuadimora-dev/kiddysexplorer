@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Kiddysexplorer Quiz Section</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+  <!-- Your CSS File -->
+  <link rel="stylesheet" href="assets/css/quiz.css">
+</head>
+
+
+
+<body>
+
+  <div class="page-watermarks">
+
+    <!-- Left Side -->
+    <i class="fa-solid fa-pencil wm p1"></i>
+    <i class="fa-solid fa-book-open wm b1"></i>
+    <i class="fa-solid fa-school wm s1"></i>
+    <i class="fa-solid fa-clock wm c1"></i>
+    <i class="fa-solid fa-graduation-cap wm g1"></i>
+
+    <!-- Right Side -->
+    <i class="fa-solid fa-book wm b2"></i>
+    <i class="fa-solid fa-pencil wm p2"></i>
+    <i class="fa-solid fa-lightbulb wm l1"></i>
+    <i class="fa-solid fa-puzzle-piece wm pu1"></i>
+    <i class="fa-solid fa-shapes wm sh1"></i>
+
+    <!-- Center -->
+    <i class="fa-solid fa-star wm st1"></i>
+    <i class="fa-solid fa-certificate wm ce1"></i>
+    <i class="fa-solid fa-award wm aw1"></i>
+    <i class="fa-solid fa-medal wm md1"></i>
+    <i class="fa-solid fa-gamepad wm gp1"></i>
+
+    <!-- Bottom -->
+    <i class="fa-solid fa-book-open wm b3"></i>
+    <i class="fa-solid fa-school wm s2"></i>
+    <i class="fa-solid fa-pencil wm p3"></i>
+    <i class="fa-solid fa-clock wm c2"></i>
+    <i class="fa-solid fa-graduation-cap wm g2"></i>
+
+</div>
+
+<div class="page-watermarks">
+
+    <!-- Education -->
+    <i class="fa-solid fa-book-open wm b1"></i>
+    <i class="fa-solid fa-book wm b2"></i>
+    <i class="fa-solid fa-pencil wm p1"></i>
+    <i class="fa-solid fa-school wm s1"></i>
+    <i class="fa-solid fa-graduation-cap wm g1"></i>
+    <i class="fa-solid fa-lightbulb wm l1"></i>
+    <i class="fa-solid fa-clock wm c1"></i>
+    <i class="fa-solid fa-puzzle-piece wm pu1"></i>
+
+    <!-- Quiz -->
+    <i class="fa-solid fa-question wm q1"></i>
+    <i class="fa-solid fa-question wm q2"></i>
+    <i class="fa-solid fa-star wm st1"></i>
+    <i class="fa-solid fa-award wm aw1"></i>
+    <i class="fa-solid fa-certificate wm ce1"></i>
+
+    <!-- Letters -->
+    <span class="wm letter a">A</span>
+    <span class="wm letter b">B</span>
+    <span class="wm letter c">C</span>
+    <span class="wm letter d">D</span>
+    <span class="wm letter e">E</span>
+
+    <!-- Numbers -->
+    <span class="wm number n1">1</span>
+    <span class="wm number n2">2</span>
+    <span class="wm number n3">3</span>
+    <span class="wm number n4">4</span>
+    <span class="wm number n5">5</span>
+
+</div>
+
+  <!-- ========================================================= -->
+  <!-- HERO SECTION -->
+  <!-- ========================================================= -->
+  <section class="quiz-hero">
+    <div class="container quiz-hero-inner">
+
+      <div class="quiz-hero-text">
+        <h1>
+          <i class="fas fa-star"></i>
+           Learn • Play • Win!
+          <i class="fas fa-star"></i>
+        </h1>
+        <p>
+          <i class="fas fa-gamepad"></i>
+          Fun, colorful and interactive quizzes for children ages 3–12.
+        </p>
+
+        <div class="quiz-hero-buttons">
+          <a href="#register" class="btn btn-primary">Start Quiz</a>
+          <a href="javascript:void(0)" class="btn btn-secondary" onclick="openPrizeInfo()">
+  How to win a Prize
+</a>
+        </div>
+      </div>
+
+      <div class="quiz-hero-image">
+        <img src="assets/images/quiz.banner.png" alt="Children taking quiz">
+      </div>
+
+    </div>
+  </section>
+
+  <div id="prizePopup" class="prize-popup">
+  <div class="prize-popup-box">
+
+    <button class="close-popup" onclick="closePrizeInfo()">&times;</button>
+
+    <h2>How to Win a Prize</h2>
+
+    <ol>
+      <li>Register your child for the Kiddysexplorer Quiz.</li>
+      <li>Choose the correct quiz group based on your child’s age.</li>
+      <li>Your child will take Section 1 of the quiz.</li>
+      <li>If your child scores 80% or above, they can proceed to Section 2.</li>
+      <li>If your child scores 80% or above in Section 2, they will wait for the live one-on-one session with the tutor.</li>
+      <li>During the live session, your child will compete with other children in the same age group.</li>
+      <li>Prize winners will be selected based on performance and final position.</li>
+      <li>If your child scores below 80%, they should go back and watch Kiddysexplorer YouTube learning videos.</li>
+      <li>After learning, your child can wait for the next quiz session and try again.</li>
+    </ol>
+
+    <a href="#groups" class="btn btn-primary" onclick="closePrizeInfo()">
+      Continue to Age Groups
+    </a>
+
+  </div>
+</div>
+  
+
+
+
+
+
+  <!-- ========================================================= -->
+  <!-- REGISTRATION -->
+  <!-- ========================================================= -->
+  <section id="register" class="quiz-register">
+    <div class="container">
+
+      <h2>
+        <i class="fas fa-user-plus"></i>
+        Quiz Registration
+      </h2>
+
+      <form id="quizForm" class="register-form">
+
+        <!-- Child Name -->
+        <div class="form-group">
+          <label for="childName">
+            <i class="fas fa-child-reaching"></i>
+            Child's Full Name
+          </label>
+          <input type="text" id="childName" placeholder="Enter child's full name" required>
+        </div>
+
+        <!-- Child Age -->
+        <div class="form-group">
+          <label for="childAge">
+            <i class="fas fa-cake-candles"></i>
+            Child's Age
+          </label>
+          <input type="number" id="childAge" min="3" max="12" placeholder="3 - 12" required>
+        </div>
+
+        <!-- Parent Email -->
+        <div class="form-group">
+          <label for="parentEmail">
+            <i class="fas fa-envelope"></i>
+            Parent's Email
+          </label>
+          <input type="email" id="parentEmail" placeholder="example@email.com" required>
+        </div>
+
+        <!-- Quiz Group -->
+        <div class="form-group">
+          <label for="quizGroup">
+            <i class="fas fa-users"></i>
+            Select Quiz Group
+          </label>
+
+          <select id="quizGroup" required>
+            <option value="">Choose Group</option>
+
+            <option value="A">
+              👶 Group A (Ages 3–5)
+            </option>
+
+            <option value="B">
+              🧒 Group B (Ages 6–8)
+            </option>
+
+            <option value="C">
+              🎓 Group C (Ages 9–12)
+            </option>
+          </select>
+        </div>
+
+        <!-- Agreement -->
+        <div class="form-group checkbox">
+
+          <input type="checkbox" id="agreeCheck" required>
+
+          <label for="agreeCheck">
+            <i class="fas fa-shield-heart"></i>
+            I agree that my child can participate in the Kiddysexplorer Quiz.
+          </label>
+
+        </div>
+
+        <!-- Button -->
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-play"></i>
+          Start Quiz
+        </button>
+
+      </form>
+
+    </div>
+  </section>
+
+  <!-- ========================================================= -->
+  <!-- GROUP SELECTION -->
+  <!-- ========================================================= -->
+  <section id="groups" class="quiz-groups">
+    <div class="container">
+
+      <h2>Choose Your Quiz Group</h2>
+
+      <div class="group-grid">
+
+        <div class="group-card">
+          <img src="assets/images/groupA-kids.png">
+          <h3>Group A</h3>
+          <p>Ages 3–5</p>
+          <a class="btn btn-primary group-btn" data-group="A">Start Section 1</a>
+        </div>
+
+        <div class="group-card">
+          <img src="assets/images/groupB-kids.png">
+          <h3>Group B</h3>
+          <p>Ages 6–8</p>
+          <a class="btn btn-primary group-btn" data-group="B">Start Section 1</a>
+        </div>
+
+        <div class="group-card">
+          <img src="assets/images/groupC-kids.png">
+          <h3>Group C</h3>
+          <p>Ages 9–12</p>
+          <a class="btn btn-primary group-btn" data-group="C">Start Section 1</a>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ========================================================= -->
+  <!-- SECTION 1 QUIZ -->
+  <!-- ========================================================= -->
+  <section id="section1" class="quiz-section" style="display:none;">
+    <div class="container">
+
+      <div class="quiz-header">
+        <h2>Section 1 – Quiz</h2>
+        <p>
+          <strong>Child:</strong> <span id="childNameDisplay">Loading...</span> |
+          <strong>Group:</strong> <span id="groupDisplay">A</span> |
+          <strong>Section:</strong> 1
+        </p>
+
+        <div class="quiz-timer"><span id="timer">10:00</span></div>
+      </div>
+
+      <form id="section1QuizForm" class="quiz-form">
+        <div id="section1Questions"></div>
+        <button type="submit" class="btn btn-primary">Submit Quiz</button>
+      </form>
+
+    </div>
+  </section>
+
+
+  <!-- ========================================================= -->
+  <!-- SCORE PAGE -->
+  <!-- ========================================================= -->
+  <section id="scorePage" class="quiz-score">
+    <div class="container">
+
+      <div class="score-card">
+
+        <h2>Your Quiz Results</h2>
+
+        <p><strong>Child:</strong> <span id="childNameResult">Loading...</span></p>
+        <p><strong>Group:</strong> <span id="groupResult">A</span> |
+          <strong>Section:</strong> <span id="sectionResult">1</span>
+        </p>
+
+        <div class="score-box">
+          <h1 id="scoreValue">0%</h1>
+          <p id="scoreMessage">Calculating...</p>
+        </div>
+
+        <p id="failMessage" style="display:none; color:red;">
+          You scored below 80%. Watch the videos and try again.
+        </p>
+
+        <div class="score-buttons">
+          <a id="nextSectionBtn" href="#" class="btn btn-primary" style="display:none;">Proceed to Section 2</a>
+          <a id="learnMoreBtn" href="#" class="btn btn-secondary" style="display:none;">Watch Learning Videos</a>
+          <a id="certificateBtn" href="#" class="btn btn-primary">View Certificate</a>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ========================================================= -->
+  <!-- CERTIFICATE PAGE -->
+  <!-- ========================================================= -->
+  <section id="certificatePage" class="certificate-section">
+    <div class="container">
+
+      <div class="certificate-card">
+
+        <h2>Certificate of Achievement</h2>
+        <p>This certificate is proudly awarded to</p>
+
+        <h1 id="certChildName">Student Name</h1>
+
+        <p>
+          For completing <strong>Section <span id="certSection">1</span></strong>
+          in <strong>Group <span id="certGroup">A</span></strong>
+          with a score of <strong><span id="certScore">0%</span></strong>.
+        </p>
+
+        <p>Awarded on: <span id="certDate"></span></p>
+
+        <div class="cert-buttons">
+          <button id="downloadCertBtn" class="btn btn-primary">Download Certificate</button>
+          <button id="certContinueBtn" class="btn btn-secondary cert-btn">Continue</button>
+
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+
+
+
+
+
+  <!-- ========================================================= -->
+  <!-- SECTION 2 QUIZ -->
+  <!-- ========================================================= -->
+  <section id="section2" class="quiz-section" style="display:none;">
+    <div class="container">
+
+      <div class="quiz-header">
+        <h2>Section 2 – Quiz</h2>
+        <p class="quiz-info">
+          <strong>Child:</strong> <span id="childNameDisplay2">Loading...</span> |
+          <strong>Group:</strong> <span id="groupDisplay2">A</span> |
+          <strong>Section:</strong> 2
+        </p>
+
+        <div class="quiz-timer">
+          <span id="timer2">10:00</span>
+        </div>
+      </div>
+
+      <form id="section2QuizForm" class="quiz-form">
+        <div id="section2Questions"></div>
+
+        <button type="submit" class="btn btn-primary quiz-submit">
+          Submit Quiz
+        </button>
+      </form>
+
+    </div>
+  </section>
+  <!-- ========================================================= -->
+  <!-- LIVE SESSION PLACEHOLDER -->
+  <!-- ========================================================= -->
+  <section id="finalStage" class="live-session" style="display:none;">
+    <div class="container">
+      <h2>🎉 Live Session Coming Soon!</h2>
+      <p>
+        Congratulations, <span id="liveChildName"></span>! You passed Section 2.
+        Your live session will start at the scheduled time.
+      </p>
+    </div>
+  </section>
+
+
+
+  <!-- ========================================================= -->
+  <!-- WAITING PAGE (Videos) -->
+  <!-- ========================================================= -->
+  <section id="videos" class="waiting-section">
+    <div class="container">
+
+      <h2>Keep Learning!</h2>
+
+      <p>
+        Hi <span id="waitChildName">Student</span>, you scored below 80%.
+        Watch these videos and join the next session.
+      </p>
+
+      <div class="video-grid">
+        <div class="video-card">
+          <h3>Learning Video 1</h3>
+          <iframe src="https://www.youtube.com/embed/2V-20Qe4M8Y"></iframe>
+        </div>
+
+        <div class="video-card">
+          <h3>Learning Video 2</h3>
+          <iframe src="https://www.youtube.com/embed/1j6YA03hm4k"></iframe>
+        </div>
+
+        <div class="video-card">
+          <h3>Learning Video 3</h3>
+          <iframe src="https://www.youtube.com/embed/2V-20Qe4M8Y"></iframe>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ========================================================= -->
+  <!-- PRIZE PAGE -->
+  <!-- ========================================================= -->
+  <section id="prizePage" class="prize-section">
+    <div class="container">
+
+      <h2>🏆 Prize Winners Announcement</h2>
+
+      <!-- GROUP A -->
+      <h3>Group A Winners</h3>
+      <div class="winner-grid">
+        <div class="winner-card gold">
+          <h3>1st Place</h3>
+          <p id="A_firstPlaceName">Loading...</p>
+          <p id="A_firstPlaceScore">Score: --%</p>
+        </div>
+
+        <div class="winner-card silver">
+          <h3>2nd Place</h3>
+          <p id="A_secondPlaceName">Loading...</p>
+          <p id="A_secondPlaceScore">Score: --%</p>
+        </div>
+
+        <div class="winner-card bronze">
+          <h3>3rd Place</h3>
+          <p id="A_thirdPlaceName">Loading...</p>
+          <p id="A_thirdPlaceScore">Score: --%</p>
+        </div>
+      </div>
+
+      <!-- GROUP B -->
+      <h3>Group B Winners</h3>
+      <div class="winner-grid">
+        <div class="winner-card gold">
+          <h3>1st Place</h3>
+          <p id="B_firstPlaceName">Loading...</p>
+          <p id="B_firstPlaceScore">Score: --%</p>
+        </div>
+
+        <div class="winner-card silver">
+          <h3>2nd Place</h3>
+          <p id="B_secondPlaceName">Loading...</p>
+          <p id="B_secondPlaceScore">Score: --%</p>
+        </div>
+
+        <div class="winner-card bronze">
+          <h3>3rd Place</h3>
+          <p id="B_thirdPlaceName">Loading...</p>
+          <p id="B_thirdPlaceScore">Score: --%</p>
+        </div>
+      </div>
+
+      <!-- GROUP C -->
+      <h3>Group C Winners</h3>
+      <div class="winner-grid">
+        <div class="winner-card gold">
+          <h3>1st Place</h3>
+          <p id="C_firstPlaceName">Loading...</p>
+          <p id="C_firstPlaceScore">Score: --%</p>
+        </div>
+
+        <div class="winner-card silver">
+          <h3>2nd Place</h3>
+          <p id="C_secondPlaceName">Loading...</p>
+          <p id="C_secondPlaceScore">Score: --%</p>
+        </div>
+
+        <div class="winner-card bronze">
+          <h3>3rd Place</h3>
+          <p id="C_thirdPlaceName">Loading...</p>
+          <p id="C_thirdPlaceScore">Score: --%</p>
+        </div>
+      </div>
+
+      <p id="winnerMessage" style="display:none;">Winners Published!</p>
+
+    </div>
+  </section>
+
+
+  <!-- ========================================================= -->
+  <!-- ADMIN DASHBOARD -->
+  <!-- ========================================================= -->
+  <section id="adminDashboard" class="admin-section">
+    <div class="container">
+
+      <h2>Admin Dashboard – Scores & Winners</h2>
+
+      <div class="filter-box">
+        <label>Select Group:</label>
+        <select id="groupFilter">
+          <option value="A">Group A</option>
+          <option value="B">Group B</option>
+          <option value="C">Group C</option>
+        </select>
+      </div>
+
+      <table class="score-table">
+        <thead>
+          <tr>
+            <th>Child Name</th>
+            <th>Parent Email</th>
+            <th>Section 1 Score</th>
+            <th>Section 2 Score</th>
+            <th>Final Session</th>
+            <th>Select Winner</th>
+          </tr>
+        </thead>
+        <tbody id="scoreTableBody"></tbody>
+      </table>
+
+      <div class="winner-box">
+        <h3>Select Winners</h3>
+
+        <label>1st Place:</label>
+        <select id="firstPlaceSelect"></select>
+
+        <label>2nd Place:</label>
+        <select id="secondPlaceSelect"></select>
+
+        <label>3rd Place:</label>
+        <select id="thirdPlaceSelect"></select>
+
+        <button id="publishWinnersBtn" class="btn btn-primary">Publish Winners</button>
+
+        <p id="winnerMessage" style="display:none;">Winners Published!</p>
+      </div>
+
+    </div>
+  </section>
+
+  
+
+  <tbody id="scoreTableBody">
+    <!-- Rows will be inserted by JS -->
+  </tbody>
+
+
+  <!--=========================
+        FOOTER
+==========================-->
+<footer class="footer">
+
+    <div class="container footer-inner">
+
+        <!-- Contact -->
+        <div class="footer-col">
+
+            <h3><i class="fas fa-map-marker-alt"></i> Get In Touch</h3>
+
+            <p><i class="fas fa-location-dot"></i> Bremen, Germany</p>
+
+            <p><i class="fas fa-phone"></i> +49 XXX XXX XXXX</p>
+
+            <p><i class="fas fa-envelope"></i> info@kiddysexplorer.com</p>
+
+            <div class="footer-social">
+
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+
+                <a href="#"><i class="fab fa-youtube"></i></a>
+
+                <a href="#"><i class="fab fa-instagram"></i></a>
+
+                <a href="#"><i class="fab fa-tiktok"></i></a>
+
+            </div>
+
+        </div>
+
+        <!-- Quick Links -->
+
+        <div class="footer-col">
+
+            <h3><i class="fas fa-link"></i> Quick Links</h3>
+
+            <ul>
+
+                <li><a href="index.html"><i class="fas fa-house"></i> Home</a></li>
+
+                <li><a href="#"><i class="fas fa-circle-info"></i> About Us</a></li>
+
+                <li><a href="donate.html"><i class="fas fa-question-circle"></i> Sponsor a child´sPrize</a></li>
+
+                <li><a href="#"><i class="fas fa-phone"></i> Contact</a></li>
+
+                <li><a href="#"><i class="fas fa-shield-halved"></i> Privacy Policy</a></li>
+
+            </ul>
+
+        </div>
+
+        <!-- Learning -->
+
+        <div class="footer-col">
+
+            <h3><i class="fas fa-book-open"></i> Learn</h3>
+
+            <ul>
+
+                <li><a href="#"><i class="fas fa-video"></i> Learning Videos</a></li>
+
+                <li><a href="#"><i class="fas fa-trophy"></i> Quiz Challenge</a></li>
+
+                <li><a href="#"><i class="fas fa-certificate"></i> Certificates</a></li>
+
+                <li><a href="#"><i class="fas fa-medal"></i> Winners</a></li>
+
+                <li><a href="#"><i class="fas fa-child"></i> Age Groups</a></li>
+
+            </ul>
+
+        </div>
+
+        <!-- Gallery -->
+
+        <div class="footer-col">
+
+            <h3><i class="fas fa-image"></i> Gallery</h3>
+
+            <div class="gallery">
+
+                <img src="assets/images/gallery1.jpg">
+
+                <img src="assets/images/gallery2.jpg">
+
+                <img src="assets/images/gallery3.jpg">
+
+                <img src="assets/images/gallery4.jpg">
+
+            </div>
+
+        </div>
+
+        <!-- Newsletter -->
+
+        <div class="footer-col">
+
+            <h3><i class="fas fa-paper-plane"></i> Newsletter</h3>
+
+            <p>Subscribe to receive new quizzes and learning videos.</p>
+
+            <div class="newsletter">
+
+                <input type="email" placeholder="Enter your email">
+
+                <button>
+
+                    <i class="fas fa-paper-plane"></i>
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="footer-bottom">
+
+        © 2026 Kiddysexplorer. All Rights Reserved.
+
+    </div>
+
+</footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <!-- ========================================================= -->
+  <!-- JS FILE -->
+  <!-- ========================================================= -->
+   <script>
+  function openPrizeInfo() {
+    document.getElementById("prizePopup").style.display = "flex";
+  }
+
+  function closePrizeInfo() {
+    document.getElementById("prizePopup").style.display = "none";
+  }
+</script>
+  <script src="assets/js/quiz.js"></script>
+
+
+</body>
+
+</html>
