@@ -995,6 +995,479 @@ select:focus {
   }
 }
 
+/* css for keep on learning*/
+/*====================================
+        KEEP LEARNING SECTION
+=====================================*/
+
+.waiting-section{
+    padding:100px 0;
+    background:linear-gradient(135deg,#fff7ed,#ffffff);
+}
+
+.waiting-section .container{
+    max-width:1200px;
+    margin:auto;
+    text-align:center;
+}
+
+.waiting-section .section-tag{
+    display:inline-block;
+    background:#fff1e6;
+    color:#ff6b00;
+    padding:10px 22px;
+    border-radius:50px;
+    font-weight:700;
+    margin-bottom:20px;
+}
+
+.waiting-section .section-tag i{
+    margin-right:8px;
+}
+
+.waiting-section h2{
+    font-size:48px;
+    color:#003b73;
+    margin-bottom:25px;
+    font-weight:800;
+}
+
+.waiting-message{
+    max-width:850px;
+    margin:0 auto 20px;
+    font-size:22px;
+    line-height:1.8;
+    color:#444;
+}
+
+.waiting-message strong{
+    color:#ff6b00;
+}
+
+.waiting-text{
+    max-width:900px;
+    margin:0 auto 60px;
+    color:#666;
+    font-size:18px;
+    line-height:1.9;
+}
+
+/*==============================
+        LEARNING CARDS
+==============================*/
+
+.learn-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(3,1fr);
+
+    gap:30px;
+
+    margin-bottom:70px;
+
+}
+
+.learn-card{
+
+    background:#ffffff;
+
+    border-radius:25px;
+
+    padding:40px 30px;
+
+    box-shadow:0 18px 45px rgba(0,0,0,.08);
+
+    transition:.35s;
+
+}
+
+.learn-card:hover{
+
+    transform:translateY(-12px);
+
+}
+
+.learn-card i{
+
+    width:85px;
+
+    height:85px;
+
+    line-height:85px;
+
+    border-radius:50%;
+
+    background:#fff1e6;
+
+    color:#ff6b00;
+
+    font-size:38px;
+
+    margin-bottom:25px;
+
+}
+
+.learn-card h3{
+
+    color:#003b73;
+
+    margin-bottom:15px;
+
+    font-size:26px;
+
+}
+
+.learn-card p{
+
+    color:#666;
+
+    line-height:1.8;
+
+    font-size:16px;
+
+}
+
+/*==============================
+        YOUTUBE BOX
+==============================*/
+
+/*==============================
+        YOUTUBE BOX
+==============================*/
+
+.youtube-box{
+
+    position:relative;
+
+    background:#ffffff;
+
+    border-radius:30px;
+
+    padding:60px 40px;
+
+    max-width:900px;
+
+    margin:auto;
+
+    text-align:center;
+
+    border:4px solid #f3f4f6;
+
+    box-shadow:0 20px 50px rgba(0,0,0,.08);
+
+    overflow:hidden;
+
+}
+
+/* Decorative color patches */
+
+.youtube-box::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:-90px;
+
+    left:-60px;
+
+    width:180px;
+
+    height:180px;
+
+    background:#ff6b00;
+
+    opacity:.12;
+
+    border-radius:50%;
+
+}
+
+.youtube-box::after{
+
+    content:"";
+
+    position:absolute;
+
+    bottom:-70px;
+
+    right:-70px;
+
+    width:220px;
+
+    height:220px;
+
+    background:#0a83f4;
+
+    opacity:.10;
+
+    border-radius:50%;
+
+}
+
+/* Small orange accent */
+
+.youtube-box .accent{
+
+    position:absolute;
+
+    width:90px;
+
+    height:90px;
+
+    background:#ffd166;
+
+    opacity:.18;
+
+    border-radius:50%;
+
+    top:25px;
+
+    right:80px;
+
+}
+
+.youtube-icon{
+
+    font-size:85px;
+
+    color:#ff0000;
+
+    margin-bottom:20px;
+
+}
+
+.youtube-box h3{
+
+    color:#003b73;
+
+    font-size:36px;
+
+    margin-bottom:20px;
+
+    font-weight:800;
+
+}
+
+.youtube-box p{
+
+    color:#555;
+
+    font-size:18px;
+
+    line-height:1.9;
+
+    margin-bottom:35px;
+
+}
+
+.youtube-icon{
+
+    font-size:90px;
+
+    margin-bottom:25px;
+
+}
+
+.youtube-box h3{
+
+    font-size:36px;
+
+    margin-bottom:20px;
+
+    color:#fff;
+
+}
+
+.youtube-box p{
+
+    font-size:18px;
+
+    line-height:1.9;
+
+    margin-bottom:35px;
+
+}
+
+/*==============================
+        BUTTON
+==============================*/
+
+.btn-danger{
+
+    display:inline-block;
+
+    padding:18px 45px;
+
+    background:#fff;
+
+    color:#ff0000;
+
+    font-size:18px;
+
+    font-weight:700;
+
+    border-radius:50px;
+
+    text-decoration:none;
+
+    transition:.35s;
+
+    box-shadow:0 10px 25px rgba(0,0,0,.15);
+
+}
+
+.btn-danger:hover{
+
+    transform:translateY(-5px);
+
+    background:#ffecec;
+
+}
+
+.btn-danger i{
+
+    margin-right:10px;
+
+}
+
+/*==============================
+        ANIMATION
+==============================*/
+
+.learn-card{
+
+    animation:floatCard 5s ease-in-out infinite;
+
+}
+
+.learn-card:nth-child(2){
+
+    animation-delay:.5s;
+
+}
+
+.learn-card:nth-child(3){
+
+    animation-delay:1s;
+
+}
+
+@keyframes floatCard{
+
+    0%,100%{
+
+        transform:translateY(0);
+
+    }
+
+    50%{
+
+        transform:translateY(-8px);
+
+    }
+
+}
+
+/*==============================
+        RESPONSIVE
+==============================*/
+
+@media(max-width:992px){
+
+.learn-grid{
+
+grid-template-columns:1fr;
+
+}
+
+.waiting-section h2{
+
+font-size:38px;
+
+}
+
+.waiting-message{
+
+font-size:20px;
+
+}
+
+.youtube-box{
+
+padding:45px 25px;
+
+}
+
+.youtube-box h3{
+
+font-size:30px;
+
+}
+
+.youtube-icon{
+
+font-size:70px;
+
+}
+
+}
+
+@media(max-width:576px){
+
+.waiting-section{
+
+padding:70px 0;
+
+}
+
+.waiting-section h2{
+
+font-size:32px;
+
+}
+
+.waiting-message{
+
+font-size:18px;
+
+}
+
+.waiting-text{
+
+font-size:16px;
+
+}
+
+.learn-card{
+
+padding:30px 20px;
+
+}
+
+.youtube-box{
+
+padding:35px 20px;
+
+}
+
+.youtube-box h3{
+
+font-size:26px;
+
+}
+
+.btn-danger{
+
+display:block;
+
+width:100%;
+
+}
+
+}
+
 /*==========================
         FOOTER
 ===========================*/
