@@ -89,111 +89,87 @@ const QuizRewards = {
     /*=========================
             MEDALS
     =========================*/
+getMedal(score){
 
-    getMedal(score){
-
-        if(score>=90){
-
-            return{
-
-                icon:"🥇",
-
-                title:"Gold Medal",
-
-                color:"#FFD700",
-
-                message:"Outstanding Performance!"
-
-            };
-
-        }
-
-
-
-        if(score>=80){
-
-            return{
-
-                icon:"🥈",
-
-                title:"Silver Medal",
-
-                color:"#C0C0C0",
-
-                message:"Excellent Work!"
-
-            };
-
-        }
-
-
-
-        if(score>=70){
-
-            return{
-
-                icon:"🥉",
-
-                title:"Bronze Medal",
-
-                color:"#CD7F32",
-
-                message:"Good Job!"
-
-            };
-
-        }
-
-
+    if(score >= 80){
 
         return{
 
-            icon:"📚",
+            icon:"🥈",
 
-            title:"Keep Learning",
+            title:"Silver Medal",
 
-            color:"#ff6b00",
+            color:"#C0C0C0",
 
-            message:"Practice and Try Again!"
+            message:"Excellent! You have qualified for the next stage."
 
         };
 
-    },
+    }
 
+    if(score >= 70){
 
+        return{
+
+            icon:"🥉",
+
+            title:"Bronze Medal",
+
+            color:"#CD7F32",
+
+            message:"Good job! Keep learning and aim even higher."
+
+        };
+
+    }
+
+    return{
+
+        icon:"📚",
+
+        title:"Keep Learning",
+
+        color:"#ff6b00",
+
+        message:"Keep practicing and try again in the next quiz."
+
+    };
+
+},
 
     /*=========================
             BUBU LEVEL
     =========================*/
 
-    getBubuLevel(score){
+   getBubuLevel(score){
 
-        if(score==100)
+    if(score >= 80)
 
-            return "🌟 Bubu says: PERFECT SCORE!";
+        return "🎉 Bubu says: Fantastic! You qualified for the next stage!";
 
+    if(score >= 70)
 
+        return "👏 Bubu says: Great job! Keep learning and you'll do even better next time!";
 
-        if(score>=90)
+    return "💪 Bubu says: Don't give up! Practice makes perfect. I'll see you in the next quiz!";
 
-            return "🎉 Bubu says: You're a Superstar!";
-
-
-
-        if(score>=80)
-
-            return "😊 Bubu says: Fantastic!";
-
-
-
-        if(score>=70)
-
-            return "👏 Bubu says: Good Job!";
-
-
-
-        return "💪 Bubu says: Keep Learning!";
-
-    }
+}
 
 };
+function launchConfetti() {
+    if (typeof confetti === "undefined") return;
+
+    confetti({
+        particleCount: 180,
+        spread: 90,
+        origin: { y: 0.6 }
+    });
+
+    setTimeout(() => {
+        confetti({
+            particleCount: 120,
+            spread: 120,
+            origin: { y: 0.7 }
+        });
+    }, 500);
+}

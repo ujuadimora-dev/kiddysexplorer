@@ -12,13 +12,24 @@ const QuizUI = {
                 <div class="quiz-player-card">
 
                     <div class="quiz-top">
-                        <h2 id="quizTitle">Kiddysexplorer Learning Challenge</h2>
-                        <p id="quizProgressText">Question 1 of 10</p>
 
-                        <div class="progress-bar">
-                            <div id="quizProgressFill"></div>
-                        </div>
-                    </div>
+    <h2 id="quizTitle">Kiddysexplorer Learning Challenge</h2>
+
+    <p id="quizProgressText">Question 1 of 10</p>
+
+    <div class="quiz-timer" id="quizTimer">
+
+        ⏰ <span id="timerValue">30</span> sec
+
+    </div>
+
+    <div class="progress-bar">
+
+        <div id="quizProgressFill"></div>
+
+    </div>
+
+</div>
 
                     <div class="bubu-message" id="bubuMessage">
                         😊 Bubu is ready. Let’s begin!
@@ -122,44 +133,71 @@ const QuizUI = {
         const medal = QuizRewards.getMedal(score);
         const bubuLevel = QuizRewards.getBubuLevel(score);
 
+        const correct = Math.round((score / 100) * total);
+        const wrong = total - correct;
+        const dashOffset = 471 - (471 * (score / 100));
+
         this.quizPlayer.innerHTML = `
-            <div class="container">
-                <div class="result-card">
+        <div class="container">
+            <div class="premium-result">
 
-                    <div class="medal-icon" style="color:${medal.color};">
-                        ${medal.icon}
+                <div class="celebration-title">🎉 CONGRATULATIONS!</div>
+
+                <div class="medal-big">${medal.icon}</div>
+
+                <h1 class="medal-title">${medal.title}</h1>
+
+                <div class="score-circle">
+                    <svg>
+                        <circle cx="90" cy="90" r="75"></circle>
+                        <circle class="progress"
+                            cx="90"
+                            cy="90"
+                            r="75"
+                            style="stroke-dashoffset:${dashOffset};">
+                        </circle>
+                    </svg>
+
+                    <div class="score-number">
+                        ${score}<span>%</span>
+                    </div>
+                </div>
+
+                <div class="score-summary">
+                    <div class="summary-card">
+                        <div>✅</div>
+                        <h2>${correct}</h2>
+                        <p>Correct</p>
                     </div>
 
-                    <h2>${medal.title}</h2>
-
-                    <h3>${score}% Score</h3>
-
-                    <p>${medal.message}</p>
-
-                    <p>
-                        You answered <strong>${Math.round((score / 100) * total)}</strong>
-                        out of <strong>${total}</strong> questions correctly.
-                    </p>
-
-                    <div class="bubu-result">
-                        ${bubuLevel}
+                    <div class="summary-card">
+                        <div>❌</div>
+                        <h2>${wrong}</h2>
+                        <p>Wrong</p>
                     </div>
+                </div>
 
+                <div class="bubu-box">
+                    🐻 ${bubuLevel}
+                </div>
+
+                <div class="result-buttons">
                     <button class="btn btn-secondary" onclick="QuizEngine.showReview()">
-                        Review Answers
+                        📖 Review Answers
                     </button>
 
                     <button class="btn btn-secondary" onclick="QuizEngine.viewCertificate()">
-                        View Certificate
+                        📜 Certificate
                     </button>
 
                     <button class="btn btn-primary" onclick="QuizEngine.continueFlow()">
-                        Continue
+                        ➜ Continue
                     </button>
-
                 </div>
+
             </div>
-        `;
+        </div>
+    `;
     },
 
     showReview(answers) {
@@ -185,7 +223,11 @@ const QuizUI = {
 
                     <p>
                         Correct Answer:
-                        <strong>${item.options[item.correct]}</strong> ✅
+                        <strong>
+    ${item.selected === null
+                    ? "No answer — time expired"
+                    : item.options[item.selected]}
+</strong> ✅
                     </p>
                 </div>
             `;
