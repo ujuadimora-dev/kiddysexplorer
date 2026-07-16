@@ -34,6 +34,7 @@ const QuizEngine = {
             QuizSettings.questionsPerQuiz || 10;
 
         localStorage.setItem("quizGroup", group);
+
         localStorage.setItem(
             "quizSection",
             section === "section1" ? "1" : "2"
@@ -238,9 +239,8 @@ const QuizEngine = {
 
                 if (
                     QuizSettings.soundsEnabled &&
-                    QuizSounds &&
-                    typeof QuizSounds.countdown ===
-                        "function"
+                    typeof QuizSounds !== "undefined" &&
+                    typeof QuizSounds.countdown === "function"
                 ) {
                     QuizSounds.countdown();
                 }
@@ -265,8 +265,7 @@ const QuizEngine = {
 
         if (
             typeof QuizSounds !== "undefined" &&
-            typeof QuizSounds.stopCountdown ===
-                "function"
+            typeof QuizSounds.stopCountdown === "function"
         ) {
             QuizSounds.stopCountdown();
         }
@@ -287,6 +286,7 @@ const QuizEngine = {
         if (!question) return;
 
         QuizUI.lockAnswers();
+
         QuizUI.markAnswer(
             null,
             question.answer
@@ -306,9 +306,8 @@ const QuizEngine = {
 
         if (
             QuizSettings.soundsEnabled &&
-            QuizSounds &&
-            typeof QuizSounds.wrong ===
-                "function"
+            typeof QuizSounds !== "undefined" &&
+            typeof QuizSounds.wrong === "function"
         ) {
             QuizSounds.wrong();
         }
@@ -331,9 +330,8 @@ const QuizEngine = {
 
         if (
             QuizSettings.soundsEnabled &&
-            QuizSounds &&
-            typeof QuizSounds.click ===
-                "function"
+            typeof QuizSounds !== "undefined" &&
+            typeof QuizSounds.click === "function"
         ) {
             QuizSounds.click();
         }
@@ -350,6 +348,7 @@ const QuizEngine = {
             selectedIndex === correctIndex;
 
         QuizUI.lockAnswers();
+
         QuizUI.markAnswer(
             selectedIndex,
             correctIndex
@@ -372,9 +371,7 @@ const QuizEngine = {
 
             if (
                 QuizSettings.soundsEnabled &&
-                QuizSounds &&
-                typeof QuizSounds.correct ===
-                    "function"
+                typeof QuizSounds.correct === "function"
             ) {
                 QuizSounds.correct();
             }
@@ -385,9 +382,7 @@ const QuizEngine = {
 
             if (
                 QuizSettings.soundsEnabled &&
-                QuizSounds &&
-                typeof QuizSounds.wrong ===
-                    "function"
+                typeof QuizSounds.wrong === "function"
             ) {
                 QuizSounds.wrong();
             }
@@ -422,8 +417,7 @@ const QuizEngine = {
     finishQuiz() {
         this.stopTimer();
 
-        const total =
-            this.questions.length;
+        const total = this.questions.length;
 
         const percentage = Math.round(
             (this.scoreCount / total) * 100
@@ -439,6 +433,14 @@ const QuizEngine = {
                 "section1Score",
                 percentage
             );
+
+            if (
+                typeof ParticipantStore !== "undefined"
+            ) {
+                ParticipantStore.saveSection1Score(
+                    percentage
+                );
+            }
         }
 
         if (this.section === "section2") {
@@ -446,6 +448,14 @@ const QuizEngine = {
                 "section2Score",
                 percentage
             );
+
+            if (
+                typeof ParticipantStore !== "undefined"
+            ) {
+                ParticipantStore.saveSection2Score(
+                    percentage
+                );
+            }
 
             this.saveChildScore({
                 name:
@@ -481,42 +491,41 @@ const QuizEngine = {
         if (percentage >= 80) {
             if (
                 QuizSettings.confettiEnabled &&
-                typeof launchConfetti ===
-                    "function"
+                typeof launchConfetti === "function"
             ) {
                 launchConfetti();
             }
 
             if (
-                QuizSettings.soundsEnabled
+                QuizSettings.soundsEnabled &&
+                typeof QuizSounds !== "undefined"
             ) {
                 if (
-                    typeof QuizSounds.applause ===
-                    "function"
+                    typeof QuizSounds.applause === "function"
                 ) {
                     QuizSounds.applause();
                 }
 
                 if (
-                    typeof QuizSounds.medal ===
-                    "function"
+                    typeof QuizSounds.medal === "function"
                 ) {
                     QuizSounds.medal();
                 }
 
                 if (
-                    typeof QuizSounds.celebration ===
-                    "function"
+                    typeof QuizSounds.celebration === "function"
                 ) {
                     QuizSounds.celebration();
                 }
             }
-        } else if (
-            QuizSettings.soundsEnabled &&
-            typeof QuizSounds.wrong ===
-                "function"
-        ) {
-            QuizSounds.wrong();
+        } else {
+            if (
+                QuizSettings.soundsEnabled &&
+                typeof QuizSounds !== "undefined" &&
+                typeof QuizSounds.wrong === "function"
+            ) {
+                QuizSounds.wrong();
+            }
         }
 
         QuizUI.showResult(
@@ -709,8 +718,7 @@ const QuizEngine = {
 
         if (certDate) {
             certDate.textContent =
-                new Date()
-                    .toLocaleDateString();
+                new Date().toLocaleDateString();
         }
 
         const medalImage =
@@ -830,8 +838,8 @@ document.addEventListener(
 
         if (
             QuizSettings.soundsEnabled &&
-            typeof QuizSounds.next ===
-                "function"
+            typeof QuizSounds !== "undefined" &&
+            typeof QuizSounds.next === "function"
         ) {
             QuizSounds.next();
         }

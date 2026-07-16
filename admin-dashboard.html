@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="description"
+    content="Kiddysexplorer quiz administration dashboard"
+  >
+
+  <title>Kiddysexplorer Admin Dashboard</title>
+
+  <!-- Favicon -->
+  <link
+    rel="icon"
+    type="image/png"
+    href="assets/images/favicon.png"
+  >
+
+  <!-- Font Awesome -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+  >
+
+  <!-- Admin Dashboard CSS -->
+  <link
+    rel="stylesheet"
+    href="assets/css/admin.css"
+  >
+</head>
+
+<body>
+
+  <!-- =========================================
+            MOBILE MENU OVERLAY
+  ========================================== -->
+  <div
+    id="adminOverlay"
+    class="admin-overlay"
+  ></div>
+
+
+  <!-- =========================================
+            ADMIN SIDEBAR
+  ========================================== -->
+  <aside
+    id="adminSidebar"
+    class="admin-sidebar"
+  >
+
+    <div class="sidebar-brand">
+
+      <div class="brand-icon">
+        <i class="fas fa-graduation-cap"></i>
+      </div>
+
+      <div>
+        <h2>Kiddysexplorer</h2>
+        <p>Admin Panel</p>
+      </div>
+
+    </div>
+
+
+    <nav class="sidebar-nav">
+
+      <a
+        href="#dashboard"
+        class="sidebar-link active"
+      >
+        <i class="fas fa-chart-pie"></i>
+        <span>Dashboard</span>
+      </a>
+
+      <a
+        href="#participants"
+        class="sidebar-link"
+      >
+        <i class="fas fa-children"></i>
+        <span>Participants</span>
+      </a>
+
+      <a
+        href="#qualified"
+        class="sidebar-link"
+      >
+        <i class="fas fa-user-graduate"></i>
+        <span>Qualified Children</span>
+      </a>
+
+      <a
+        href="#live-competition"
+        class="sidebar-link"
+      >
+        <i class="fas fa-video"></i>
+        <span>Live Competition</span>
+      </a>
+
+      <a
+        href="#leaderboard"
+        class="sidebar-link"
+      >
+        <i class="fas fa-ranking-star"></i>
+        <span>Leaderboard</span>
+      </a>
+
+      <a
+        href="#prizes"
+        class="sidebar-link"
+      >
+        <i class="fas fa-gift"></i>
+        <span>Prize Management</span>
+      </a>
+
+      <a
+        href="#certificates"
+        class="sidebar-link"
+      >
+        <i class="fas fa-certificate"></i>
+        <span>Certificates</span>
+      </a>
+
+      <a
+        href="#reports"
+        class="sidebar-link"
+      >
+        <i class="fas fa-file-lines"></i>
+        <span>Reports</span>
+      </a>
+
+    </nav>
+
+
+    <div class="sidebar-bottom">
+
+      <a
+        href="quiz.html"
+        class="sidebar-link"
+      >
+        <i class="fas fa-circle-question"></i>
+        <span>Open Quiz Page</span>
+      </a>
+
+      <a
+        href="index.html"
+        class="sidebar-link"
+      >
+        <i class="fas fa-house"></i>
+        <span>Back to Website</span>
+      </a>
+
+    </div>
+
+  </aside>
+
+
+  <!-- =========================================
+            MAIN ADMIN AREA
+  ========================================== -->
+  <main class="admin-main">
+
+    <!-- =========================================
+              TOP HEADER
+    ========================================== -->
+    <header class="admin-header">
+
+      <div class="admin-header-left">
+
+        <button
+          id="adminMenuBtn"
+          class="admin-menu-btn"
+          type="button"
+          aria-label="Open administration menu"
+        >
+          <i class="fas fa-bars"></i>
+        </button>
+
+        <div>
+          <h1>Admin Dashboard</h1>
+
+          <p>
+            Manage quiz participants, scores, qualifications and prizes.
+          </p>
+        </div>
+
+      </div>
+
+
+      <div class="admin-header-right">
+
+        <button
+          id="refreshAdminBtn"
+          class="header-action-btn"
+          type="button"
+        >
+          <i class="fas fa-arrows-rotate"></i>
+          <span>Refresh</span>
+        </button>
+
+        <div class="admin-profile">
+
+          <div class="admin-avatar">
+            <i class="fas fa-user-shield"></i>
+          </div>
+
+          <div>
+            <strong>Administrator</strong>
+            <span>Kiddysexplorer</span>
+          </div>
+
+        </div>
+
+      </div>
+
+    </header>
+
+
+    <!-- =========================================
+              DASHBOARD CONTENT
+    ========================================== -->
+    <div class="admin-content">
+
+
+      <!-- =========================================
+                WELCOME BANNER
+      ========================================== -->
+      <section
+        id="dashboard"
+        class="admin-welcome"
+      >
+
+        <div class="welcome-content">
+
+          <span class="admin-label">
+            <i class="fas fa-sparkles"></i>
+            Quiz Management
+          </span>
+
+          <h2>
+            Welcome to the Kiddysexplorer Admin Panel
+          </h2>
+
+          <p>
+            View registered children, monitor quiz results,
+            identify qualified participants and prepare for
+            the live competition.
+          </p>
+
+        </div>
+
+        <div class="welcome-icon">
+          <i class="fas fa-trophy"></i>
+        </div>
+
+      </section>
+
+
+      <!-- =========================================
+                STATISTICS CARDS
+      ========================================== -->
+      <section class="admin-stat-grid">
+
+        <!-- Total participants -->
+        <article class="admin-stat-card stat-blue">
+
+          <div class="stat-icon">
+            <i class="fas fa-children"></i>
+          </div>
+
+          <div class="stat-content">
+            <span>Total Participants</span>
+
+            <h3 id="totalParticipants">
+              0
+            </h3>
+
+            <p>All registered children</p>
+          </div>
+
+        </article>
+
+
+        <!-- Qualified participants -->
+        <article class="admin-stat-card stat-green">
+
+          <div class="stat-icon">
+            <i class="fas fa-circle-check"></i>
+          </div>
+
+          <div class="stat-content">
+            <span>Qualified</span>
+
+            <h3 id="qualifiedParticipants">
+              0
+            </h3>
+
+            <p>Ready for the live competition</p>
+          </div>
+
+        </article>
+
+
+        <!-- Keep learning -->
+        <article class="admin-stat-card stat-orange">
+
+          <div class="stat-icon">
+            <i class="fas fa-book-open-reader"></i>
+          </div>
+
+          <div class="stat-content">
+            <span>Keep Learning</span>
+
+            <h3 id="keepLearningParticipants">
+              0
+            </h3>
+
+            <p>Children who need more practice</p>
+          </div>
+
+        </article>
+
+
+        <!-- Section 2 pending -->
+        <article class="admin-stat-card stat-purple">
+
+          <div class="stat-icon">
+            <i class="fas fa-hourglass-half"></i>
+          </div>
+
+          <div class="stat-content">
+            <span>Section 2 Pending</span>
+
+            <h3 id="pendingParticipants">
+              0
+            </h3>
+
+            <p>Passed Section 1</p>
+          </div>
+
+        </article>
+
+      </section>
+
+
+      <!-- =========================================
+                PARTICIPANTS SECTION
+      ========================================== -->
+      <section
+        id="participants"
+        class="admin-panel"
+      >
+
+        <div class="admin-panel-header">
+
+          <div>
+            <span class="panel-label">
+              <i class="fas fa-users"></i>
+              Participant Records
+            </span>
+
+            <h2>Quiz Participants</h2>
+
+            <p>
+              Search, filter and manage all registered children.
+            </p>
+          </div>
+
+
+          <div class="admin-export-buttons">
+
+            <button
+              id="exportCsvBtn"
+              class="admin-btn admin-btn-light"
+              type="button"
+            >
+              <i class="fas fa-file-csv"></i>
+              Export CSV
+            </button>
+
+            <button
+              id="exportExcelBtn"
+              class="admin-btn admin-btn-success"
+              type="button"
+            >
+              <i class="fas fa-file-excel"></i>
+              Export Excel
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <!-- Filters -->
+        <div class="admin-filters">
+
+          <div class="admin-search-box">
+
+            <i class="fas fa-magnifying-glass"></i>
+
+            <input
+              type="search"
+              id="adminSearchInput"
+              placeholder="Search child name or parent email..."
+              autocomplete="off"
+            >
+
+          </div>
+
+
+          <div class="admin-filter-group">
+
+            <label for="adminGroupFilter">
+              <i class="fas fa-layer-group"></i>
+              Group
+            </label>
+
+            <select id="adminGroupFilter">
+
+              <option value="All">
+                All Groups
+              </option>
+
+              <option value="A">
+                Group A — Ages 3–5
+              </option>
+
+              <option value="B">
+                Group B — Ages 6–8
+              </option>
+
+              <option value="C">
+                Group C — Ages 9–12
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <div class="admin-filter-group">
+
+            <label for="adminStatusFilter">
+              <i class="fas fa-filter"></i>
+              Status
+            </label>
+
+            <select id="adminStatusFilter">
+
+              <option value="All">
+                All Statuses
+              </option>
+
+              <option value="Registered">
+                Registered
+              </option>
+
+              <option value="Section 2 Pending">
+                Section 2 Pending
+              </option>
+
+              <option value="Qualified">
+                Qualified
+              </option>
+
+              <option value="Keep Learning">
+                Keep Learning
+              </option>
+
+            </select>
+
+          </div>
+
+        </div>
+
+
+        <!-- Table -->
+        <div class="admin-table-wrapper">
+
+          <table class="admin-table">
+
+            <thead>
+
+              <tr>
+                <th>#</th>
+                <th>Participant</th>
+                <th>Age</th>
+                <th>Group</th>
+                <th>Section 1</th>
+                <th>Section 2</th>
+                <th>Status</th>
+                <th>Attendance</th>
+                <th>Live Score</th>
+                <th>Position</th>
+                <th>Prize</th>
+                <th>Action</th>
+              </tr>
+
+            </thead>
+
+            <tbody id="participantTableBody">
+
+              <!-- Participant rows are generated by adminDashboard.js -->
+
+            </tbody>
+
+          </table>
+
+
+          <!-- Empty table message -->
+          <div
+            id="adminEmptyState"
+            class="admin-empty-state"
+            style="display:none;"
+          >
+
+            <div class="empty-state-icon">
+              <i class="fas fa-users-slash"></i>
+            </div>
+
+            <h3>No participants found</h3>
+
+            <p>
+              New registered children will appear here automatically.
+            </p>
+
+            <a
+              href="quiz.html"
+              class="admin-btn admin-btn-primary"
+            >
+              <i class="fas fa-circle-question"></i>
+              Open Quiz Page
+            </a>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- =========================================
+              QUALIFIED CHILDREN PREVIEW
+      ========================================== -->
+      <section
+        id="qualified"
+        class="admin-panel admin-coming-soon"
+      >
+
+        <div class="coming-soon-icon">
+          <i class="fas fa-user-graduate"></i>
+        </div>
+
+        <div>
+          <span class="panel-label">
+            Next Module
+          </span>
+
+          <h2>Qualified Children</h2>
+
+          <p>
+            This section will show children who passed both
+            Section 1 and Section 2 and are ready for the live competition.
+          </p>
+        </div>
+
+      </section>
+
+
+      <!-- =========================================
+              LIVE COMPETITION PREVIEW
+      ========================================== -->
+      <section
+        id="live-competition"
+        class="admin-panel admin-coming-soon"
+      >
+
+        <div class="coming-soon-icon">
+          <i class="fas fa-video"></i>
+        </div>
+
+        <div>
+          <span class="panel-label">
+            Upcoming Module
+          </span>
+
+          <h2>Live Competition Management</h2>
+
+          <p>
+            Schedule live sessions, add meeting links,
+            mark attendance and record final scores.
+          </p>
+        </div>
+
+      </section>
+
+
+      <!-- =========================================
+              LEADERBOARD PREVIEW
+      ========================================== -->
+      <section
+        id="leaderboard"
+        class="admin-panel admin-coming-soon"
+      >
+
+        <div class="coming-soon-icon">
+          <i class="fas fa-ranking-star"></i>
+        </div>
+
+        <div>
+          <span class="panel-label">
+            Upcoming Module
+          </span>
+
+          <h2>Live Leaderboard</h2>
+
+          <p>
+            Rank qualified children according to their live competition scores.
+          </p>
+        </div>
+
+      </section>
+
+
+      <!-- =========================================
+              PRIZE MANAGEMENT PREVIEW
+      ========================================== -->
+      <section
+        id="prizes"
+        class="admin-panel admin-coming-soon"
+      >
+
+        <div class="coming-soon-icon">
+          <i class="fas fa-gift"></i>
+        </div>
+
+        <div>
+          <span class="panel-label">
+            Upcoming Module
+          </span>
+
+          <h2>Prize Management</h2>
+
+          <p>
+            Assign first, second and third positions,
+            record prizes and generate winner certificates.
+          </p>
+        </div>
+
+      </section>
+
+
+      <!-- =========================================
+              CERTIFICATE PREVIEW
+      ========================================== -->
+      <section
+        id="certificates"
+        class="admin-panel admin-coming-soon"
+      >
+
+        <div class="coming-soon-icon">
+          <i class="fas fa-certificate"></i>
+        </div>
+
+        <div>
+          <span class="panel-label">
+            Upcoming Module
+          </span>
+
+          <h2>Certificate Manager</h2>
+
+          <p>
+            Review qualification certificates and generate
+            final certificates for competition winners.
+          </p>
+        </div>
+
+      </section>
+
+
+      <!-- =========================================
+              REPORTS PREVIEW
+      ========================================== -->
+      <section
+        id="reports"
+        class="admin-panel admin-coming-soon"
+      >
+
+        <div class="coming-soon-icon">
+          <i class="fas fa-chart-column"></i>
+        </div>
+
+        <div>
+          <span class="panel-label">
+            Upcoming Module
+          </span>
+
+          <h2>Reports and Analytics</h2>
+
+          <p>
+            View group performance, qualification rates,
+            average scores and competition statistics.
+          </p>
+        </div>
+
+      </section>
+
+    </div>
+
+
+    <!-- =========================================
+              ADMIN FOOTER
+    ========================================== -->
+    <footer class="admin-footer">
+
+      <p>
+        &copy; <span id="adminCurrentYear"></span>
+        Kiddysexplorer. All rights reserved.
+      </p>
+
+      <p>
+        Learn • Play • Grow • Win
+      </p>
+
+    </footer>
+
+  </main>
+
+
+  <!-- =========================================
+            EXCEL LIBRARY
+  ========================================== -->
+  <script
+    src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"
+  ></script>
+
+
+  <!-- =========================================
+            ADMIN JAVASCRIPT
+  ========================================== -->
+
+  <!-- Participant database -->
+  <script src="assets/js/participantStore.js"></script>
+
+  <!-- Dashboard controller -->
+  <script src="assets/js/adminDashboard.js"></script>
+
+
+  <!-- =========================================
+            SMALL PAGE CONTROLS
+  ========================================== -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const currentYear =
+        document.getElementById("adminCurrentYear");
+
+      if (currentYear) {
+        currentYear.textContent =
+          new Date().getFullYear();
+      }
+
+
+      const menuButton =
+        document.getElementById("adminMenuBtn");
+
+      const sidebar =
+        document.getElementById("adminSidebar");
+
+      const overlay =
+        document.getElementById("adminOverlay");
+
+
+      function closeAdminMenu() {
+        if (sidebar) {
+          sidebar.classList.remove("sidebar-open");
+        }
+
+        if (overlay) {
+          overlay.classList.remove("overlay-visible");
+        }
+      }
+
+
+      if (menuButton) {
+        menuButton.addEventListener("click", function () {
+          if (sidebar) {
+            sidebar.classList.toggle("sidebar-open");
+          }
+
+          if (overlay) {
+            overlay.classList.toggle("overlay-visible");
+          }
+        });
+      }
+
+
+      if (overlay) {
+        overlay.addEventListener(
+          "click",
+          closeAdminMenu
+        );
+      }
+
+
+      document
+        .querySelectorAll(".sidebar-link")
+        .forEach(function (link) {
+          link.addEventListener(
+            "click",
+            closeAdminMenu
+          );
+        });
+    });
+  </script>
+
+</body>
+
+</html>
