@@ -5,6 +5,25 @@
   <meta charset="UTF-8">
   <title>Kiddysexplorer Quiz Section</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <select id="languageSwitcher" aria-label="Choose language">
+
+    <option value="en">🇬🇧 English</option>
+
+    <option value="de">🇩🇪 Deutsch</option>
+
+    <option value="ig">🇳🇬 Igbo</option>
+
+    <option value="yo">🇳🇬 Yorùbá</option>
+
+    <option value="ha">🇳🇬 Hausa</option>
+
+    <option value="hi">🇮🇳 हिन्दी</option>
+
+    <option value="ur">🇵🇰 اردو</option>
+
+    <option value="zh">🇨🇳 简体中文</option>
+
+</select>
 
   <!-- Fonts & Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
@@ -874,21 +893,32 @@
       document.getElementById("prizePopup").style.display = "none";
     }
   </script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <script src="assets/js/questionBankA.js"></script>
-  <script src="assets/js/questionBankB.js"></script>
-  <script src="assets/js/questionBankC.js"></script>
-  <script src="assets/js/quizSounds.js"></script>
-  <script src="assets/js/quizRewards.js"></script>
-  <script src="assets/js/quizUI.js"></script>
-  <script src="assets/js/quizSettings.js"></script>
-  <script src="assets/js/participantStore.js"></script>
-  <script src="assets/js/quizEngine.js"></script>
-  <script src="assets/js/quiz.js"></script>
-  <script src="assets/js/quiz.js"></script>
+ <!-- PDF and image export libraries -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<!-- Celebration library -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+<!-- Question banks -->
+<script src="assets/js/questionBankA.js"></script>
+<script src="assets/js/questionBankB.js"></script>
+<script src="assets/js/questionBankC.js"></script>
+
+<!-- Quiz configuration -->
+<script src="assets/js/quizSettings.js"></script>
+
+<!-- Quiz supporting files -->
+<script src="assets/js/quizSounds.js"></script>
+<script src="assets/js/quizRewards.js"></script>
+<script src="assets/js/quizUI.js"></script>
+
+<!-- Participant database -->
+<script src="assets/js/participantStore.js"></script>
+
+<!-- Main quiz files -->
+<script src="assets/js/quizEngine.js"></script>
+<script src="assets/js/quiz.js"></script>
 
 
 </body>

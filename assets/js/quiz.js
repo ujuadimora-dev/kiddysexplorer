@@ -8,126 +8,90 @@ document.addEventListener("DOMContentLoaded", function () {
             REGISTRATION FORM
     ======================================*/
 
-    const form = document.getElementById("quizForm");
+    /* Registration Form */
+const form = document.getElementById("quizForm");
 
-    if (form) {
-        form.addEventListener("submit", function (event) {
-            event.preventDefault();
+if (form) {
+    form.addEventListener("submit", function (event) {
+        event.preventDefault();
 
-            const nameInput =
-                document.getElementById("childName");
+        const nameInput =
+            document.getElementById("childName");
 
-            const ageInput =
-                document.getElementById("childAge");
+        const ageInput =
+            document.getElementById("childAge");
 
-            const emailInput =
-                document.getElementById("parentEmail");
+        const emailInput =
+            document.getElementById("parentEmail");
 
-            const groupInput =
-                document.getElementById("quizGroup");
+        const groupInput =
+            document.getElementById("quizGroup");
 
-            const groupsSection =
-                document.getElementById("groups");
+        const name = nameInput
+            ? nameInput.value.trim()
+            : "";
 
+        const age = ageInput
+            ? parseInt(ageInput.value, 10)
+            : null;
 
-            const name = nameInput
-                ? nameInput.value.trim()
-                : "";
+        const email = emailInput
+            ? emailInput.value.trim()
+            : "";
 
-            const age = ageInput
-                ? ageInput.value
-                : "";
+        const group = groupInput
+            ? groupInput.value
+            : "";
 
-            const email = emailInput
-                ? emailInput.value.trim()
-                : "";
+        if (!name || !age || !email || !group) {
+            alert(
+                "Please complete all registration fields."
+            );
+            return;
+        }
 
-            const group = groupInput
-                ? groupInput.value
-                : "";
+        /* Save the current child for the quiz */
+        localStorage.setItem("childName", name);
+        localStorage.setItem("childAge", age);
+        localStorage.setItem("parentEmail", email);
+        localStorage.setItem("quizGroup", group);
 
-
-            /* Check required fields */
-
-            if (!name || !age || !email || !group) {
-                alert(
-                    "Please complete all registration fields."
-                );
-
-                return;
-            }
-
-
-            /* Save basic quiz information */
-
-            localStorage.setItem(
-                "childName",
-                name
+        /*
+         * Create the participant record used by
+         * the Admin Dashboard.
+         */
+        if (
+            typeof ParticipantStore !== "undefined" &&
+            typeof ParticipantStore.register === "function"
+        ) {
+            ParticipantStore.register({
+                childName: name,
+                age: age,
+                parentEmail: email,
+                group: group
+            });
+        } else {
+            console.error(
+                "ParticipantStore is not loaded."
             );
 
-            localStorage.setItem(
-                "childAge",
-                age
+            alert(
+                "The registration could not be saved to the Admin Dashboard."
             );
 
-            localStorage.setItem(
-                "parentEmail",
-                email
-            );
+            return;
+        }
 
-            localStorage.setItem(
-                "quizGroup",
-                group
-            );
+        const groupsSection =
+            document.getElementById("groups");
 
-
-            /*
-             * Register the child for the Admin Dashboard.
-             * The quiz will still continue if ParticipantStore
-             * is not available.
-             */
-
-            if (
-                typeof ParticipantStore !== "undefined" &&
-                typeof ParticipantStore.register === "function"
-            ) {
-                try {
-                    ParticipantStore.register({
-                        childName: name,
-                        age: Number(age),
-                        parentEmail: email,
-                        group: group
-                    });
-
-                } catch (error) {
-                    console.error(
-                        "Participant registration failed:",
-                        error
-                    );
-                }
-            } else {
-                console.warn(
-                    "ParticipantStore is not loaded. The quiz can continue, but the participant will not appear in the admin dashboard."
-                );
-            }
-
-
-            /* Go to group selection */
-
-            if (groupsSection) {
-                groupsSection.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start"
-                });
-            } else {
-                console.error(
-                    'The section with id="groups" was not found.'
-                );
-            }
-        });
-    }
-
-
+        if (groupsSection) {
+            groupsSection.scrollIntoView({
+                behavior: "smooth"
+            });
+        }
+    });
+}
     /*=====================================
             GROUP BUTTONS
     ======================================*/
