@@ -1,5 +1,5 @@
 /*=========================================
-        KIDDYSEXPLORER QUIZ ENGINE
+    KIDDYSEXPLORER QUIZ ENGINE
 ==========================================*/
 
 const QuizEngine = {
@@ -13,15 +13,31 @@ const QuizEngine = {
     lastResultHTML: "",
 
     timer: null,
-    timeLeft: QuizSettings.questionTime,
+    timeLeft: 0,
     answerLocked: false,
+    participant: null,
 
     /*=====================================
-            START THE QUIZ
-    ======================================*/
+        START THE QUIZ
+    =====================================*/
 
     start(group, section) {
         this.stopTimer();
+
+        const validGroups = ["A", "B", "C"];
+        const validSections = ["section1", "section2"];
+
+        if (!validGroups.includes(group)) {
+            console.error("Invalid quiz group:", group);
+            alert("The selected quiz group is invalid.");
+            return;
+        }
+
+        if (!validSections.includes(section)) {
+            console.error("Invalid quiz section:", section);
+            alert("The selected quiz section is invalid.");
+            return;
+        }
 
         this.group = group;
         this.section = section;
@@ -31,8 +47,20 @@ const QuizEngine = {
         this.answerLocked = false;
 
         this.totalQuestions =
-            QuizSettings.questionsPerQuiz || 10;
+            Number(QuizSettings.questionsPerQuiz) || 10;
 
+        if (
+            typeof ParticipantStore !== "undefined" &&
+            typeof ParticipantStore.getCurrentParticipant === "function"
+        ) {
+            this.participant =
+                ParticipantStore.getCurrentParticipant();
+        }
+
+        /*
+         * These values are kept for compatibility with quiz.js,
+         * QuizUI and the current certificate display.
+         */
         localStorage.setItem("quizGroup", group);
 
         localStorage.setItem(
@@ -54,7 +82,19 @@ const QuizEngine = {
             );
 
             alert(
-                "The quiz questions could not be loaded."
+                "The quiz questions could not be loaded. Please check the question bank."
+            );
+
+            return;
+        }
+
+        if (
+            typeof QuizUI === "undefined"
+        ) {
+            console.error("QuizUI is not available.");
+
+            alert(
+                "The quiz interface could not be loaded."
             );
 
             return;
@@ -70,31 +110,51 @@ const QuizEngine = {
 
     /*=====================================
         GET THE CORRECT QUESTION BANK
-    ======================================*/
+    =====================================*/
 
     getQuestionBank(group, section) {
-        if (
-            group === "A" &&
-            window.QuestionBankA &&
-            Array.isArray(window.QuestionBankA[section])
-        ) {
-            return window.QuestionBankA[section];
-        }
+        switch (group) {
+            case "A":
+                if (
+                    window.QuestionBankA &&
+                    Array.isArray(
+                        window.QuestionBankA[section]
+                    )
+                ) {
+                    return window.QuestionBankA[section];
+                }
 
-        if (
-            group === "B" &&
-            window.QuestionBankB &&
-            Array.isArray(window.QuestionBankB[section])
-        ) {
-            return window.QuestionBankB[section];
-        }
+                break;
 
-        if (
-            group === "C" &&
-            window.QuestionBankC &&
-            Array.isArray(window.QuestionBankC[section])
-        ) {
-            return window.QuestionBankC[section];
+            case "B":
+                if (
+                    window.QuestionBankB &&
+                    Array.isArray(
+                        window.QuestionBankB[section]
+                    )
+                ) {
+                    return window.QuestionBankB[section];
+                }
+
+                break;
+
+            case "C":
+                if (
+                    window.QuestionBankC &&
+                    Array.isArray(
+                        window.QuestionBankC[section]
+                    )
+                ) {
+                    return window.QuestionBankC[section];
+                }
+
+                break;
+
+            default:
+                console.error(
+                    "Unknown question-bank group:",
+                    group
+                );
         }
 
         return [];
@@ -102,13 +162,16 @@ const QuizEngine = {
 
     /*=====================================
         SELECT QUIZ QUESTIONS
-    ======================================*/
+    =====================================*/
 
     getRandomQuestions(group, section) {
         const bank =
             this.getQuestionBank(group, section);
 
-        if (!Array.isArray(bank)) {
+        if (
+            !Array.isArray(bank) ||
+            bank.length === 0
+        ) {
             return [];
         }
 
@@ -128,10 +191,14 @@ const QuizEngine = {
     },
 
     /*=====================================
-            SHUFFLE QUESTIONS
-    ======================================*/
+        SHUFFLE QUESTIONS
+    =====================================*/
 
     shuffle(array) {
+        if (!Array.isArray(array)) {
+            return [];
+        }
+
         const copy = [...array];
 
         for (
@@ -153,8 +220,8 @@ const QuizEngine = {
     },
 
     /*=====================================
-            LOAD CURRENT QUESTION
-    ======================================*/
+        LOAD CURRENT QUESTION
+    =====================================*/
 
     loadQuestion() {
         this.answerLocked = false;
@@ -167,6 +234,13 @@ const QuizEngine = {
                 "Question not found at index:",
                 this.currentIndex
             );
+
+            if (
+                this.currentIndex >=
+                this.questions.length
+            ) {
+                this.finishQuiz();
+            }
 
             return;
         }
@@ -187,17 +261,17 @@ const QuizEngine = {
     },
 
     /*=====================================
-            START TIMER
-    ======================================*/
+        START TIMER
+    =====================================*/
 
     startTimer() {
+        this.stopTimer();
+
         const timerBox =
             document.getElementById("quizTimer");
 
         const timerValue =
             document.getElementById("timerValue");
-
-        this.stopTimer();
 
         if (!QuizSettings.timerEnabled) {
             if (timerBox) {
@@ -207,6 +281,9 @@ const QuizEngine = {
             return;
         }
 
+        this.timeLeft =
+            Number(QuizSettings.questionTime) || 30;
+
         if (timerBox) {
             timerBox.style.display = "block";
             timerBox.classList.remove(
@@ -214,20 +291,19 @@ const QuizEngine = {
             );
         }
 
-        this.timeLeft =
-            QuizSettings.questionTime || 30;
-
         if (timerValue) {
             timerValue.textContent =
-                this.timeLeft;
+                String(this.timeLeft);
         }
 
-        this.timer = setInterval(() => {
-            this.timeLeft--;
+        this.timer = window.setInterval(() => {
+            this.timeLeft -= 1;
 
             if (timerValue) {
                 timerValue.textContent =
-                    this.timeLeft;
+                    String(
+                        Math.max(this.timeLeft, 0)
+                    );
             }
 
             if (this.timeLeft === 5) {
@@ -240,7 +316,8 @@ const QuizEngine = {
                 if (
                     QuizSettings.soundsEnabled &&
                     typeof QuizSounds !== "undefined" &&
-                    typeof QuizSounds.countdown === "function"
+                    typeof QuizSounds.countdown ===
+                        "function"
                 ) {
                     QuizSounds.countdown();
                 }
@@ -254,36 +331,46 @@ const QuizEngine = {
     },
 
     /*=====================================
-            STOP TIMER
-    ======================================*/
+        STOP TIMER
+    =====================================*/
 
     stopTimer() {
-        if (this.timer) {
-            clearInterval(this.timer);
+        if (this.timer !== null) {
+            window.clearInterval(this.timer);
             this.timer = null;
         }
 
         if (
             typeof QuizSounds !== "undefined" &&
-            typeof QuizSounds.stopCountdown === "function"
+            typeof QuizSounds.stopCountdown ===
+                "function"
         ) {
             QuizSounds.stopCountdown();
         }
     },
 
     /*=====================================
-            TIME EXPIRED
-    ======================================*/
+        TIME EXPIRED
+    =====================================*/
 
     handleTimeUp() {
-        if (this.answerLocked) return;
+        if (this.answerLocked) {
+            return;
+        }
 
         this.answerLocked = true;
 
         const question =
             this.questions[this.currentIndex];
 
-        if (!question) return;
+        if (!question) {
+            console.error(
+                "The timed-out question could not be found."
+            );
+
+            this.nextQuestion();
+            return;
+        }
 
         QuizUI.lockAnswers();
 
@@ -293,15 +380,24 @@ const QuizEngine = {
         );
 
         this.selectedAnswers.push({
-            question: question.q,
-            options: question.options,
+            question:
+                question.q ||
+                question.question ||
+                "",
+
+            options:
+                Array.isArray(question.options)
+                    ? [...question.options]
+                    : [],
+
             selected: null,
             correct: question.answer,
-            isCorrect: false
+            isCorrect: false,
+            timedOut: true
         });
 
         QuizUI.showBubuMessage(
-            "⏰ Time's up! Don't worry—keep learning!"
+            "⏰ Time is up! Don’t worry—keep learning!"
         );
 
         if (
@@ -312,20 +408,48 @@ const QuizEngine = {
             QuizSounds.wrong();
         }
 
-        setTimeout(() => {
+        window.setTimeout(() => {
             this.nextQuestion();
         }, 1500);
     },
 
     /*=====================================
-            SELECT AN ANSWER
-    ======================================*/
+        SELECT AN ANSWER
+    =====================================*/
 
     selectAnswer(selectedIndex) {
-        if (this.answerLocked) return;
+        if (this.answerLocked) {
+            return;
+        }
+
+        const question =
+            this.questions[this.currentIndex];
+
+        if (!question) {
+            console.error(
+                "Question not found while selecting an answer."
+            );
+
+            return;
+        }
+
+        const numericSelectedIndex =
+            Number(selectedIndex);
+
+        if (
+            !Number.isInteger(
+                numericSelectedIndex
+            )
+        ) {
+            console.error(
+                "Invalid answer index:",
+                selectedIndex
+            );
+
+            return;
+        }
 
         this.answerLocked = true;
-
         this.stopTimer();
 
         if (
@@ -336,53 +460,81 @@ const QuizEngine = {
             QuizSounds.click();
         }
 
-        const question =
-            this.questions[this.currentIndex];
-
-        if (!question) return;
-
         const correctIndex =
-            question.answer;
+            Number(question.answer);
 
         const isCorrect =
-            selectedIndex === correctIndex;
+            numericSelectedIndex === correctIndex;
 
         QuizUI.lockAnswers();
 
         QuizUI.markAnswer(
-            selectedIndex,
+            numericSelectedIndex,
             correctIndex
         );
 
         this.selectedAnswers.push({
-            question: question.q,
-            options: question.options,
-            selected: selectedIndex,
-            correct: correctIndex,
-            isCorrect: isCorrect
+            question:
+                question.q ||
+                question.question ||
+                "",
+
+            options:
+                Array.isArray(question.options)
+                    ? [...question.options]
+                    : [],
+
+            selected:
+                numericSelectedIndex,
+
+            correct:
+                correctIndex,
+
+            isCorrect,
+            timedOut: false
         });
 
         if (isCorrect) {
-            this.scoreCount++;
+            this.scoreCount += 1;
+
+            const correctMessage =
+                typeof QuizRewards !==
+                    "undefined" &&
+                typeof QuizRewards.getCorrectMessage ===
+                    "function"
+                    ? QuizRewards.getCorrectMessage()
+                    : "🎉 Correct! Well done!";
 
             QuizUI.showBubuMessage(
-                QuizRewards.getCorrectMessage()
+                correctMessage
             );
 
             if (
                 QuizSettings.soundsEnabled &&
-                typeof QuizSounds.correct === "function"
+                typeof QuizSounds !== "undefined" &&
+                typeof QuizSounds.correct ===
+                    "function"
             ) {
                 QuizSounds.correct();
             }
         } else {
+            const wrongMessage =
+                typeof QuizRewards !==
+                    "undefined" &&
+                typeof QuizRewards.getWrongMessage ===
+                    "function"
+                    ? QuizRewards.getWrongMessage()
+                    : "Keep trying—you are learning!";
+
             QuizUI.showBubuMessage(
-                QuizRewards.getWrongMessage()
+                wrongMessage
             );
 
             if (
                 QuizSettings.soundsEnabled &&
-                typeof QuizSounds.wrong === "function"
+                typeof QuizSounds !== "undefined" &&
+                typeof QuizSounds.wrong ===
+                    "function"
             ) {
                 QuizSounds.wrong();
             }
@@ -392,32 +544,46 @@ const QuizEngine = {
     },
 
     /*=====================================
-            NEXT QUESTION
-    ======================================*/
+        NEXT QUESTION
+    =====================================*/
 
     nextQuestion() {
+        if (!this.answerLocked) {
+            return;
+        }
+
         this.stopTimer();
 
-        this.currentIndex++;
+        this.currentIndex += 1;
 
         if (
             this.currentIndex <
             this.questions.length
         ) {
             this.loadQuestion();
-        } else {
-            this.finishQuiz();
+            return;
         }
+
+        this.finishQuiz();
     },
 
     /*=====================================
-            FINISH QUIZ
-    ======================================*/
+        FINISH QUIZ
+    =====================================*/
 
     finishQuiz() {
         this.stopTimer();
 
-        const total = this.questions.length;
+        const total =
+            this.questions.length;
+
+        if (total <= 0) {
+            console.error(
+                "The quiz cannot be completed because no questions were loaded."
+            );
+
+            return;
+        }
 
         const percentage = Math.round(
             (this.scoreCount / total) * 100
@@ -425,107 +591,49 @@ const QuizEngine = {
 
         localStorage.setItem(
             "quizScore",
-            percentage
+            String(percentage)
+        );
+
+        localStorage.setItem(
+            "quizGroup",
+            this.group
+        );
+
+        localStorage.setItem(
+            "quizSection",
+            this.section === "section1"
+                ? "1"
+                : "2"
         );
 
         if (this.section === "section1") {
             localStorage.setItem(
                 "section1Score",
-                percentage
+                String(percentage)
             );
 
-            if (
-                typeof ParticipantStore !== "undefined"
-            ) {
-                ParticipantStore.saveSection1Score(
-                    percentage
-                );
-            }
+            this.saveScoreToParticipant(
+                "section1",
+                percentage
+            );
         }
 
         if (this.section === "section2") {
             localStorage.setItem(
                 "section2Score",
-                percentage
+                String(percentage)
             );
 
-            if (
-                typeof ParticipantStore !== "undefined"
-            ) {
-                ParticipantStore.saveSection2Score(
-                    percentage
-                );
-            }
-
-            this.saveChildScore({
-                name:
-                    localStorage.getItem(
-                        "childName"
-                    ) || "Student",
-
-                email:
-                    localStorage.getItem(
-                        "parentEmail"
-                    ) || "",
-
-                group:
-                    localStorage.getItem(
-                        "quizGroup"
-                    ) || this.group,
-
-                section1Score: parseInt(
-                    localStorage.getItem(
-                        "section1Score"
-                    ) || "0",
-                    10
-                ),
-
-                section2Score:
-                    percentage,
-
-                finalScore: null,
-                attendance: null
-            });
+            this.saveScoreToParticipant(
+                "section2",
+                percentage
+            );
         }
 
         if (percentage >= 80) {
-            if (
-                QuizSettings.confettiEnabled &&
-                typeof launchConfetti === "function"
-            ) {
-                launchConfetti();
-            }
-
-            if (
-                QuizSettings.soundsEnabled &&
-                typeof QuizSounds !== "undefined"
-            ) {
-                if (
-                    typeof QuizSounds.applause === "function"
-                ) {
-                    QuizSounds.applause();
-                }
-
-                if (
-                    typeof QuizSounds.medal === "function"
-                ) {
-                    QuizSounds.medal();
-                }
-
-                if (
-                    typeof QuizSounds.celebration === "function"
-                ) {
-                    QuizSounds.celebration();
-                }
-            }
+            this.playSuccessCelebration();
         } else {
-            if (
-                QuizSettings.soundsEnabled &&
-                typeof QuizSounds !== "undefined" &&
-                typeof QuizSounds.wrong === "function"
-            ) {
-                QuizSounds.wrong();
-            }
+            this.playFailureSound();
         }
 
         QuizUI.showResult(
@@ -544,16 +652,152 @@ const QuizEngine = {
             this.lastResultHTML =
                 player.innerHTML;
         }
+
+        this.refreshCurrentParticipant();
     },
 
     /*=====================================
-            CONTINUE QUIZ FLOW
-    ======================================*/
+        SAVE SCORE TO PARTICIPANT STORE
+    =====================================*/
+
+    saveScoreToParticipant(
+        section,
+        percentage
+    ) {
+        if (
+            typeof ParticipantStore ===
+            "undefined"
+        ) {
+            console.warn(
+                "ParticipantStore is unavailable. The score was saved only for the current browser session."
+            );
+
+            return;
+        }
+
+        try {
+            if (
+                section === "section1" &&
+                typeof ParticipantStore
+                    .saveSection1Score ===
+                    "function"
+            ) {
+                ParticipantStore.saveSection1Score(
+                    percentage
+                );
+
+                return;
+            }
+
+            if (
+                section === "section2" &&
+                typeof ParticipantStore
+                    .saveSection2Score ===
+                    "function"
+            ) {
+                ParticipantStore.saveSection2Score(
+                    percentage
+                );
+
+                return;
+            }
+
+            console.error(
+                "The required ParticipantStore score method is missing."
+            );
+        } catch (error) {
+            console.error(
+                "The participant score could not be saved:",
+                error
+            );
+
+            alert(
+                "Your result was calculated, but it could not be saved. Please do not close this page."
+            );
+        }
+    },
+
+    /*=====================================
+        REFRESH CURRENT PARTICIPANT
+    =====================================*/
+
+    refreshCurrentParticipant() {
+        if (
+            typeof ParticipantStore !==
+                "undefined" &&
+            typeof ParticipantStore
+                .getCurrentParticipant ===
+                "function"
+        ) {
+            this.participant =
+                ParticipantStore.getCurrentParticipant();
+        }
+    },
+
+    /*=====================================
+        SUCCESS CELEBRATION
+    =====================================*/
+
+    playSuccessCelebration() {
+        if (
+            QuizSettings.confettiEnabled &&
+            typeof launchConfetti ===
+                "function"
+        ) {
+            launchConfetti();
+        }
+
+        if (
+            !QuizSettings.soundsEnabled ||
+            typeof QuizSounds === "undefined"
+        ) {
+            return;
+        }
+
+        if (
+            typeof QuizSounds.applause ===
+                "function"
+        ) {
+            QuizSounds.applause();
+        }
+
+        if (
+            typeof QuizSounds.medal ===
+                "function"
+        ) {
+            QuizSounds.medal();
+        }
+
+        if (
+            typeof QuizSounds.celebration ===
+                "function"
+        ) {
+            QuizSounds.celebration();
+        }
+    },
+
+    /*=====================================
+        FAILURE SOUND
+    =====================================*/
+
+    playFailureSound() {
+        if (
+            QuizSettings.soundsEnabled &&
+            typeof QuizSounds !== "undefined" &&
+            typeof QuizSounds.wrong === "function"
+        ) {
+            QuizSounds.wrong();
+        }
+    },
+
+    /*=====================================
+        CONTINUE QUIZ FLOW
+    =====================================*/
 
     continueFlow() {
         this.stopTimer();
 
-        const score = parseInt(
+        const score = Number.parseInt(
             localStorage.getItem(
                 "quizScore"
             ) || "0",
@@ -565,10 +809,15 @@ const QuizEngine = {
                 "quizSection"
             );
 
+        const group =
+            localStorage.getItem(
+                "quizGroup"
+            ) || this.group;
+
         if (section === "1") {
             if (score >= 80) {
                 this.start(
-                    this.group,
+                    group,
                     "section2"
                 );
             } else {
@@ -580,47 +829,63 @@ const QuizEngine = {
 
         if (section === "2") {
             if (score >= 80) {
-                const finalStage =
-                    document.getElementById(
-                        "finalStage"
-                    );
-
-                if (finalStage) {
-                    finalStage.style.display =
-                        "block";
-
-                    const liveChildName =
-                        document.getElementById(
-                            "liveChildName"
-                        );
-
-                    if (liveChildName) {
-                        liveChildName.textContent =
-                            localStorage.getItem(
-                                "childName"
-                            ) || "Student";
-                    }
-
-                    finalStage.scrollIntoView({
-                        behavior: "smooth"
-                    });
-                }
+                this.showFinalStage();
             } else {
                 this.goToKeepLearning();
             }
+
+            return;
         }
+
+        console.error(
+            "The current quiz section is missing."
+        );
     },
 
     /*=====================================
-            KEEP LEARNING SECTION
-    ======================================*/
+        SHOW FINAL STAGE
+    =====================================*/
+
+    showFinalStage() {
+        this.refreshCurrentParticipant();
+
+        const finalStage =
+            document.getElementById(
+                "finalStage"
+            );
+
+        if (!finalStage) {
+            console.error(
+                "The finalStage section was not found."
+            );
+
+            return;
+        }
+
+        const liveChildName =
+            document.getElementById(
+                "liveChildName"
+            );
+
+        if (liveChildName) {
+            liveChildName.textContent =
+                this.getParticipantName();
+        }
+
+        finalStage.style.display =
+            "block";
+
+        finalStage.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+    },
+
+    /*=====================================
+        KEEP LEARNING SECTION
+    =====================================*/
 
     goToKeepLearning() {
-        const childName =
-            localStorage.getItem(
-                "childName"
-            ) || "Student";
-
         const waitingName =
             document.getElementById(
                 "waitChildName"
@@ -628,7 +893,7 @@ const QuizEngine = {
 
         if (waitingName) {
             waitingName.textContent =
-                childName;
+                this.getParticipantName();
         }
 
         const videos =
@@ -636,40 +901,90 @@ const QuizEngine = {
                 "videos"
             );
 
-        if (videos) {
-            videos.scrollIntoView({
-                behavior: "smooth"
-            });
+        if (!videos) {
+            console.error(
+                "The Keep Learning section was not found."
+            );
+
+            return;
         }
+
+        videos.style.display = "block";
+
+        videos.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
     },
 
     /*=====================================
-            VIEW CERTIFICATE
-    ======================================*/
+        GET PARTICIPANT NAME
+    =====================================*/
 
-    viewCertificate() {
-        const name =
+    getParticipantName() {
+        this.refreshCurrentParticipant();
+
+        if (
+            this.participant &&
+            this.participant.childName
+        ) {
+            return this.participant.childName;
+        }
+
+        return (
             localStorage.getItem(
                 "childName"
-            ) || "Student";
+            ) || "Student"
+        );
+    },
 
-        const group =
+    /*=====================================
+        GET PARTICIPANT GROUP
+    =====================================*/
+
+    getParticipantGroup() {
+        this.refreshCurrentParticipant();
+
+        if (
+            this.participant &&
+            this.participant.group
+        ) {
+            return this.participant.group;
+        }
+
+        return (
             localStorage.getItem(
                 "quizGroup"
-            ) || "A";
+            ) ||
+            this.group ||
+            "A"
+        );
+    },
+
+    /*=====================================
+        VIEW CERTIFICATE
+    =====================================*/
+
+    viewCertificate() {
+        this.refreshCurrentParticipant();
+
+        const name =
+            this.getParticipantName();
+
+        const group =
+            this.getParticipantGroup();
 
         const section =
             localStorage.getItem(
                 "quizSection"
             ) || "1";
 
-        const score =
+        const score = Number.parseInt(
             localStorage.getItem(
                 "quizScore"
-            ) || "0";
-
-        const numericScore =
-            parseInt(score, 10);
+            ) || "0",
+            10
+        );
 
         const certChildName =
             document.getElementById(
@@ -713,7 +1028,7 @@ const QuizEngine = {
 
         if (certScore) {
             certScore.textContent =
-                score + "%";
+                `${score}%`;
         }
 
         if (certDate) {
@@ -721,6 +1036,37 @@ const QuizEngine = {
                 new Date().toLocaleDateString();
         }
 
+        this.updateCertificateMedal(
+            score
+        );
+
+        const certificatePage =
+            document.getElementById(
+                "certificatePage"
+            );
+
+        if (!certificatePage) {
+            console.error(
+                "The certificate section was not found."
+            );
+
+            return;
+        }
+
+        certificatePage.style.display =
+            "block";
+
+        certificatePage.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+    },
+
+    /*=====================================
+        UPDATE CERTIFICATE MEDAL
+    =====================================*/
+
+    updateCertificateMedal(score) {
         const medalImage =
             document.getElementById(
                 "certMedalImage"
@@ -731,48 +1077,63 @@ const QuizEngine = {
                 "certMedalText"
             );
 
-        if (medalImage && medalText) {
-            if (numericScore >= 80) {
-                medalImage.src =
-                    "assets/images/silver-medal.png";
-
-                medalText.textContent =
-                    "Silver Medal";
-            } else if (
-                numericScore >= 70
-            ) {
-                medalImage.src =
-                    "assets/images/bronze-medal.png";
-
-                medalText.textContent =
-                    "Bronze Medal";
-            } else {
-                medalImage.src =
-                    "assets/images/learning-badge.png";
-
-                medalText.textContent =
-                    "Keep Learning";
-            }
+        if (!medalImage || !medalText) {
+            return;
         }
 
-        const certificatePage =
-            document.getElementById(
-                "certificatePage"
-            );
+        if (score >= 80) {
+            medalImage.src =
+                "assets/images/silver-medal.png";
 
-        if (certificatePage) {
-            certificatePage.scrollIntoView({
-                behavior: "smooth"
-            });
+            medalImage.alt =
+                "Achievement medal";
+
+            medalText.textContent =
+                "Achievement Medal";
+
+            return;
         }
+
+        if (score >= 70) {
+            medalImage.src =
+                "assets/images/bronze-medal.png";
+
+            medalImage.alt =
+                "Bronze medal";
+
+            medalText.textContent =
+                "Bronze Medal";
+
+            return;
+        }
+
+        medalImage.src =
+            "assets/images/learning-badge.png";
+
+        medalImage.alt =
+            "Keep learning badge";
+
+        medalText.textContent =
+            "Keep Learning";
     },
 
     /*=====================================
-            SHOW ANSWER REVIEW
-    ======================================*/
+        SHOW ANSWER REVIEW
+    =====================================*/
 
     showReview() {
         if (!QuizSettings.showReview) {
+            return;
+        }
+
+        if (
+            typeof QuizUI.showReview !==
+            "function"
+        ) {
+            console.error(
+                "QuizUI.showReview is not available."
+            );
+
             return;
         }
 
@@ -782,8 +1143,8 @@ const QuizEngine = {
     },
 
     /*=====================================
-            RETURN TO RESULT
-    ======================================*/
+        RETURN TO RESULT
+    =====================================*/
 
     backToResult() {
         const player =
@@ -791,39 +1152,46 @@ const QuizEngine = {
                 "quizPlayer"
             );
 
-        if (!player) return;
+        if (!player) {
+            console.error(
+                "The quiz player was not found."
+            );
+
+            return;
+        }
+
+        if (!this.lastResultHTML) {
+            console.error(
+                "No previous result is available."
+            );
+
+            return;
+        }
 
         player.innerHTML =
             this.lastResultHTML;
 
+        /*
+         * Reconnects the quiz UI elements after restoring
+         * the saved result HTML.
+         */
+        if (
+            typeof QuizUI !== "undefined" &&
+            typeof QuizUI.init === "function"
+        ) {
+            QuizUI.init();
+        }
+
         player.scrollIntoView({
-            behavior: "smooth"
+            behavior: "smooth",
+            block: "start"
         });
-    },
-
-    /*=====================================
-        SAVE RESULT FOR ADMIN DASHBOARD
-    ======================================*/
-
-    saveChildScore(data) {
-        const children = JSON.parse(
-            localStorage.getItem(
-                "childrenScores"
-            ) || "[]"
-        );
-
-        children.push(data);
-
-        localStorage.setItem(
-            "childrenScores",
-            JSON.stringify(children)
-        );
     }
 };
 
 
 /*=========================================
-        NEXT QUESTION BUTTON
+    NEXT QUESTION BUTTON
 ==========================================*/
 
 document.addEventListener(
@@ -834,7 +1202,9 @@ document.addEventListener(
                 "#nextQuestionBtn"
             );
 
-        if (!nextButton) return;
+        if (!nextButton) {
+            return;
+        }
 
         if (
             QuizSettings.soundsEnabled &&
@@ -846,6 +1216,4 @@ document.addEventListener(
 
         QuizEngine.nextQuestion();
     }
-
-
 );

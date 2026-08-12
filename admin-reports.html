@@ -1,0 +1,4274 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Kiddysexplorer reports and analytics administration page"
+    >
+
+    <title>
+        Reports & Analytics | Kiddysexplorer Admin
+    </title>
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Nunito:wght@600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+    <style>
+
+        :root {
+
+            --primary: #253b80;
+            --primary-dark: #18295f;
+            --primary-light: #e9eeff;
+
+            --secondary: #f59e0b;
+            --secondary-dark: #b86c00;
+            --secondary-light: #fff4d6;
+
+            --success: #16a34a;
+            --success-light: #dcfce7;
+
+            --danger: #dc2626;
+            --danger-light: #fee2e2;
+
+            --warning: #d97706;
+            --warning-light: #fef3c7;
+
+            --info: #0284c7;
+            --info-light: #e0f2fe;
+
+            --purple: #7c3aed;
+            --purple-light: #ede9fe;
+
+            --surface: #ffffff;
+            --surface-soft: #f8fafc;
+            --background: #eef2f8;
+
+            --text: #172033;
+            --text-soft: #64748b;
+            --border: #dbe3ef;
+
+            --sidebar-width: 280px;
+            --header-height: 74px;
+
+            --radius-sm: 10px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+
+            --shadow-sm:
+                0 4px 18px
+                rgba(15, 23, 42, 0.06);
+
+            --shadow-md:
+                0 16px 40px
+                rgba(15, 23, 42, 0.10);
+
+        }
+
+
+        * {
+
+            box-sizing: border-box;
+
+        }
+
+
+        html {
+
+            scroll-behavior: smooth;
+
+        }
+
+
+        body {
+
+            margin: 0;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #eef2ff 0%,
+                    #f8fafc 38%,
+                    #fff7e6 100%
+                );
+
+            color: var(--text);
+
+            font-family:
+                "Inter",
+                sans-serif;
+
+        }
+
+
+        button,
+        input,
+        select,
+        textarea {
+
+            font: inherit;
+
+        }
+
+
+        button {
+
+            cursor: pointer;
+
+        }
+
+
+        a {
+
+            color: inherit;
+            text-decoration: none;
+
+        }
+
+
+        img {
+
+            max-width: 100%;
+
+        }
+
+
+        [hidden] {
+
+            display: none !important;
+
+        }
+
+
+        .admin-layout {
+
+            min-height: 100vh;
+
+        }
+
+
+        .admin-sidebar {
+
+            position: fixed;
+            z-index: 1200;
+            top: 0;
+            bottom: 0;
+            left: 0;
+
+            width: var(--sidebar-width);
+
+            overflow-y: auto;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    #1a2d69,
+                    #253b80 58%,
+                    #172554
+                );
+
+            color: #ffffff;
+
+            box-shadow:
+                10px 0 30px
+                rgba(15, 23, 42, 0.15);
+
+            transition:
+                transform 0.25s ease;
+
+        }
+
+
+        .sidebar-header {
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            min-height: var(--header-height);
+            padding: 16px 18px;
+
+            border-bottom:
+                1px solid
+                rgba(255, 255, 255, 0.12);
+
+        }
+
+
+        .brand {
+
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+        }
+
+
+        .brand-logo {
+
+            display: grid;
+            place-items: center;
+
+            width: 46px;
+            height: 46px;
+
+            border-radius: 16px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #ffd85e,
+                    #f59e0b
+                );
+
+            color: #172554;
+
+            font-family:
+                "Nunito",
+                sans-serif;
+
+            font-size: 18px;
+            font-weight: 800;
+
+            box-shadow:
+                0 10px 24px
+                rgba(245, 158, 11, 0.28);
+
+        }
+
+
+        .brand-copy strong {
+
+            display: block;
+
+            font-family:
+                "Nunito",
+                sans-serif;
+
+            font-size: 16px;
+            font-weight: 800;
+
+        }
+
+
+        .brand-copy span {
+
+            display: block;
+
+            margin-top: 2px;
+
+            color:
+                rgba(255, 255, 255, 0.70);
+
+            font-size: 12px;
+
+        }
+
+
+        .sidebar-close-btn {
+
+            display: none;
+            place-items: center;
+
+            width: 38px;
+            height: 38px;
+
+            border: 0;
+            border-radius: 12px;
+
+            background:
+                rgba(255, 255, 255, 0.10);
+
+            color: #ffffff;
+
+        }
+
+
+        .sidebar-nav {
+
+            padding: 18px 14px 30px;
+
+        }
+
+
+        .nav-label {
+
+            margin:
+                18px 12px
+                8px;
+
+            color:
+                rgba(255, 255, 255, 0.54);
+
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.10em;
+            text-transform: uppercase;
+
+        }
+
+
+        .nav-link {
+
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            margin-bottom: 6px;
+            padding: 12px 14px;
+
+            border-radius: 14px;
+
+            color:
+                rgba(255, 255, 255, 0.84);
+
+            font-size: 14px;
+            font-weight: 600;
+
+            transition:
+                background 0.2s ease,
+                color 0.2s ease,
+                transform 0.2s ease;
+
+        }
+
+
+        .nav-link:hover {
+
+            background:
+                rgba(255, 255, 255, 0.10);
+
+            color: #ffffff;
+
+            transform:
+                translateX(2px);
+
+        }
+
+
+        .nav-link.active {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(255, 216, 94, 0.24),
+                    rgba(245, 158, 11, 0.16)
+                );
+
+            color: #ffe8a3;
+
+            box-shadow:
+                inset 0 0 0 1px
+                rgba(255, 216, 94, 0.30);
+
+        }
+
+
+        .nav-link i {
+
+            width: 22px;
+
+            text-align: center;
+
+            font-size: 16px;
+
+        }
+
+
+        .admin-main {
+
+            min-height: 100vh;
+            margin-left: var(--sidebar-width);
+
+        }
+
+
+        .admin-header {
+
+            position: sticky;
+            z-index: 1000;
+            top: 0;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+
+            min-height: var(--header-height);
+            padding: 12px 28px;
+
+            border-bottom:
+                1px solid
+                rgba(203, 213, 225, 0.72);
+
+            background:
+                rgba(255, 255, 255, 0.90);
+
+            backdrop-filter:
+                blur(18px);
+
+        }
+
+
+        .header-left {
+
+            display: flex;
+            align-items: center;
+            gap: 14px;
+
+        }
+
+
+        .menu-toggle-btn {
+
+            display: none;
+            place-items: center;
+
+            width: 42px;
+            height: 42px;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 13px;
+
+            background:
+                var(--surface);
+
+            color: var(--primary);
+
+        }
+
+
+        .page-heading h1 {
+
+            margin: 0;
+
+            font-family:
+                "Nunito",
+                sans-serif;
+
+            font-size: 22px;
+            font-weight: 800;
+
+        }
+
+
+        .page-heading p {
+
+            margin:
+                3px 0 0;
+
+            color: var(--text-soft);
+
+            font-size: 13px;
+
+        }
+
+
+        .header-actions {
+
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+        }
+
+
+        .header-btn {
+
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+
+            min-height: 42px;
+            padding: 0 16px;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 13px;
+
+            background:
+                var(--surface);
+
+            color: var(--text);
+
+            font-size: 13px;
+            font-weight: 700;
+
+        }
+
+
+        .header-btn:hover {
+
+            border-color:
+                rgba(37, 59, 128, 0.35);
+
+            color: var(--primary);
+
+        }
+
+
+        .admin-user {
+
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            padding-left: 4px;
+
+        }
+
+
+        .admin-avatar {
+
+            display: grid;
+            place-items: center;
+
+            width: 42px;
+            height: 42px;
+
+            border-radius: 50%;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--primary),
+                    #4f67b4
+                );
+
+            color: #ffffff;
+
+            font-weight: 800;
+
+        }
+
+
+        .admin-user-copy strong {
+
+            display: block;
+
+            font-size: 13px;
+
+        }
+
+
+        .admin-user-copy span {
+
+            display: block;
+
+            margin-top: 2px;
+
+            color: var(--text-soft);
+
+            font-size: 11px;
+
+        }
+
+
+        .admin-content {
+
+            padding: 28px;
+
+        }
+
+
+        .hero-panel {
+
+            position: relative;
+            overflow: hidden;
+
+            display: grid;
+            grid-template-columns:
+                minmax(0, 1.45fr)
+                minmax(280px, 0.55fr);
+
+            gap: 24px;
+            align-items: center;
+
+            padding: 30px;
+
+            border-radius: var(--radius-lg);
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #1d3174,
+                    #304b9a 52%,
+                    #735bbf
+                );
+
+            color: #ffffff;
+
+            box-shadow: var(--shadow-md);
+
+        }
+
+
+        .hero-panel::before {
+
+            content: "";
+
+            position: absolute;
+            top: -100px;
+            right: -80px;
+
+            width: 280px;
+            height: 280px;
+
+            border-radius: 50%;
+
+            background:
+                rgba(255, 255, 255, 0.09);
+
+        }
+
+
+        .hero-panel::after {
+
+            content: "";
+
+            position: absolute;
+            bottom: -150px;
+            left: 30%;
+
+            width: 330px;
+            height: 330px;
+
+            border-radius: 50%;
+
+            background:
+                rgba(245, 158, 11, 0.10);
+
+        }
+
+
+        .hero-copy {
+
+            position: relative;
+            z-index: 1;
+
+        }
+
+
+        .hero-badge {
+
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+
+            margin-bottom: 14px;
+            padding: 8px 12px;
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.20);
+
+            border-radius: 999px;
+
+            background:
+                rgba(255, 255, 255, 0.10);
+
+            color: #fff2c7;
+
+            font-size: 12px;
+            font-weight: 800;
+
+        }
+
+
+        .hero-copy h2 {
+
+            max-width: 760px;
+            margin: 0;
+
+            font-family:
+                "Nunito",
+                sans-serif;
+
+            font-size:
+                clamp(
+                    28px,
+                    4vw,
+                    42px
+                );
+
+            line-height: 1.12;
+
+        }
+
+
+        .hero-copy p {
+
+            max-width: 760px;
+            margin:
+                14px 0 0;
+
+            color:
+                rgba(255, 255, 255, 0.80);
+
+            font-size: 15px;
+            line-height: 1.7;
+
+        }
+
+
+        .hero-actions {
+
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+
+            margin-top: 22px;
+
+        }
+
+
+        .btn {
+
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+
+            min-height: 44px;
+            padding: 0 17px;
+
+            border: 0;
+            border-radius: 13px;
+
+            font-size: 13px;
+            font-weight: 800;
+
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease,
+                opacity 0.2s ease;
+
+        }
+
+
+        .btn:hover {
+
+            transform:
+                translateY(-1px);
+
+        }
+
+
+        .btn-primary {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--primary),
+                    #4561b3
+                );
+
+            color: #ffffff;
+
+            box-shadow:
+                0 10px 24px
+                rgba(37, 59, 128, 0.22);
+
+        }
+
+
+        .btn-secondary {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #ffd85e,
+                    #f59e0b
+                );
+
+            color: #172554;
+
+            box-shadow:
+                0 10px 24px
+                rgba(245, 158, 11, 0.22);
+
+        }
+
+
+        .btn-outline {
+
+            border:
+                1px solid
+                var(--border);
+
+            background:
+                var(--surface);
+
+            color: var(--text);
+
+        }
+
+
+        .btn-light {
+
+            background: #ffffff;
+            color: var(--primary);
+
+        }
+
+
+        .btn-glass {
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.24);
+
+            background:
+                rgba(255, 255, 255, 0.12);
+
+            color: #ffffff;
+
+        }
+
+
+        .hero-visual {
+
+            position: relative;
+            z-index: 1;
+
+            display: grid;
+            place-items: center;
+
+            min-height: 220px;
+
+        }
+
+
+        .analytics-orbit {
+
+            position: relative;
+
+            display: grid;
+            place-items: center;
+
+            width: 210px;
+            height: 210px;
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.18);
+
+            border-radius: 50%;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(255, 255, 255, 0.13),
+                    rgba(255, 255, 255, 0.02)
+                );
+
+        }
+
+
+        .analytics-orbit::before,
+        .analytics-orbit::after {
+
+            content: "";
+
+            position: absolute;
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.14);
+
+            border-radius: 50%;
+
+        }
+
+
+        .analytics-orbit::before {
+
+            inset: 22px;
+
+        }
+
+
+        .analytics-orbit::after {
+
+            inset: 46px;
+
+        }
+
+
+        .analytics-main-icon {
+
+            position: relative;
+            z-index: 2;
+
+            display: grid;
+            place-items: center;
+
+            width: 86px;
+            height: 86px;
+
+            border-radius: 28px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #ffe48e,
+                    #f59e0b
+                );
+
+            color: #172554;
+
+            font-size: 34px;
+
+            box-shadow:
+                0 20px 45px
+                rgba(0, 0, 0, 0.20);
+
+        }
+
+
+        .orbit-item {
+
+            position: absolute;
+            z-index: 3;
+
+            display: grid;
+            place-items: center;
+
+            width: 44px;
+            height: 44px;
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.26);
+
+            border-radius: 15px;
+
+            background:
+                rgba(255, 255, 255, 0.14);
+
+            color: #ffffff;
+
+            backdrop-filter:
+                blur(10px);
+
+        }
+
+
+        .orbit-item.one {
+
+            top: 8px;
+            left: 50%;
+
+            transform:
+                translateX(-50%);
+
+        }
+
+
+        .orbit-item.two {
+
+            top: 50%;
+            right: 5px;
+
+            transform:
+                translateY(-50%);
+
+        }
+
+
+        .orbit-item.three {
+
+            bottom: 8px;
+            left: 50%;
+
+            transform:
+                translateX(-50%);
+
+        }
+
+
+        .orbit-item.four {
+
+            top: 50%;
+            left: 5px;
+
+            transform:
+                translateY(-50%);
+
+        }
+
+
+        .section-block {
+
+            margin-top: 26px;
+
+        }
+
+
+        .section-heading {
+
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 18px;
+
+            margin-bottom: 14px;
+
+        }
+
+
+        .section-heading h2 {
+
+            margin: 0;
+
+            font-family:
+                "Nunito",
+                sans-serif;
+
+            font-size: 20px;
+            font-weight: 800;
+
+        }
+
+
+        .section-heading p {
+
+            margin:
+                5px 0 0;
+
+            color: var(--text-soft);
+
+            font-size: 13px;
+
+        }
+
+
+        .section-actions {
+
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+
+        }
+
+
+        .stats-grid {
+
+            display: grid;
+            grid-template-columns:
+                repeat(6, minmax(0, 1fr));
+
+            gap: 16px;
+
+        }
+
+
+        .stat-card {
+
+            position: relative;
+            overflow: hidden;
+
+            min-height: 145px;
+            padding: 18px;
+
+            border:
+                1px solid
+                rgba(203, 213, 225, 0.72);
+
+            border-radius: var(--radius-md);
+
+            background:
+                rgba(255, 255, 255, 0.94);
+
+            box-shadow: var(--shadow-sm);
+
+        }
+
+
+        .stat-card::after {
+
+            content: "";
+
+            position: absolute;
+            right: -26px;
+            bottom: -30px;
+
+            width: 90px;
+            height: 90px;
+
+            border-radius: 50%;
+
+            background:
+                var(--accent-soft);
+
+        }
+
+
+        .stat-top {
+
+            position: relative;
+            z-index: 1;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+
+        }
+
+
+        .stat-icon {
+
+            display: grid;
+            place-items: center;
+
+            width: 44px;
+            height: 44px;
+
+            border-radius: 14px;
+
+            background:
+                var(--accent-soft);
+
+            color:
+                var(--accent);
+
+            font-size: 18px;
+
+        }
+
+
+        .stat-trend {
+
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+
+            color: var(--success);
+
+            font-size: 11px;
+            font-weight: 800;
+
+        }
+
+
+        .stat-value {
+
+            position: relative;
+            z-index: 1;
+
+            margin-top: 16px;
+
+            font-family:
+                "Nunito",
+                sans-serif;
+
+            font-size: 28px;
+            font-weight: 800;
+
+        }
+
+
+        .stat-label {
+
+            position: relative;
+            z-index: 1;
+
+            margin-top: 3px;
+
+            color: var(--text-soft);
+
+            font-size: 12px;
+            font-weight: 700;
+
+        }
+
+
+        .stat-primary {
+
+            --accent: var(--primary);
+            --accent-soft: var(--primary-light);
+
+        }
+
+
+        .stat-info {
+
+            --accent: var(--info);
+            --accent-soft: var(--info-light);
+
+        }
+
+
+        .stat-success {
+
+            --accent: var(--success);
+            --accent-soft: var(--success-light);
+
+        }
+
+
+        .stat-warning {
+
+            --accent: var(--warning);
+            --accent-soft: var(--warning-light);
+
+        }
+
+
+        .stat-purple {
+
+            --accent: var(--purple);
+            --accent-soft: var(--purple-light);
+
+        }
+
+
+        .stat-danger {
+
+            --accent: var(--danger);
+            --accent-soft: var(--danger-light);
+
+        }
+
+
+        .panel {
+
+            border:
+                1px solid
+                rgba(203, 213, 225, 0.76);
+
+            border-radius: var(--radius-md);
+
+            background:
+                rgba(255, 255, 255, 0.96);
+
+            box-shadow: var(--shadow-sm);
+
+        }
+
+
+        .panel-header {
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+
+            padding: 18px 20px;
+
+            border-bottom:
+                1px solid
+                var(--border);
+
+        }
+
+
+        .panel-title {
+
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+        }
+
+
+        .panel-title-icon {
+
+            display: grid;
+            place-items: center;
+
+            width: 40px;
+            height: 40px;
+
+            border-radius: 13px;
+
+            background:
+                var(--primary-light);
+
+            color: var(--primary);
+
+        }
+
+
+        .panel-title h3 {
+
+            margin: 0;
+
+            font-family:
+                "Nunito",
+                sans-serif;
+
+            font-size: 16px;
+            font-weight: 800;
+
+        }
+
+
+        .panel-title p {
+
+            margin:
+                3px 0 0;
+
+            color: var(--text-soft);
+
+            font-size: 12px;
+
+        }
+
+
+        .panel-body {
+
+            padding: 20px;
+
+        }
+
+
+        .filter-panel {
+
+            margin-top: 26px;
+
+        }
+
+
+        .filter-grid {
+
+            display: grid;
+            grid-template-columns:
+                repeat(6, minmax(0, 1fr));
+
+            gap: 14px;
+
+        }
+
+
+        .form-group {
+
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+
+        }
+
+
+        .form-group label {
+
+            color: #334155;
+
+            font-size: 12px;
+            font-weight: 800;
+
+        }
+
+
+        .form-control {
+
+            width: 100%;
+            min-height: 43px;
+            padding: 0 13px;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 12px;
+
+            outline: none;
+
+            background: #ffffff;
+            color: var(--text);
+
+            font-size: 13px;
+
+            transition:
+                border-color 0.2s ease,
+                box-shadow 0.2s ease;
+
+        }
+
+
+        textarea.form-control {
+
+            min-height: 100px;
+            padding:
+                12px 13px;
+
+            resize: vertical;
+
+        }
+
+
+        .form-control:focus {
+
+            border-color:
+                rgba(37, 59, 128, 0.55);
+
+            box-shadow:
+                0 0 0 4px
+                rgba(37, 59, 128, 0.10);
+
+        }
+
+
+        .filter-actions {
+
+            display: flex;
+            align-items: end;
+            gap: 8px;
+
+        }
+
+
+        .charts-grid {
+
+            display: grid;
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+
+            gap: 18px;
+
+        }
+
+
+        .chart-panel {
+
+            min-height: 360px;
+
+        }
+
+
+        .chart-container {
+
+            position: relative;
+
+            min-height: 280px;
+
+        }
+
+
+        .chart-canvas {
+
+            width: 100% !important;
+            height: 280px !important;
+
+        }
+
+
+        .report-layout {
+
+            display: grid;
+            grid-template-columns:
+                minmax(0, 1.55fr)
+                minmax(300px, 0.45fr);
+
+            gap: 18px;
+
+        }
+
+
+        .table-wrapper {
+
+            overflow-x: auto;
+
+        }
+
+
+        .report-table {
+
+            width: 100%;
+            min-width: 980px;
+
+            border-collapse: collapse;
+
+        }
+
+
+        .report-table th,
+        .report-table td {
+
+            padding:
+                13px 14px;
+
+            border-bottom:
+                1px solid
+                #e8edf4;
+
+            text-align: left;
+            vertical-align: middle;
+
+            font-size: 12px;
+
+        }
+
+
+        .report-table th {
+
+            background: #f8fafc;
+            color: #475569;
+
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+
+        }
+
+
+        .report-table tbody tr {
+
+            transition:
+                background 0.2s ease;
+
+        }
+
+
+        .report-table tbody tr:hover {
+
+            background: #f8faff;
+
+        }
+
+
+        .participant-cell {
+
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+        }
+
+
+        .participant-avatar {
+
+            display: grid;
+            place-items: center;
+
+            flex: 0 0 auto;
+
+            width: 38px;
+            height: 38px;
+
+            border-radius: 13px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--primary-light),
+                    #fff3c4
+                );
+
+            color: var(--primary);
+
+            font-size: 12px;
+            font-weight: 800;
+
+        }
+
+
+        .participant-cell strong {
+
+            display: block;
+
+            color: var(--text);
+
+            font-size: 12px;
+
+        }
+
+
+        .participant-cell small {
+
+            display: block;
+
+            margin-top: 3px;
+
+            color: var(--text-soft);
+
+            font-size: 10px;
+
+        }
+
+
+        .badge {
+
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            min-height: 25px;
+            padding: 0 9px;
+
+            border-radius: 999px;
+
+            font-size: 10px;
+            font-weight: 800;
+
+        }
+
+
+        .badge-primary {
+
+            background:
+                var(--primary-light);
+
+            color:
+                var(--primary);
+
+        }
+
+
+        .badge-success {
+
+            background:
+                var(--success-light);
+
+            color:
+                var(--success);
+
+        }
+
+
+        .badge-warning {
+
+            background:
+                var(--warning-light);
+
+            color:
+                var(--warning);
+
+        }
+
+
+        .badge-danger {
+
+            background:
+                var(--danger-light);
+
+            color:
+                var(--danger);
+
+        }
+
+
+        .badge-info {
+
+            background:
+                var(--info-light);
+
+            color:
+                var(--info);
+
+        }
+
+
+        .badge-purple {
+
+            background:
+                var(--purple-light);
+
+            color:
+                var(--purple);
+
+        }
+
+
+        .table-actions {
+
+            display: flex;
+            align-items: center;
+            gap: 6px;
+
+        }
+
+
+        .icon-btn {
+
+            display: grid;
+            place-items: center;
+
+            width: 34px;
+            height: 34px;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 10px;
+
+            background: #ffffff;
+            color: var(--primary);
+
+        }
+
+
+        .icon-btn:hover {
+
+            border-color:
+                rgba(37, 59, 128, 0.32);
+
+            background:
+                var(--primary-light);
+
+        }
+
+
+        .summary-list {
+
+            display: grid;
+            gap: 12px;
+
+        }
+
+
+        .summary-item {
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+
+            padding: 14px;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 13px;
+
+            background: #fbfdff;
+
+        }
+
+
+        .summary-item-left {
+
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+        }
+
+
+        .summary-icon {
+
+            display: grid;
+            place-items: center;
+
+            width: 36px;
+            height: 36px;
+
+            border-radius: 11px;
+
+            background:
+                var(--primary-light);
+
+            color:
+                var(--primary);
+
+        }
+
+
+        .summary-copy strong {
+
+            display: block;
+
+            font-size: 12px;
+
+        }
+
+
+        .summary-copy small {
+
+            display: block;
+
+            margin-top: 3px;
+
+            color: var(--text-soft);
+
+            font-size: 10px;
+
+        }
+
+
+        .summary-value {
+
+            font-family:
+                "Nunito",
+                sans-serif;
+
+            font-size: 18px;
+            font-weight: 800;
+
+        }
+
+
+        .empty-state {
+
+            padding:
+                55px 20px;
+
+            text-align: center;
+
+        }
+
+
+        .empty-state-icon {
+
+            display: grid;
+            place-items: center;
+
+            width: 70px;
+            height: 70px;
+
+            margin:
+                0 auto 16px;
+
+            border-radius: 22px;
+
+            background:
+                var(--primary-light);
+
+            color: var(--primary);
+
+            font-size: 26px;
+
+        }
+
+
+        .empty-state h3 {
+
+            margin: 0;
+
+            font-family:
+                "Nunito",
+                sans-serif;
+
+            font-size: 18px;
+
+        }
+
+
+        .empty-state p {
+
+            max-width: 500px;
+            margin:
+                8px auto 0;
+
+            color: var(--text-soft);
+
+            font-size: 13px;
+            line-height: 1.6;
+
+        }
+
+
+        .sidebar-overlay {
+
+            position: fixed;
+            z-index: 1100;
+            inset: 0;
+
+            display: none;
+
+            background:
+                rgba(15, 23, 42, 0.54);
+
+            opacity: 0;
+
+            transition:
+                opacity 0.2s ease;
+
+        }
+
+
+        .sidebar-overlay.active {
+
+            opacity: 1;
+
+        }
+
+
+        @media (
+            max-width: 1450px
+        ) {
+
+            .stats-grid {
+
+                grid-template-columns:
+                    repeat(3, minmax(0, 1fr));
+
+            }
+
+            .filter-grid {
+
+                grid-template-columns:
+                    repeat(3, minmax(0, 1fr));
+
+            }
+
+        }
+
+
+        @media (
+            max-width: 1100px
+        ) {
+
+            .hero-panel {
+
+                grid-template-columns:
+                    1fr;
+
+            }
+
+            .hero-visual {
+
+                display: none;
+
+            }
+
+            .report-layout {
+
+                grid-template-columns:
+                    1fr;
+
+            }
+
+        }
+
+
+        @media (
+            max-width: 900px
+        ) {
+
+            .admin-sidebar {
+
+                transform:
+                    translateX(-100%);
+
+            }
+
+            .admin-sidebar.open {
+
+                transform:
+                    translateX(0);
+
+            }
+
+            .sidebar-close-btn,
+            .menu-toggle-btn {
+
+                display: grid;
+
+            }
+
+            .sidebar-overlay {
+
+                display: block;
+
+                pointer-events: none;
+
+            }
+
+            .sidebar-overlay.active {
+
+                pointer-events: auto;
+
+            }
+
+            .admin-main {
+
+                margin-left: 0;
+
+            }
+
+            .charts-grid {
+
+                grid-template-columns:
+                    1fr;
+
+            }
+
+        }
+
+
+        @media (
+            max-width: 720px
+        ) {
+
+            .admin-header {
+
+                padding:
+                    12px 16px;
+
+            }
+
+            .admin-content {
+
+                padding:
+                    20px 15px;
+
+            }
+
+            .header-actions .header-btn span,
+            .admin-user-copy {
+
+                display: none;
+
+            }
+
+            .hero-panel {
+
+                padding: 23px 20px;
+
+            }
+
+            .stats-grid,
+            .filter-grid {
+
+                grid-template-columns:
+                    repeat(2, minmax(0, 1fr));
+
+            }
+
+            .section-heading {
+
+                align-items: flex-start;
+                flex-direction: column;
+
+            }
+
+        }
+
+
+        @media (
+            max-width: 500px
+        ) {
+
+            .stats-grid,
+            .filter-grid {
+
+                grid-template-columns:
+                    1fr;
+
+            }
+
+            .filter-actions {
+
+                align-items: stretch;
+                flex-direction: column;
+
+            }
+
+            .filter-actions .btn {
+
+                width: 100%;
+
+            }
+
+            .hero-actions {
+
+                flex-direction: column;
+
+            }
+
+            .hero-actions .btn {
+
+                width: 100%;
+
+            }
+
+        }
+
+
+        @media print {
+
+            .admin-sidebar,
+            .admin-header,
+            .hero-panel,
+            .filter-panel,
+            .section-actions,
+            .table-actions,
+            .sidebar-overlay {
+
+                display: none !important;
+
+            }
+
+            .admin-main {
+
+                margin-left: 0;
+
+            }
+
+            .admin-content {
+
+                padding: 0;
+
+            }
+
+            body {
+
+                background: #ffffff;
+
+            }
+
+            .panel,
+            .stat-card {
+
+                box-shadow: none;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="admin-layout">
+
+        <aside
+            class="admin-sidebar"
+            id="adminSidebar"
+        >
+
+            <div class="sidebar-header">
+
+                <a
+                    href="admin-dashboard.html"
+                    class="brand"
+                >
+
+                    <div class="brand-logo">
+                        KX
+                    </div>
+
+                    <div class="brand-copy">
+
+                        <strong>
+                            Kiddysexplorer
+                        </strong>
+
+                        <span>
+                            Admin Management
+                        </span>
+
+                    </div>
+
+                </a>
+
+                <button
+                    type="button"
+                    class="sidebar-close-btn"
+                    id="sidebarCloseBtn"
+                    aria-label="Close navigation"
+                >
+
+                    <i class="fas fa-times"></i>
+
+                </button>
+
+            </div>
+
+            <nav class="sidebar-nav">
+
+                <div class="nav-label">
+                    Overview
+                </div>
+
+                <a
+                    href="admin-dashboard.html"
+                    class="nav-link"
+                >
+
+                    <i class="fas fa-chart-pie"></i>
+
+                    <span>
+                        Dashboard
+                    </span>
+
+                </a>
+
+                <div class="nav-label">
+                    Competition
+                </div>
+
+                <a
+                    href="admin-participants.html"
+                    class="nav-link"
+                >
+
+                    <i class="fas fa-users"></i>
+
+                    <span>
+                        Participants
+                    </span>
+
+                </a>
+
+                <a
+                    href="admin-live-competition.html"
+                    class="nav-link"
+                >
+
+                    <i class="fas fa-tower-broadcast"></i>
+
+                    <span>
+                        Live Competition
+                    </span>
+
+                </a>
+
+                <a
+                    href="admin-leaderboard.html"
+                    class="nav-link"
+                >
+
+                    <i class="fas fa-ranking-star"></i>
+
+                    <span>
+                        Leaderboard
+                    </span>
+
+                </a>
+
+                <a
+                    href="admin-prizes.html"
+                    class="nav-link"
+                >
+
+                    <i class="fas fa-gift"></i>
+
+                    <span>
+                        Prizes
+                    </span>
+
+                </a>
+
+                <a
+                    href="admin-certificates.html"
+                    class="nav-link"
+                >
+
+                    <i class="fas fa-certificate"></i>
+
+                    <span>
+                        Certificates
+                    </span>
+
+                </a>
+
+                <a
+                    href="admin-reports.html"
+                    class="nav-link active"
+                    aria-current="page"
+                >
+
+                    <i class="fas fa-chart-column"></i>
+
+                    <span>
+                        Reports & Analytics
+                    </span>
+
+                </a>
+
+                <div class="nav-label">
+                    Administration
+                </div>
+
+                <a
+                    href="admin-settings.html"
+                    class="nav-link"
+                >
+
+                    <i class="fas fa-gear"></i>
+
+                    <span>
+                        Settings
+                    </span>
+
+                </a>
+
+                <a
+                    href="admin-users.html"
+                    class="nav-link"
+                >
+
+                    <i class="fas fa-user-shield"></i>
+
+                    <span>
+                        Admin Users
+                    </span>
+
+                </a>
+
+                <a
+                    href="index.html"
+                    class="nav-link"
+                >
+
+                    <i class="fas fa-arrow-up-right-from-square"></i>
+
+                    <span>
+                        View Website
+                    </span>
+
+                </a>
+
+            </nav>
+
+        </aside>
+
+        <div
+            class="sidebar-overlay"
+            id="sidebarOverlay"
+        ></div>
+
+        <main class="admin-main">
+
+            <header class="admin-header">
+
+                <div class="header-left">
+
+                    <button
+                        type="button"
+                        class="menu-toggle-btn"
+                        id="menuToggleBtn"
+                        aria-label="Open navigation"
+                    >
+
+                        <i class="fas fa-bars"></i>
+
+                    </button>
+
+                    <div class="page-heading">
+
+                        <h1>
+                            Reports & Analytics
+                        </h1>
+
+                        <p>
+                            Monitor competition performance and generate detailed reports.
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <div class="header-actions">
+
+                    <button
+                        type="button"
+                        class="header-btn"
+                        id="refreshReportsBtn"
+                    >
+
+                        <i class="fas fa-rotate"></i>
+
+                        <span>
+                            Refresh
+                        </span>
+
+                    </button>
+
+                    <button
+                        type="button"
+                        class="header-btn"
+                        id="printReportPageBtn"
+                    >
+
+                        <i class="fas fa-print"></i>
+
+                        <span>
+                            Print
+                        </span>
+
+                    </button>
+
+                    <div class="admin-user">
+
+                        <div class="admin-avatar">
+                            AD
+                        </div>
+
+                        <div class="admin-user-copy">
+
+                            <strong>
+                                Administrator
+                            </strong>
+
+                            <span>
+                                Competition Manager
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </header>
+
+            <div class="admin-content">
+
+                <section class="hero-panel">
+
+                    <div class="hero-copy">
+
+                        <div class="hero-badge">
+
+                            <i class="fas fa-chart-line"></i>
+
+                            Competition Intelligence Centre
+
+                        </div>
+
+                        <h2>
+                            Understand performance, participation and progress.
+                        </h2>
+
+                        <p>
+                            Review registrations, scores, rankings, prizes and certificates from one central analytics dashboard.
+                        </p>
+
+                        <div class="hero-actions">
+
+                            <button
+                                type="button"
+                                class="btn btn-secondary"
+                                id="generateFullReportBtn"
+                            >
+
+                                <i class="fas fa-file-lines"></i>
+
+                                Generate Full Report
+
+                            </button>
+
+                            <button
+                                type="button"
+                                class="btn btn-light"
+                                id="exportReportCSVBtn"
+                            >
+
+                                <i class="fas fa-file-csv"></i>
+
+                                Export CSV
+
+                            </button>
+
+                            <button
+                                type="button"
+                                class="btn btn-glass"
+                                id="exportReportExcelBtn"
+                            >
+
+                                <i class="fas fa-file-excel"></i>
+
+                                Export Excel
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    <div class="hero-visual">
+
+                        <div class="analytics-orbit">
+
+                            <div class="analytics-main-icon">
+
+                                <i class="fas fa-chart-simple"></i>
+
+                            </div>
+
+                            <div class="orbit-item one">
+
+                                <i class="fas fa-users"></i>
+
+                            </div>
+
+                            <div class="orbit-item two">
+
+                                <i class="fas fa-trophy"></i>
+
+                            </div>
+
+                            <div class="orbit-item three">
+
+                                <i class="fas fa-certificate"></i>
+
+                            </div>
+
+                            <div class="orbit-item four">
+
+                                <i class="fas fa-gift"></i>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+                <section class="section-block">
+
+                    <div class="section-heading">
+
+                        <div>
+
+                            <h2>
+                                Competition Overview
+                            </h2>
+
+                            <p>
+                                Key performance indicators from the current competition data.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <div class="stats-grid">
+
+                        <article class="stat-card stat-primary">
+
+                            <div class="stat-top">
+
+                                <div class="stat-icon">
+
+                                    <i class="fas fa-users"></i>
+
+                                </div>
+
+                                <div class="stat-trend">
+
+                                    <i class="fas fa-arrow-trend-up"></i>
+
+                                    Total
+
+                                </div>
+
+                            </div>
+
+                            <div
+                                class="stat-value"
+                                id="reportTotalParticipants"
+                            >
+                                0
+                            </div>
+
+                            <div class="stat-label">
+                                Registered Participants
+                            </div>
+
+                        </article>
+
+                        <article class="stat-card stat-info">
+
+                            <div class="stat-top">
+
+                                <div class="stat-icon">
+
+                                    <i class="fas fa-flag-checkered"></i>
+
+                                </div>
+
+                                <div class="stat-trend">
+
+                                    <i class="fas fa-check"></i>
+
+                                    Completed
+
+                                </div>
+
+                            </div>
+
+                            <div
+                                class="stat-value"
+                                id="reportCompletedCompetitions"
+                            >
+                                0
+                            </div>
+
+                            <div class="stat-label">
+                                Completed Competitions
+                            </div>
+
+                        </article>
+
+                        <article class="stat-card stat-success">
+
+                            <div class="stat-top">
+
+                                <div class="stat-icon">
+
+                                    <i class="fas fa-trophy"></i>
+
+                                </div>
+
+                                <div class="stat-trend">
+
+                                    <i class="fas fa-ranking-star"></i>
+
+                                    Top 3
+
+                                </div>
+
+                            </div>
+
+                            <div
+                                class="stat-value"
+                                id="reportTotalWinners"
+                            >
+                                0
+                            </div>
+
+                            <div class="stat-label">
+                                Competition Winners
+                            </div>
+
+                        </article>
+
+                        <article class="stat-card stat-warning">
+
+                            <div class="stat-top">
+
+                                <div class="stat-icon">
+
+                                    <i class="fas fa-gift"></i>
+
+                                </div>
+
+                                <div class="stat-trend">
+
+                                    <i class="fas fa-box-open"></i>
+
+                                    Issued
+
+                                </div>
+
+                            </div>
+
+                            <div
+                                class="stat-value"
+                                id="reportPrizesAwarded"
+                            >
+                                0
+                            </div>
+
+                            <div class="stat-label">
+                                Prizes Awarded
+                            </div>
+
+                        </article>
+
+                        <article class="stat-card stat-purple">
+
+                            <div class="stat-top">
+
+                                <div class="stat-icon">
+
+                                    <i class="fas fa-certificate"></i>
+
+                                </div>
+
+                                <div class="stat-trend">
+
+                                    <i class="fas fa-file-circle-check"></i>
+
+                                    Generated
+
+                                </div>
+
+                            </div>
+
+                            <div
+                                class="stat-value"
+                                id="reportCertificatesGenerated"
+                            >
+                                0
+                            </div>
+
+                            <div class="stat-label">
+                                Certificates Generated
+                            </div>
+
+                        </article>
+
+                        <article class="stat-card stat-danger">
+
+                            <div class="stat-top">
+
+                                <div class="stat-icon">
+
+                                    <i class="fas fa-percent"></i>
+
+                                </div>
+
+                                <div class="stat-trend">
+
+                                    <i class="fas fa-chart-line"></i>
+
+                                    Average
+
+                                </div>
+
+                            </div>
+
+                            <div
+                                class="stat-value"
+                                id="reportAverageScore"
+                            >
+                                0%
+                            </div>
+
+                            <div class="stat-label">
+                                Overall Average Score
+                            </div>
+
+                        </article>
+
+                    </div>
+
+                </section>
+
+                                <section class="section-block filter-panel">
+
+                    <div class="panel">
+
+                        <div class="panel-header">
+
+                            <div class="panel-title">
+
+                                <div class="panel-title-icon">
+
+                                    <i class="fas fa-filter"></i>
+
+                                </div>
+
+                                <div>
+
+                                    <h3>
+                                        Report Filters
+                                    </h3>
+
+                                    <p>
+                                        Filter reports by competition, date, group and performance.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="panel-body">
+
+                            <div class="filter-grid">
+
+                                <div class="form-group">
+
+                                    <label for="reportCompetitionFilter">
+                                        Competition
+                                    </label>
+
+                                    <select
+                                        id="reportCompetitionFilter"
+                                        class="form-control"
+                                    >
+
+                                        <option value="">
+                                            All Competitions
+                                        </option>
+
+                                        <option value="section1">
+                                            Section 1
+                                        </option>
+
+                                        <option value="section2">
+                                            Section 2
+                                        </option>
+
+                                        <option value="section3">
+                                            Section 3
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label for="reportGroupFilter">
+                                        Group
+                                    </label>
+
+                                    <select
+                                        id="reportGroupFilter"
+                                        class="form-control"
+                                    >
+
+                                        <option value="">
+                                            All Groups
+                                        </option>
+
+                                        <option value="A">
+                                            Group A
+                                        </option>
+
+                                        <option value="B">
+                                            Group B
+                                        </option>
+
+                                        <option value="C">
+                                            Group C
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label for="reportScoreFilter">
+                                        Minimum Score
+                                    </label>
+
+                                    <select
+                                        id="reportScoreFilter"
+                                        class="form-control"
+                                    >
+
+                                        <option value="">
+                                            Any Score
+                                        </option>
+
+                                        <option value="50">
+                                            50%
+                                        </option>
+
+                                        <option value="60">
+                                            60%
+                                        </option>
+
+                                        <option value="70">
+                                            70%
+                                        </option>
+
+                                        <option value="80">
+                                            80%
+                                        </option>
+
+                                        <option value="90">
+                                            90%
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label for="reportDateFrom">
+                                        Date From
+                                    </label>
+
+                                    <input
+                                        type="date"
+                                        id="reportDateFrom"
+                                        class="form-control"
+                                    >
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label for="reportDateTo">
+                                        Date To
+                                    </label>
+
+                                    <input
+                                        type="date"
+                                        id="reportDateTo"
+                                        class="form-control"
+                                    >
+
+                                </div>
+
+                                <div class="filter-actions">
+
+                                    <button
+                                        class="btn btn-primary"
+                                        id="applyReportFiltersBtn"
+                                        type="button"
+                                    >
+
+                                        <i class="fas fa-filter"></i>
+
+                                        Apply
+
+                                    </button>
+
+                                    <button
+                                        class="btn btn-outline"
+                                        id="resetReportFiltersBtn"
+                                        type="button"
+                                    >
+
+                                        Reset
+
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <section class="section-block">
+
+                    <div class="section-heading">
+
+                        <div>
+
+                            <h2>
+                                Analytics Charts
+                            </h2>
+
+                            <p>
+                                Visualise participation, scores and competition results.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <div class="charts-grid">
+
+                        <article
+                            class="panel chart-panel"
+                        >
+
+                            <div class="panel-header">
+
+                                <div class="panel-title">
+
+                                    <div class="panel-title-icon">
+
+                                        <i class="fas fa-users"></i>
+
+                                    </div>
+
+                                    <div>
+
+                                        <h3>
+                                            Participants by Group
+                                        </h3>
+
+                                        <p>
+                                            Distribution of registered participants.
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="panel-body">
+
+                                <div class="chart-container">
+
+                                    <canvas
+                                        id="groupChart"
+                                        class="chart-canvas"
+                                    ></canvas>
+
+                                </div>
+
+                            </div>
+
+                        </article>
+
+
+                        <article
+                            class="panel chart-panel"
+                        >
+
+                            <div class="panel-header">
+
+                                <div class="panel-title">
+
+                                    <div class="panel-title-icon">
+
+                                        <i class="fas fa-chart-line"></i>
+
+                                    </div>
+
+                                    <div>
+
+                                        <h3>
+                                            Average Scores
+                                        </h3>
+
+                                        <p>
+                                            Average performance across groups.
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="panel-body">
+
+                                <div class="chart-container">
+
+                                    <canvas
+                                        id="scoreChart"
+                                        class="chart-canvas"
+                                    ></canvas>
+
+                                </div>
+
+                            </div>
+
+                        </article>
+
+
+                        <article
+                            class="panel chart-panel"
+                        >
+
+                            <div class="panel-header">
+
+                                <div class="panel-title">
+
+                                    <div class="panel-title-icon">
+
+                                        <i class="fas fa-gift"></i>
+
+                                    </div>
+
+                                    <div>
+
+                                        <h3>
+                                            Prize Distribution
+                                        </h3>
+
+                                        <p>
+                                            Breakdown of prizes awarded.
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="panel-body">
+
+                                <div class="chart-container">
+
+                                    <canvas
+                                        id="prizeChart"
+                                        class="chart-canvas"
+                                    ></canvas>
+
+                                </div>
+
+                            </div>
+
+                        </article>
+
+
+                        <article
+                            class="panel chart-panel"
+                        >
+
+                            <div class="panel-header">
+
+                                <div class="panel-title">
+
+                                    <div class="panel-title-icon">
+
+                                        <i class="fas fa-certificate"></i>
+
+                                    </div>
+
+                                    <div>
+
+                                        <h3>
+                                            Certificates
+                                        </h3>
+
+                                        <p>
+                                            Generated vs pending certificates.
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="panel-body">
+
+                                <div class="chart-container">
+
+                                    <canvas
+                                        id="certificateChart"
+                                        class="chart-canvas"
+                                    ></canvas>
+
+                                </div>
+
+                            </div>
+
+                        </article>
+
+                    </div>
+
+                </section>
+
+                                <section class="section-block">
+
+                    <div class="section-heading">
+
+                        <div>
+
+                            <h2>
+                                Detailed Participant Report
+                            </h2>
+
+                            <p>
+                                Review participant performance, rankings, prizes and certificate status.
+                            </p>
+
+                        </div>
+
+                        <div class="section-actions">
+
+                            <button
+                                type="button"
+                                class="btn btn-outline"
+                                id="exportFilteredReportBtn"
+                            >
+
+                                <i class="fas fa-download"></i>
+
+                                Export Filtered
+
+                            </button>
+
+                            <button
+                                type="button"
+                                class="btn btn-primary"
+                                id="printFilteredReportBtn"
+                            >
+
+                                <i class="fas fa-print"></i>
+
+                                Print Report
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    <div class="report-layout">
+
+                        <article class="panel">
+
+                            <div class="panel-header">
+
+                                <div class="panel-title">
+
+                                    <div class="panel-title-icon">
+
+                                        <i class="fas fa-table-list"></i>
+
+                                    </div>
+
+                                    <div>
+
+                                        <h3>
+                                            Participant Performance
+                                        </h3>
+
+                                        <p
+                                            id="reportResultSummary"
+                                        >
+                                            Showing 0 participants
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div
+                                class="table-wrapper"
+                                id="reportTableWrapper"
+                            >
+
+                                <table class="report-table">
+
+                                    <thead>
+
+                                        <tr>
+
+                                            <th>
+                                                Participant
+                                            </th>
+
+                                            <th>
+                                                Group
+                                            </th>
+
+                                            <th>
+                                                Competition
+                                            </th>
+
+                                            <th>
+                                                Score
+                                            </th>
+
+                                            <th>
+                                                Position
+                                            </th>
+
+                                            <th>
+                                                Prize
+                                            </th>
+
+                                            <th>
+                                                Certificate
+                                            </th>
+
+                                            <th>
+                                                Status
+                                            </th>
+
+                                            <th>
+                                                Actions
+                                            </th>
+
+                                        </tr>
+
+                                    </thead>
+
+                                    <tbody
+                                        id="reportTableBody"
+                                    ></tbody>
+
+                                </table>
+
+                            </div>
+
+                            <div
+                                class="empty-state"
+                                id="reportEmptyState"
+                                hidden
+                            >
+
+                                <div class="empty-state-icon">
+
+                                    <i class="fas fa-chart-column"></i>
+
+                                </div>
+
+                                <h3>
+                                    No report records found
+                                </h3>
+
+                                <p>
+                                    Change the selected filters or add participant competition data before generating this report.
+                                </p>
+
+                            </div>
+
+                        </article>
+
+
+                        <aside class="panel">
+
+                            <div class="panel-header">
+
+                                <div class="panel-title">
+
+                                    <div class="panel-title-icon">
+
+                                        <i class="fas fa-list-check"></i>
+
+                                    </div>
+
+                                    <div>
+
+                                        <h3>
+                                            Report Summary
+                                        </h3>
+
+                                        <p>
+                                            Current filtered dataset.
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="panel-body">
+
+                                <div class="summary-list">
+
+                                    <div class="summary-item">
+
+                                        <div class="summary-item-left">
+
+                                            <div class="summary-icon">
+
+                                                <i class="fas fa-users"></i>
+
+                                            </div>
+
+                                            <div class="summary-copy">
+
+                                                <strong>
+                                                    Participants
+                                                </strong>
+
+                                                <small>
+                                                    Matching current filters
+                                                </small>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div
+                                            class="summary-value"
+                                            id="summaryParticipants"
+                                        >
+                                            0
+                                        </div>
+
+                                    </div>
+
+
+                                    <div class="summary-item">
+
+                                        <div class="summary-item-left">
+
+                                            <div class="summary-icon">
+
+                                                <i class="fas fa-percent"></i>
+
+                                            </div>
+
+                                            <div class="summary-copy">
+
+                                                <strong>
+                                                    Average Score
+                                                </strong>
+
+                                                <small>
+                                                    Across filtered results
+                                                </small>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div
+                                            class="summary-value"
+                                            id="summaryAverageScore"
+                                        >
+                                            0%
+                                        </div>
+
+                                    </div>
+
+
+                                    <div class="summary-item">
+
+                                        <div class="summary-item-left">
+
+                                            <div class="summary-icon">
+
+                                                <i class="fas fa-trophy"></i>
+
+                                            </div>
+
+                                            <div class="summary-copy">
+
+                                                <strong>
+                                                    Winners
+                                                </strong>
+
+                                                <small>
+                                                    Participants in top 3
+                                                </small>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div
+                                            class="summary-value"
+                                            id="summaryWinners"
+                                        >
+                                            0
+                                        </div>
+
+                                    </div>
+
+
+                                    <div class="summary-item">
+
+                                        <div class="summary-item-left">
+
+                                            <div class="summary-icon">
+
+                                                <i class="fas fa-gift"></i>
+
+                                            </div>
+
+                                            <div class="summary-copy">
+
+                                                <strong>
+                                                    Prize Records
+                                                </strong>
+
+                                                <small>
+                                                    Linked awarded prizes
+                                                </small>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div
+                                            class="summary-value"
+                                            id="summaryPrizes"
+                                        >
+                                            0
+                                        </div>
+
+                                    </div>
+
+
+                                    <div class="summary-item">
+
+                                        <div class="summary-item-left">
+
+                                            <div class="summary-icon">
+
+                                                <i class="fas fa-certificate"></i>
+
+                                            </div>
+
+                                            <div class="summary-copy">
+
+                                                <strong>
+                                                    Certificates
+                                                </strong>
+
+                                                <small>
+                                                    Generated certificates
+                                                </small>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div
+                                            class="summary-value"
+                                            id="summaryCertificates"
+                                        >
+                                            0
+                                        </div>
+
+                                    </div>
+
+
+                                    <div class="summary-item">
+
+                                        <div class="summary-item-left">
+
+                                            <div class="summary-icon">
+
+                                                <i class="fas fa-circle-check"></i>
+
+                                            </div>
+
+                                            <div class="summary-copy">
+
+                                                <strong>
+                                                    Completion Rate
+                                                </strong>
+
+                                                <small>
+                                                    Participants with scores
+                                                </small>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div
+                                            class="summary-value"
+                                            id="summaryCompletionRate"
+                                        >
+                                            0%
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </aside>
+
+                    </div>
+
+                </section>
+
+
+                <section class="section-block">
+
+                    <div class="section-heading">
+
+                        <div>
+
+                            <h2>
+                                Quick Reports
+                            </h2>
+
+                            <p>
+                                Generate focused reports for common administrative needs.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <div class="stats-grid">
+
+                        <article class="stat-card stat-primary">
+
+                            <div class="stat-top">
+
+                                <div class="stat-icon">
+
+                                    <i class="fas fa-users"></i>
+
+                                </div>
+
+                            </div>
+
+                            <div class="stat-value">
+                                All
+                            </div>
+
+                            <div class="stat-label">
+                                Participants Report
+                            </div>
+
+                            <button
+                                type="button"
+                                class="btn btn-outline"
+                                data-quick-report="all"
+                                style="margin-top: 15px; width: 100%;"
+                            >
+
+                                Generate
+
+                            </button>
+
+                        </article>
+
+
+                        <article class="stat-card stat-info">
+
+                            <div class="stat-top">
+
+                                <div class="stat-icon">
+
+                                    <i class="fas fa-child-reaching"></i>
+
+                                </div>
+
+                            </div>
+
+                            <div class="stat-value">
+                                A
+                            </div>
+
+                            <div class="stat-label">
+                                Group A Report
+                            </div>
+
+                            <button
+                                type="button"
+                                class="btn btn-outline"
+                                data-quick-report="group-a"
+                                style="margin-top: 15px; width: 100%;"
+                            >
+
+                                Generate
+
+                            </button>
+
+                        </article>
+
+
+                        <article class="stat-card stat-success">
+
+                            <div class="stat-top">
+
+                                <div class="stat-icon">
+
+                                    <i class="fas fa-children"></i>
+
+                                </div>
+
+                            </div>
+
+                            <div class="stat-value">
+                                B
+                            </div>
+
+                            <div class="stat-label">
+                                Group B Report
+                            </div>
+
+                            <button
+                                type="button"
+                                class="btn btn-outline"
+                                data-quick-report="group-b"
+                                style="margin-top: 15px; width: 100%;"
+                            >
+
+                                Generate
+
+                            </button>
+
+                        </article>
+
+
+                        <article class="stat-card stat-warning">
+
+                            <div class="stat-top">
+
+                                <div class="stat-icon">
+
+                                    <i class="fas fa-user-graduate"></i>
+
+                                </div>
+
+                            </div>
+
+                            <div class="stat-value">
+                                C
+                            </div>
+
+                            <div class="stat-label">
+                                Group C Report
+                            </div>
+
+                            <button
+                                type="button"
+                                class="btn btn-outline"
+                                data-quick-report="group-c"
+                                style="margin-top: 15px; width: 100%;"
+                            >
+
+                                Generate
+
+                            </button>
+
+                        </article>
+
+
+                        <article class="stat-card stat-purple">
+
+                            <div class="stat-top">
+
+                                <div class="stat-icon">
+
+                                    <i class="fas fa-ranking-star"></i>
+
+                                </div>
+
+                            </div>
+
+                            <div class="stat-value">
+                                Top
+                            </div>
+
+                            <div class="stat-label">
+                                Winners Report
+                            </div>
+
+                            <button
+                                type="button"
+                                class="btn btn-outline"
+                                data-quick-report="winners"
+                                style="margin-top: 15px; width: 100%;"
+                            >
+
+                                Generate
+
+                            </button>
+
+                        </article>
+
+
+                        <article class="stat-card stat-danger">
+
+                            <div class="stat-top">
+
+                                <div class="stat-icon">
+
+                                    <i class="fas fa-certificate"></i>
+
+                                </div>
+
+                            </div>
+
+                            <div class="stat-value">
+                                PDF
+                            </div>
+
+                            <div class="stat-label">
+                                Certificate Report
+                            </div>
+
+                            <button
+                                type="button"
+                                class="btn btn-outline"
+                                data-quick-report="certificates"
+                                style="margin-top: 15px; width: 100%;"
+                            >
+
+                                Generate
+
+                            </button>
+
+                        </article>
+
+                    </div>
+
+                </section>
+
+                                <div
+                    class="modal"
+                    id="participantReportModal"
+                    hidden
+                    style="
+                        position: fixed;
+                        z-index: 1600;
+                        inset: 0;
+                        display: grid;
+                        place-items: center;
+                        padding: 20px;
+                        background: rgba(15, 23, 42, 0.62);
+                    "
+                >
+
+                    <div
+                        class="panel"
+                        style="
+                            width: min(760px, 100%);
+                            max-height: 90vh;
+                            overflow-y: auto;
+                            box-shadow: var(--shadow-md);
+                        "
+                    >
+
+                        <div class="panel-header">
+
+                            <div class="panel-title">
+
+                                <div class="panel-title-icon">
+
+                                    <i class="fas fa-user-chart"></i>
+
+                                </div>
+
+                                <div>
+
+                                    <h3>
+                                        Participant Report
+                                    </h3>
+
+                                    <p id="participantReportModalSubtitle">
+                                        Detailed competition performance record.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                            <button
+                                type="button"
+                                class="icon-btn"
+                                id="closeParticipantReportModalBtn"
+                                aria-label="Close participant report"
+                            >
+
+                                <i class="fas fa-times"></i>
+
+                            </button>
+
+                        </div>
+
+                        <div class="panel-body">
+
+                            <div
+                                style="
+                                    display: grid;
+                                    grid-template-columns: auto 1fr;
+                                    gap: 16px;
+                                    align-items: center;
+                                    margin-bottom: 22px;
+                                "
+                            >
+
+                                <div
+                                    class="participant-avatar"
+                                    id="modalParticipantAvatar"
+                                    style="
+                                        width: 70px;
+                                        height: 70px;
+                                        border-radius: 22px;
+                                        font-size: 20px;
+                                    "
+                                >
+                                    PN
+                                </div>
+
+                                <div>
+
+                                    <h2
+                                        id="modalParticipantName"
+                                        style="
+                                            margin: 0;
+                                            font-family: 'Nunito', sans-serif;
+                                            font-size: 22px;
+                                        "
+                                    >
+                                        Participant Name
+                                    </h2>
+
+                                    <p
+                                        id="modalParticipantMeta"
+                                        style="
+                                            margin: 5px 0 0;
+                                            color: var(--text-soft);
+                                            font-size: 13px;
+                                        "
+                                    >
+                                        Group • Competition
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                            <div
+                                style="
+                                    display: grid;
+                                    grid-template-columns: repeat(2, minmax(0, 1fr));
+                                    gap: 14px;
+                                "
+                            >
+
+                                <div class="summary-item">
+
+                                    <div class="summary-item-left">
+
+                                        <div class="summary-icon">
+
+                                            <i class="fas fa-percent"></i>
+
+                                        </div>
+
+                                        <div class="summary-copy">
+
+                                            <strong>
+                                                Score
+                                            </strong>
+
+                                            <small>
+                                                Competition result
+                                            </small>
+
+                                        </div>
+
+                                    </div>
+
+                                    <div
+                                        class="summary-value"
+                                        id="modalParticipantScore"
+                                    >
+                                        0%
+                                    </div>
+
+                                </div>
+
+                                <div class="summary-item">
+
+                                    <div class="summary-item-left">
+
+                                        <div class="summary-icon">
+
+                                            <i class="fas fa-ranking-star"></i>
+
+                                        </div>
+
+                                        <div class="summary-copy">
+
+                                            <strong>
+                                                Position
+                                            </strong>
+
+                                            <small>
+                                                Final ranking
+                                            </small>
+
+                                        </div>
+
+                                    </div>
+
+                                    <div
+                                        class="summary-value"
+                                        id="modalParticipantPosition"
+                                    >
+                                        —
+                                    </div>
+
+                                </div>
+
+                                <div class="summary-item">
+
+                                    <div class="summary-item-left">
+
+                                        <div class="summary-icon">
+
+                                            <i class="fas fa-gift"></i>
+
+                                        </div>
+
+                                        <div class="summary-copy">
+
+                                            <strong>
+                                                Prize
+                                            </strong>
+
+                                            <small>
+                                                Award record
+                                            </small>
+
+                                        </div>
+
+                                    </div>
+
+                                    <div
+                                        class="summary-value"
+                                        id="modalParticipantPrize"
+                                        style="font-size: 14px;"
+                                    >
+                                        None
+                                    </div>
+
+                                </div>
+
+                                <div class="summary-item">
+
+                                    <div class="summary-item-left">
+
+                                        <div class="summary-icon">
+
+                                            <i class="fas fa-certificate"></i>
+
+                                        </div>
+
+                                        <div class="summary-copy">
+
+                                            <strong>
+                                                Certificate
+                                            </strong>
+
+                                            <small>
+                                                Certificate status
+                                            </small>
+
+                                        </div>
+
+                                    </div>
+
+                                    <div
+                                        class="summary-value"
+                                        id="modalParticipantCertificate"
+                                        style="font-size: 14px;"
+                                    >
+                                        Pending
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div
+                                style="
+                                    margin-top: 20px;
+                                    padding: 18px;
+                                    border: 1px solid var(--border);
+                                    border-radius: 14px;
+                                    background: #fbfdff;
+                                "
+                            >
+
+                                <h3
+                                    style="
+                                        margin: 0 0 12px;
+                                        font-family: 'Nunito', sans-serif;
+                                        font-size: 15px;
+                                    "
+                                >
+                                    Parent and Registration Information
+                                </h3>
+
+                                <div
+                                    style="
+                                        display: grid;
+                                        grid-template-columns: repeat(2, minmax(0, 1fr));
+                                        gap: 14px;
+                                    "
+                                >
+
+                                    <div>
+
+                                        <strong
+                                            style="
+                                                display: block;
+                                                font-size: 11px;
+                                                color: var(--text-soft);
+                                                text-transform: uppercase;
+                                                letter-spacing: 0.06em;
+                                            "
+                                        >
+                                            Parent or Guardian
+                                        </strong>
+
+                                        <span
+                                            id="modalParentName"
+                                            style="
+                                                display: block;
+                                                margin-top: 5px;
+                                                font-size: 13px;
+                                                font-weight: 700;
+                                            "
+                                        >
+                                            Not provided
+                                        </span>
+
+                                    </div>
+
+                                    <div>
+
+                                        <strong
+                                            style="
+                                                display: block;
+                                                font-size: 11px;
+                                                color: var(--text-soft);
+                                                text-transform: uppercase;
+                                                letter-spacing: 0.06em;
+                                            "
+                                        >
+                                            Contact
+                                        </strong>
+
+                                        <span
+                                            id="modalParentContact"
+                                            style="
+                                                display: block;
+                                                margin-top: 5px;
+                                                font-size: 13px;
+                                                font-weight: 700;
+                                            "
+                                        >
+                                            Not provided
+                                        </span>
+
+                                    </div>
+
+                                    <div>
+
+                                        <strong
+                                            style="
+                                                display: block;
+                                                font-size: 11px;
+                                                color: var(--text-soft);
+                                                text-transform: uppercase;
+                                                letter-spacing: 0.06em;
+                                            "
+                                        >
+                                            Registration Date
+                                        </strong>
+
+                                        <span
+                                            id="modalRegistrationDate"
+                                            style="
+                                                display: block;
+                                                margin-top: 5px;
+                                                font-size: 13px;
+                                                font-weight: 700;
+                                            "
+                                        >
+                                            Not available
+                                        </span>
+
+                                    </div>
+
+                                    <div>
+
+                                        <strong
+                                            style="
+                                                display: block;
+                                                font-size: 11px;
+                                                color: var(--text-soft);
+                                                text-transform: uppercase;
+                                                letter-spacing: 0.06em;
+                                            "
+                                        >
+                                            Competition Status
+                                        </strong>
+
+                                        <span
+                                            id="modalCompetitionStatus"
+                                            style="
+                                                display: block;
+                                                margin-top: 5px;
+                                                font-size: 13px;
+                                                font-weight: 700;
+                                            "
+                                        >
+                                            Pending
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div
+                                style="
+                                    display: flex;
+                                    justify-content: flex-end;
+                                    flex-wrap: wrap;
+                                    gap: 9px;
+                                    margin-top: 20px;
+                                "
+                            >
+
+                                <button
+                                    type="button"
+                                    class="btn btn-outline"
+                                    id="printParticipantReportBtn"
+                                >
+
+                                    <i class="fas fa-print"></i>
+
+                                    Print Participant Report
+
+                                </button>
+
+                                <button
+                                    type="button"
+                                    class="btn btn-primary"
+                                    id="closeParticipantReportFooterBtn"
+                                >
+
+                                    Close
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
+
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"
+    ></script>
+
+    <script src="assets/js/adminCommon.js"></script>
+
+    <script src="assets/js/adminReports.js"></script>
+    
+
+</body>
+
+</html>

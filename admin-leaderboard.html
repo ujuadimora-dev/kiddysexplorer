@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="View and manage the Kiddysexplorer live competition leaderboard.">
+
+    <title>Leaderboard | Kiddysexplorer Admin</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <link rel="stylesheet" href="assets/css/admin.css">
+
+    <style>
+        .leaderboard-toolbar {
+            display: flex;
+            align-items: end;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .leaderboard-toolbar-left,
+        .leaderboard-toolbar-right {
+            display: flex;
+            align-items: end;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .leaderboard-field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .leaderboard-field label {
+            color: #475569;
+            font-size: 0.82rem;
+            font-weight: 700;
+        }
+
+        .leaderboard-field input,
+        .leaderboard-field select {
+            min-height: 44px;
+            border: 1px solid #dbe2ea;
+            border-radius: 10px;
+            background: #ffffff;
+            color: #172033;
+            padding: 0 12px;
+        }
+
+        .leaderboard-search {
+            position: relative;
+            min-width: 280px;
+        }
+
+        .leaderboard-search i {
+            position: absolute;
+            top: 50%;
+            left: 14px;
+            color: #94a3b8;
+            transform: translateY(-50%);
+        }
+
+        .leaderboard-search input {
+            width: 100%;
+            padding-left: 40px;
+        }
+
+        .leaderboard-note {
+            margin-bottom: 18px;
+            padding: 14px 16px;
+            border-radius: 12px;
+            background: #eff6ff;
+            color: #1e3a8a;
+        }
+
+        .podium-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            align-items: end;
+            gap: 18px;
+            margin-top: 22px;
+        }
+
+        .podium-card {
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+            border-radius: 22px;
+            background: #ffffff;
+            padding: 26px 20px 22px;
+            text-align: center;
+            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.07);
+        }
+
+        .podium-card.first {
+            min-height: 330px;
+            border-color: #f6c84c;
+        }
+
+        .podium-card.second,
+        .podium-card.third {
+            min-height: 285px;
+        }
+
+        .podium-rank {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 42px;
+            height: 42px;
+            border-radius: 999px;
+            background: #f1f5f9;
+            color: #334155;
+            font-size: 0.9rem;
+            font-weight: 900;
+        }
+
+        .podium-card.first .podium-rank {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .podium-card.second .podium-rank {
+            background: #e2e8f0;
+            color: #475569;
+        }
+
+        .podium-card.third .podium-rank {
+            background: #ffedd5;
+            color: #9a3412;
+        }
+
+        .podium-medal {
+            margin-bottom: 10px;
+            font-size: 3.2rem;
+            line-height: 1;
+        }
+
+        .podium-avatar {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 82px;
+            height: 82px;
+            margin-bottom: 14px;
+            border-radius: 50%;
+            background: #eef2ff;
+            color: #4338ca;
+            font-size: 2rem;
+        }
+
+        .podium-card h3 {
+            margin: 0 0 6px;
+            color: #172033;
+        }
+
+        .podium-card p {
+            margin: 4px 0;
+            color: #64748b;
+        }
+
+        .podium-score {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            margin-top: 13px;
+            padding: 9px 14px;
+            border-radius: 999px;
+            background: #eef2ff;
+            color: #3730a3;
+            font-weight: 900;
+        }
+
+        .podium-prize {
+            display: block;
+            margin-top: 11px;
+            color: #475569;
+            font-size: 0.88rem;
+            font-weight: 700;
+        }
+
+        .leader-position {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 54px;
+            padding: 7px 11px;
+            border-radius: 999px;
+            background: #eef2ff;
+            color: #3730a3;
+            font-weight: 900;
+        }
+
+        .leader-position.first {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .leader-position.second {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .leader-position.third {
+            background: #ffedd5;
+            color: #9a3412;
+        }
+
+        .leader-score {
+            font-weight: 900;
+            color: #172033;
+        }
+
+        .leader-prize {
+            display: inline-flex;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: #f0fdf4;
+            color: #166534;
+            font-size: 0.82rem;
+            font-weight: 800;
+        }
+
+        .leader-status {
+            display: inline-flex;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: #dbeafe;
+            color: #1d4ed8;
+            font-size: 0.8rem;
+            font-weight: 800;
+        }
+
+        .leader-status.published {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .leaderboard-empty {
+            padding: 48px 20px;
+            color: #64748b;
+            text-align: center;
+        }
+
+        .leaderboard-empty i {
+            margin-bottom: 12px;
+            color: #94a3b8;
+            font-size: 2.6rem;
+        }
+
+        @media (max-width: 900px) {
+            .podium-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .podium-card.first,
+            .podium-card.second,
+            .podium-card.third {
+                min-height: auto;
+            }
+
+            .leaderboard-search {
+                min-width: 100%;
+            }
+        }
+
+        @media print {
+
+            .admin-sidebar,
+            .admin-header,
+            .admin-footer,
+            .leaderboard-toolbar,
+            .admin-export-actions,
+            .admin-menu-btn,
+            #adminOverlay {
+                display: none !important;
+            }
+
+            .admin-main {
+                margin: 0 !important;
+            }
+
+            .admin-content {
+                padding: 0 !important;
+            }
+
+            .admin-panel,
+            .admin-welcome,
+            .admin-stat-card,
+            .podium-card {
+                box-shadow: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body class="admin-page">
+
+    <div id="adminOverlay" class="admin-overlay" aria-hidden="true"></div>
+
+
+    <aside id="adminSidebar" class="admin-sidebar">
+        <div class="sidebar-brand">
+
+            <div class="sidebar-logo">
+                <i class="fas fa-rocket"></i>
+            </div>
+
+            <div class="sidebar-brand-text">
+                <strong>Kiddysexplorer</strong>
+                <span>Admin Panel</span>
+            </div>
+
+        </div>
+
+
+        <nav class="sidebar-navigation" aria-label="Admin navigation">
+            <span class="sidebar-section-title">
+                Management
+            </span>
+
+            <a href="admin-dashboard.html" class="sidebar-link">
+                <i class="fas fa-table-columns"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="admin-participants.html" class="sidebar-link">
+                <i class="fas fa-children"></i>
+                <span>Participants</span>
+            </a>
+
+            <a href="admin-live-competition.html" class="sidebar-link">
+                <i class="fas fa-video"></i>
+                <span>Live Competition</span>
+            </a>
+
+            <a href="admin-leaderboard.html" class="sidebar-link active">
+                <i class="fas fa-ranking-star"></i>
+                <span>Leaderboard</span>
+            </a>
+
+            <a href="admin-prizes.html" class="sidebar-link">
+                <i class="fas fa-gift"></i>
+                <span>Prize Management</span>
+            </a>
+
+            <a href="admin-certificates.html" class="sidebar-link">
+                <i class="fas fa-certificate"></i>
+                <span>Certificates</span>
+            </a>
+
+            <a href="admin-reports.html" class="sidebar-link">
+                <i class="fas fa-file-lines"></i>
+                <span>Reports</span>
+            </a>
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <a href="quiz.html" class="sidebar-link">
+                <i class="fas fa-circle-question"></i>
+                <span>Open Quiz Page</span>
+            </a>
+
+            <a href="index.html" class="sidebar-link">
+                <i class="fas fa-house"></i>
+                <span>Back to Website</span>
+            </a>
+
+        </div>
+    </aside>
+
+
+    <main class="admin-main">
+
+        <header class="admin-header">
+
+            <div class="admin-header-left">
+
+                <button id="adminMenuBtn" class="admin-menu-btn" type="button" aria-label="Open administration menu"
+                    aria-controls="adminSidebar" aria-expanded="false">
+                    <i class="fas fa-bars"></i>
+                </button>
+
+                <div>
+                    <h1>Leaderboard</h1>
+
+                    <p>
+                        View final rankings, top performers,
+                        competition scores and assigned prizes.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="admin-header-right">
+
+                <button id="refreshLeaderboardBtn" class="header-action-btn" type="button">
+                    <i class="fas fa-arrows-rotate"></i>
+                    <span>Refresh</span>
+                </button>
+
+                <div class="admin-profile">
+
+                    <div class="admin-avatar">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+
+                    <div>
+                        <strong>Administrator</strong>
+                        <span>Kiddysexplorer</span>
+                    </div>
+
+                </div>
+            </div>
+        </header>
+
+
+        <div class="admin-content">
+
+            <section class="admin-welcome">
+
+                <div class="welcome-content">
+
+                    <span class="admin-label">
+                        <i class="fas fa-ranking-star"></i>
+                        Competition Results
+                    </span>
+
+                    <h2>
+                        Kiddysexplorer Final Leaderboard
+                    </h2>
+
+                    <p>
+                        Celebrate the highest-scoring participants
+                        and review the complete competition ranking.
+                    </p>
+
+                </div>
+
+                <div class="welcome-icon">
+                    <i class="fas fa-trophy"></i>
+                </div>
+
+            </section>
+
+
+            <section class="admin-stat-grid" aria-label="Leaderboard statistics">
+
+                <article class="admin-stat-card stat-blue">
+
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+
+                    <div class="stat-content">
+                        <span>Ranked Participants</span>
+                        <h3 id="leaderRankedCount">0</h3>
+                        <p>Participants with final positions</p>
+                    </div>
+
+                </article>
+
+
+                <article class="admin-stat-card stat-green">
+
+                    <div class="stat-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+
+                    <div class="stat-content">
+                        <span>Winners Published</span>
+                        <h3 id="leaderPublishedCount">0</h3>
+                        <p>Published competition results</p>
+                    </div>
+
+                </article>
+
+
+                <article class="admin-stat-card stat-orange">
+
+                    <div class="stat-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+
+                    <div class="stat-content">
+                        <span>Highest Score</span>
+                        <h3 id="leaderHighestScore">—</h3>
+                        <p>Best live competition score</p>
+                    </div>
+
+                </article>
+
+
+                <article class="admin-stat-card stat-purple">
+
+                    <div class="stat-icon">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+
+                    <div class="stat-content">
+                        <span>Groups Represented</span>
+                        <h3 id="leaderGroupCount">0</h3>
+                        <p>Groups appearing in the ranking</p>
+                    </div>
+
+                </article>
+
+            </section>
+
+
+            <section class="admin-panel">
+
+                <div class="admin-panel-header">
+
+                    <div>
+                        <span class="panel-label">
+                            Winner Podium
+                        </span>
+
+                        <h2>Top Three Participants</h2>
+
+                        <p>
+                            The podium updates automatically from
+                            the saved live competition positions.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div id="leaderboardPodium" class="podium-grid">
+
+                    <article class="podium-card second">
+
+                        <span class="podium-rank">
+                            2nd
+                        </span>
+
+                        <div class="podium-medal">
+                            🥈
+                        </div>
+
+                        <div class="podium-avatar">
+                            <i class="fas fa-child-reaching"></i>
+                        </div>
+
+                        <h3 id="leaderSecondName">
+                            Not yet available
+                        </h3>
+
+                        <p id="leaderSecondGroup">
+                            Group —
+                        </p>
+
+                        <span id="leaderSecondScore" class="podium-score">
+                            <i class="fas fa-star"></i>
+                            —
+                        </span>
+
+                        <span id="leaderSecondPrize" class="podium-prize">
+                            No prize assigned
+                        </span>
+
+                    </article>
+
+
+                    <article class="podium-card first">
+
+                        <span class="podium-rank">
+                            1st
+                        </span>
+
+                        <div class="podium-medal">
+                            🥇
+                        </div>
+
+                        <div class="podium-avatar">
+                            <i class="fas fa-crown"></i>
+                        </div>
+
+                        <h3 id="leaderFirstName">
+                            Not yet available
+                        </h3>
+
+                        <p id="leaderFirstGroup">
+                            Group —
+                        </p>
+
+                        <span id="leaderFirstScore" class="podium-score">
+                            <i class="fas fa-star"></i>
+                            —
+                        </span>
+
+                        <span id="leaderFirstPrize" class="podium-prize">
+                            No prize assigned
+                        </span>
+
+                    </article>
+
+
+                    <article class="podium-card third">
+
+                        <span class="podium-rank">
+                            3rd
+                        </span>
+
+                        <div class="podium-medal">
+                            🥉
+                        </div>
+
+                        <div class="podium-avatar">
+                            <i class="fas fa-child-reaching"></i>
+                        </div>
+
+                        <h3 id="leaderThirdName">
+                            Not yet available
+                        </h3>
+
+                        <p id="leaderThirdGroup">
+                            Group —
+                        </p>
+
+                        <span id="leaderThirdScore" class="podium-score">
+                            <i class="fas fa-star"></i>
+                            —
+                        </span>
+
+                        <span id="leaderThirdPrize" class="podium-prize">
+                            No prize assigned
+                        </span>
+
+                    </article>
+
+                </div>
+
+            </section>
+
+
+            <section class="admin-panel">
+
+                <div class="admin-panel-header">
+
+                    <div>
+                        <span class="panel-label">
+                            Complete Ranking
+                        </span>
+
+                        <h2>Competition Leaderboard</h2>
+
+                        <p>
+                            Search, filter, print or export
+                            the final ranking.
+                        </p>
+                    </div>
+
+
+                    <div class="admin-export-actions">
+
+                        <button id="exportLeaderboardCsvBtn" class="admin-btn admin-btn-light" type="button">
+                            <i class="fas fa-file-csv"></i>
+                            Export CSV
+                        </button>
+
+                        <button id="printLeaderboardBtn" class="admin-btn admin-btn-primary" type="button">
+                            <i class="fas fa-print"></i>
+                            Print / PDF
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div class="leaderboard-note">
+
+                    <i class="fas fa-circle-info"></i>
+
+                    Rankings are based on saved live competition
+                    scores. Participants must have a final position
+                    before appearing on this page.
+
+                </div>
+
+
+                <div class="leaderboard-toolbar">
+
+                    <div class="leaderboard-toolbar-left">
+
+                        <div class="leaderboard-field leaderboard-search">
+
+                            <label for="leaderboardSearchInput">
+                                Search
+                            </label>
+
+                            <i class="fas fa-magnifying-glass"></i>
+
+                            <input id="leaderboardSearchInput" type="search"
+                                placeholder="Search participant or parent email" autocomplete="off">
+
+                        </div>
+
+
+                        <div class="leaderboard-field">
+
+                            <label for="leaderboardGroupFilter">
+                                Group
+                            </label>
+
+                            <select id="leaderboardGroupFilter">
+
+                                <option value="All">
+                                    All Groups
+                                </option>
+
+                                <option value="A">
+                                    Group A
+                                </option>
+
+                                <option value="B">
+                                    Group B
+                                </option>
+
+                                <option value="C">
+                                    Group C
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="leaderboard-field">
+
+                            <label for="leaderboardPublishFilter">
+                                Publication
+                            </label>
+
+                            <select id="leaderboardPublishFilter">
+
+                                <option value="All">
+                                    All Results
+                                </option>
+
+                                <option value="Published">
+                                    Published
+                                </option>
+
+                                <option value="Not Published">
+                                    Not Published
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="admin-table-container">
+
+                    <table class="admin-table">
+
+                        <thead>
+
+                            <tr>
+                                <th scope="col">Position</th>
+                                <th scope="col">Participant</th>
+                                <th scope="col">Group</th>
+                                <th scope="col">Section 2</th>
+                                <th scope="col">Live Score</th>
+                                <th scope="col">Prize</th>
+                                <th scope="col">Status</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="leaderboardTableBody">
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+                <div id="leaderboardEmptyState" class="leaderboard-empty" hidden>
+
+                    <i class="fas fa-ranking-star"></i>
+
+                    <h3>No ranked participants found</h3>
+
+                    <p>
+                        Save live scores and publish competition
+                        positions to display the leaderboard.
+                    </p>
+
+                </div>
+
+            </section>
+
+        </div>
+
+
+        <footer class="admin-footer">
+
+            <p>
+                &copy;
+                <span id="adminCurrentYear"></span>
+                Kiddysexplorer. All rights reserved.
+            </p>
+
+            <p>
+                Learn • Play • Grow • Win
+            </p>
+
+        </footer>
+
+    </main>
+
+
+    <div id="adminToastContainer" class="admin-toast-container" aria-live="polite" aria-atomic="true"></div>
+    <script src="assets/js/adminCommon.js"></script>
+    <script src="assets/js/participantStore.js"></script>
+    <script src="assets/js/adminLeaderboard.js"></script>
+
+
+    <script>
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+                const menuButton =
+                    document.getElementById(
+                        "adminMenuBtn"
+                    );
+
+                const sidebar =
+                    document.getElementById(
+                        "adminSidebar"
+                    );
+
+                const overlay =
+                    document.getElementById(
+                        "adminOverlay"
+                    );
+
+                const currentYear =
+                    document.getElementById(
+                        "adminCurrentYear"
+                    );
+
+
+                function closeSidebar() {
+                    sidebar?.classList.remove(
+                        "sidebar-open"
+                    );
+
+                    overlay?.classList.remove(
+                        "overlay-visible"
+                    );
+
+                    overlay?.setAttribute(
+                        "aria-hidden",
+                        "true"
+                    );
+
+                    menuButton?.setAttribute(
+                        "aria-expanded",
+                        "false"
+                    );
+                }
+
+
+                menuButton?.addEventListener(
+                    "click",
+                    function () {
+                        const isOpen =
+                            sidebar?.classList.toggle(
+                                "sidebar-open"
+                            );
+
+                        overlay?.classList.toggle(
+                            "overlay-visible",
+                            Boolean(isOpen)
+                        );
+
+                        overlay?.setAttribute(
+                            "aria-hidden",
+                            isOpen
+                                ? "false"
+                                : "true"
+                        );
+
+                        menuButton?.setAttribute(
+                            "aria-expanded",
+                            isOpen
+                                ? "true"
+                                : "false"
+                        );
+                    }
+                );
+
+
+                overlay?.addEventListener(
+                    "click",
+                    closeSidebar
+                );
+
+
+                document
+                    .querySelectorAll(
+                        ".sidebar-link"
+                    )
+                    .forEach(function (link) {
+                        link.addEventListener(
+                            "click",
+                            closeSidebar
+                        );
+                    });
+
+
+                window.addEventListener(
+                    "resize",
+                    function () {
+                        if (
+                            window.innerWidth >
+                            1024
+                        ) {
+                            closeSidebar();
+                        }
+                    }
+                );
+
+
+                if (currentYear) {
+                    currentYear.textContent =
+                        new Date().getFullYear();
+                }
+            }
+        );
+    </script>
+
+</body>
+
+</html>

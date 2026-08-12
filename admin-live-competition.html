@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Manage the Kiddysexplorer live quiz competition, attendance, live scores, rankings and prizes.">
+    <title>Live Competition | Kiddysexplorer Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/admin.css">
+    <style>
+        .competition-toolbar {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: end;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .competition-toolbar-left,
+        .competition-toolbar-right {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: end;
+        }
+
+        .competition-field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .competition-field label {
+            font-size: .82rem;
+            font-weight: 700;
+            color: #475569;
+        }
+
+        .competition-field input,
+        .competition-field select {
+            min-height: 44px;
+            border: 1px solid #dbe2ea;
+            border-radius: 10px;
+            padding: 0 12px;
+            background: #fff;
+            color: #172033;
+        }
+
+        .competition-search {
+            position: relative;
+            min-width: 280px;
+        }
+
+        .competition-search i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+        }
+
+        .competition-search input {
+            width: 100%;
+            padding-left: 40px;
+        }
+
+        .live-table input[type="number"],
+        .live-table select {
+            width: 100%;
+            min-width: 105px;
+            border: 1px solid #dbe2ea;
+            border-radius: 8px;
+            padding: 8px 10px;
+            background: #fff;
+        }
+
+        .attendance-toggle {
+            display: flex;
+            gap: 6px;
+        }
+
+        .attendance-btn {
+            border: 1px solid #dbe2ea;
+            background: #fff;
+            border-radius: 8px;
+            padding: 8px 10px;
+            cursor: pointer;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .attendance-btn.present.active {
+            background: #dcfce7;
+            border-color: #22c55e;
+            color: #166534;
+        }
+
+        .attendance-btn.absent.active {
+            background: #fee2e2;
+            border-color: #ef4444;
+            color: #991b1b;
+        }
+
+        .save-row-btn {
+            border: 0;
+            border-radius: 8px;
+            padding: 9px 12px;
+            background: #2563eb;
+            color: #fff;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .position-chip {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 48px;
+            padding: 7px 10px;
+            border-radius: 999px;
+            background: #eef2ff;
+            color: #3730a3;
+            font-weight: 800;
+        }
+
+        .position-chip.first {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .position-chip.second {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .position-chip.third {
+            background: #ffedd5;
+            color: #9a3412;
+        }
+
+        .competition-status {
+            display: inline-flex;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-weight: 700;
+            font-size: .8rem;
+        }
+
+        .competition-status.ready {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .competition-status.completed {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .winner-panel {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .winner-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 20px;
+            background: #fff;
+            text-align: center;
+        }
+
+        .winner-card .medal {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        .winner-card h3 {
+            margin: 4px 0;
+        }
+
+        .winner-card p {
+            margin: 4px 0;
+            color: #64748b;
+        }
+
+        .competition-note {
+            padding: 14px 16px;
+            border-radius: 12px;
+            background: #eff6ff;
+            color: #1e3a8a;
+            margin-bottom: 18px;
+        }
+
+        .live-empty {
+            text-align: center;
+            padding: 46px 20px;
+            color: #64748b;
+        }
+
+        .live-empty i {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+            color: #94a3b8;
+        }
+
+        @media (max-width: 900px) {
+            .winner-panel {
+                grid-template-columns: 1fr;
+            }
+
+            .competition-search {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body class="admin-page">
+    <div id="adminOverlay" class="admin-overlay" aria-hidden="true"></div>
+
+    <aside id="adminSidebar" class="admin-sidebar">
+        <div class="sidebar-brand">
+            <div class="sidebar-logo"><i class="fas fa-rocket"></i></div>
+            <div class="sidebar-brand-text"><strong>Kiddysexplorer</strong><span>Admin Panel</span></div>
+        </div>
+
+        <nav class="sidebar-navigation" aria-label="Admin navigation">
+            <span class="sidebar-section-title">Management</span>
+            <a href="admin-dashboard.html" class="sidebar-link"><i
+                    class="fas fa-table-columns"></i><span>Dashboard</span></a>
+            <a href="admin-participants.html" class="sidebar-link"><i
+                    class="fas fa-children"></i><span>Participants</span></a>
+            <a href="admin-live-competition.html" class="sidebar-link active"><i class="fas fa-video"></i><span>Live
+                    Competition</span></a>
+            <a href="admin-leaderboard.html" class="sidebar-link"><i
+                    class="fas fa-ranking-star"></i><span>Leaderboard</span></a>
+            <a href="admin-prizes.html" class="sidebar-link"><i class="fas fa-gift"></i><span>Prize
+                    Management</span></a>
+            <a href="admin-certificates.html" class="sidebar-link"><i
+                    class="fas fa-certificate"></i><span>Certificates</span></a>
+            <a href="admin-reports.html" class="sidebar-link"><i class="fas fa-file-lines"></i><span>Reports</span></a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <a href="quiz.html" class="sidebar-link"><i class="fas fa-circle-question"></i><span>Open Quiz
+                    Page</span></a>
+            <a href="index.html" class="sidebar-link"><i class="fas fa-house"></i><span>Back to Website</span></a>
+        </div>
+    </aside>
+
+    <main class="admin-main">
+        <header class="admin-header">
+            <div class="admin-header-left">
+                <button id="adminMenuBtn" class="admin-menu-btn" type="button" aria-label="Open administration menu"
+                    aria-controls="adminSidebar" aria-expanded="false"><i class="fas fa-bars"></i></button>
+                <div>
+                    <h1>Live Competition</h1>
+                    <p>Mark attendance, enter live scores, assign prizes and publish winners.</p>
+                </div>
+            </div>
+            <div class="admin-header-right">
+                <button id="refreshCompetitionBtn" class="header-action-btn" type="button"><i
+                        class="fas fa-arrows-rotate"></i><span>Refresh</span></button>
+                <div class="admin-profile">
+                    <div class="admin-avatar"><i class="fas fa-user-shield"></i></div>
+                    <div><strong>Administrator</strong><span>Kiddysexplorer</span></div>
+                </div>
+            </div>
+        </header>
+
+        <div class="admin-content">
+            <section class="admin-welcome">
+                <div class="welcome-content">
+                    <span class="admin-label"><i class="fas fa-trophy"></i>Competition Control</span>
+                    <h2>Manage the Live Quiz Competition</h2>
+                    <p>Only qualified participants appear on this page. Record attendance and scores, then publish the
+                        final ranking.</p>
+                </div>
+                <div class="welcome-icon"><i class="fas fa-video"></i></div>
+            </section>
+
+            <section class="admin-stat-grid" aria-label="Live competition statistics">
+                <article class="admin-stat-card stat-blue">
+                    <div class="stat-icon"><i class="fas fa-circle-check"></i></div>
+                    <div class="stat-content"><span>Qualified</span>
+                        <h3 id="liveQualifiedCount">0</h3>
+                        <p>Eligible participants</p>
+                    </div>
+                </article>
+                <article class="admin-stat-card stat-green">
+                    <div class="stat-icon"><i class="fas fa-user-check"></i></div>
+                    <div class="stat-content"><span>Present</span>
+                        <h3 id="livePresentCount">0</h3>
+                        <p>Attendance confirmed</p>
+                    </div>
+                </article>
+                <article class="admin-stat-card stat-orange">
+                    <div class="stat-icon"><i class="fas fa-user-xmark"></i></div>
+                    <div class="stat-content"><span>Absent</span>
+                        <h3 id="liveAbsentCount">0</h3>
+                        <p>Marked absent</p>
+                    </div>
+                </article>
+                <article class="admin-stat-card stat-purple">
+                    <div class="stat-icon"><i class="fas fa-flag-checkered"></i></div>
+                    <div class="stat-content"><span>Completed</span>
+                        <h3 id="liveCompletedCount">0</h3>
+                        <p>Scores entered</p>
+                    </div>
+                </article>
+            </section>
+
+            <section class="admin-panel">
+                <div class="admin-panel-header">
+                    <div><span class="panel-label">Live Competition Management</span>
+                        <h2>Qualified Participants</h2>
+                        <p>Enter and save each participant's live competition details.</p>
+                    </div>
+                    <div class="admin-export-actions">
+                        <button id="exportLiveCsvBtn" class="admin-btn admin-btn-light" type="button"><i
+                                class="fas fa-file-csv"></i>Export CSV</button>
+                        <button id="publishWinnersBtn" class="admin-btn admin-btn-success" type="button"><i
+                                class="fas fa-trophy"></i>Publish Winners</button>
+                    </div>
+                </div>
+
+                <div class="competition-note"><i class="fas fa-circle-info"></i> Ranking is calculated from the highest
+                    live score. Participants must be marked present and have a live score before receiving a position.
+                </div>
+
+                <div class="competition-toolbar">
+                    <div class="competition-toolbar-left">
+                        <div class="competition-field competition-search"><label for="liveSearchInput">Search</label><i
+                                class="fas fa-magnifying-glass"></i><input id="liveSearchInput" type="search"
+                                placeholder="Search participant or parent email" autocomplete="off"></div>
+                        <div class="competition-field"><label for="liveGroupFilter">Group</label><select
+                                id="liveGroupFilter">
+                                <option value="All">All Groups</option>
+                                <option value="A">Group A</option>
+                                <option value="B">Group B</option>
+                                <option value="C">Group C</option>
+                            </select></div>
+                        <div class="competition-field"><label for="liveAttendanceFilter">Attendance</label><select
+                                id="liveAttendanceFilter">
+                                <option value="All">All Attendance</option>
+                                <option value="Present">Present</option>
+                                <option value="Absent">Absent</option>
+                                <option value="Not Marked">Not Marked</option>
+                            </select></div>
+                    </div>
+                </div>
+
+                <div class="admin-table-container">
+                    <table class="admin-table live-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Participant</th>
+                                <th>Group</th>
+                                <th>Section 2</th>
+                                <th>Attendance</th>
+                                <th>Live Score</th>
+                                <th>Position</th>
+                                <th>Prize</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="liveCompetitionTableBody"></tbody>
+                    </table>
+                </div>
+
+                <div id="liveCompetitionEmptyState" class="live-empty" hidden><i class="fas fa-users-slash"></i>
+                    <h3>No qualified participants found</h3>
+                    <p>Qualified participants will appear here after completing Section 2 successfully.</p>
+                </div>
+            </section>
+
+            <section class="admin-panel">
+                <div class="admin-panel-header">
+                    <div><span class="panel-label">Final Results</span>
+                        <h2>Top Three Winners</h2>
+                        <p>The winner cards update automatically when live scores are saved.</p>
+                    </div>
+                </div>
+                <div id="winnerPanel" class="winner-panel">
+                    <article class="winner-card">
+                        <div class="medal">🥇</div>
+                        <h3 id="firstPlaceName">Not yet available</h3>
+                        <p id="firstPlaceScore">Enter live scores</p>
+                    </article>
+                    <article class="winner-card">
+                        <div class="medal">🥈</div>
+                        <h3 id="secondPlaceName">Not yet available</h3>
+                        <p id="secondPlaceScore">Enter live scores</p>
+                    </article>
+                    <article class="winner-card">
+                        <div class="medal">🥉</div>
+                        <h3 id="thirdPlaceName">Not yet available</h3>
+                        <p id="thirdPlaceScore">Enter live scores</p>
+                    </article>
+                </div>
+            </section>
+        </div>
+
+        <footer class="admin-footer">
+            <p>&copy; <span id="adminCurrentYear"></span> Kiddysexplorer. All rights reserved.</p>
+            <p>Learn • Play • Grow • Win</p>
+        </footer>
+    </main>
+
+    <div id="adminToastContainer" class="admin-toast-container" aria-live="polite" aria-atomic="true"></div>
+    <script src="assets/js/adminCommon.js"></script>
+
+    <script src="assets/js/participantStore.js"></script>
+    <script src="assets/js/adminLiveCompetition.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const menuButton = document.getElementById("adminMenuBtn");
+            const sidebar = document.getElementById("adminSidebar");
+            const overlay = document.getElementById("adminOverlay");
+            const currentYear = document.getElementById("adminCurrentYear");
+            function closeSidebar() {
+                sidebar?.classList.remove("sidebar-open");
+                overlay?.classList.remove("overlay-visible");
+                overlay?.setAttribute("aria-hidden", "true");
+                menuButton?.setAttribute("aria-expanded", "false");
+            }
+            menuButton?.addEventListener("click", function () {
+                const isOpen = sidebar?.classList.toggle("sidebar-open");
+                overlay?.classList.toggle("overlay-visible", Boolean(isOpen));
+                overlay?.setAttribute("aria-hidden", isOpen ? "false" : "true");
+                menuButton?.setAttribute("aria-expanded", isOpen ? "true" : "false");
+            });
+            overlay?.addEventListener("click", closeSidebar);
+            document.querySelectorAll(".sidebar-link").forEach(link => link.addEventListener("click", closeSidebar));
+            window.addEventListener("resize", () => { if (window.innerWidth > 1024) closeSidebar(); });
+            if (currentYear) currentYear.textContent = new Date().getFullYear();
+        });
+    </script>
+</body>
+
+</html>

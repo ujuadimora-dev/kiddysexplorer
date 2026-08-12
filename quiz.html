@@ -5,26 +5,6 @@
   <meta charset="UTF-8">
   <title>Kiddysexplorer Quiz Section</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <select id="languageSwitcher" aria-label="Choose language">
-
-    <option value="en">🇬🇧 English</option>
-
-    <option value="de">🇩🇪 Deutsch</option>
-
-    <option value="ig">🇳🇬 Igbo</option>
-
-    <option value="yo">🇳🇬 Yorùbá</option>
-
-    <option value="ha">🇳🇬 Hausa</option>
-
-    <option value="hi">🇮🇳 हिन्दी</option>
-
-    <option value="ur">🇵🇰 اردو</option>
-
-    <option value="zh">🇨🇳 简体中文</option>
-
-</select>
-
   <!-- Fonts & Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
@@ -38,6 +18,21 @@
 
 
 <body>
+
+  <!-- LANGUAGE SWITCHER -->
+  <div class="language-switcher-wrap">
+    <label for="languageSwitcher" class="sr-only">Choose language</label>
+    <select id="languageSwitcher" aria-label="Choose language">
+      <option value="en">🇬🇧 English</option>
+      <option value="de">🇩🇪 Deutsch</option>
+      <option value="ig">🇳🇬 Igbo</option>
+      <option value="yo">🇳🇬 Yorùbá</option>
+      <option value="ha">🇳🇬 Hausa</option>
+      <option value="hi">🇮🇳 हिन्दी</option>
+      <option value="ur">🇵🇰 اردو</option>
+      <option value="zh">🇨🇳 简体中文</option>
+    </select>
+  </div>
 
   <div class="page-watermarks">
 
@@ -364,7 +359,7 @@
   <!-- ========================================================= -->
   <!-- SCORE PAGE -->
   <!-- ========================================================= -->
-  <section id="scorePage" class="quiz-score">
+  <section id="scorePage" class="quiz-score" style="display:none;">
     <div class="container">
 
       <div class="score-card">
@@ -400,7 +395,7 @@
   <!-- ========================================================= -->
   <!-- CERTIFICATE PAGE -->
   <!-- ========================================================= -->
-  <section id="certificatePage" class="certificate-section">
+  <section id="certificatePage" class="certificate-section" style="display:none;">
     <div class="container">
 
       <div class="certificate-card premium-certificate">
@@ -454,7 +449,7 @@
 
         <div class="cert-buttons">
           <button id="downloadCertBtn" class="btn btn-primary">
-             Download PDF Certificate
+            <i class="fas fa-file-pdf"></i> Download PDF Certificate
           </button>
 
           <button id="certContinueBtn" class="btn btn-secondary cert-btn" onclick="QuizEngine.continueFlow()">
@@ -520,7 +515,7 @@
   <!-- WAITING PAGE (Videos) -->
   <!-- ========================================================= -->
   <!-- KEEP LEARNING -->
-  <section id="videos" class="waiting-section">
+  <section id="videos" class="waiting-section" style="display:none;">
 
     <div class="container">
 
@@ -614,12 +609,13 @@
 
   </section>
   <!-- ========================================================= -->
-  <!-- PRIZE PAGE -->
+  <!-- PRIZE WINNERS PAGE (READ-ONLY; PUBLISHED BY ADMIN) -->
   <!-- ========================================================= -->
-  <section id="prizePage" class="prize-section">
+  <section id="prizePage" class="prize-section" style="display:none;">
     <div class="container">
 
       <h2>🏆 Prize Winners Announcement</h2>
+      <p class="winner-status-note">Only winners published by the Kiddysexplorer admin team will appear here.</p>
 
       <!-- GROUP A -->
       <h3>Group A Winners</h3>
@@ -693,63 +689,7 @@
   </section>
 
 
-  <!-- ========================================================= -->
-  <!-- ADMIN DASHBOARD -->
-  <!-- ========================================================= -->
-  <section id="adminDashboard" class="admin-section">
-    <div class="container">
-
-      <h2>Admin Dashboard – Scores & Winners</h2>
-
-      <div class="filter-box">
-        <label>Select Group:</label>
-        <select id="groupFilter">
-          <option value="A">Group A</option>
-          <option value="B">Group B</option>
-          <option value="C">Group C</option>
-        </select>
-      </div>
-
-      <table class="score-table">
-        <thead>
-          <tr>
-            <th>Child Name</th>
-            <th>Parent Email</th>
-            <th>Section 1 Score</th>
-            <th>Section 2 Score</th>
-            <th>Final Session</th>
-            <th>Select Winner</th>
-          </tr>
-        </thead>
-        <tbody id="scoreTableBody"></tbody>
-      </table>
-
-      <div class="winner-box">
-        <h3>Select Winners</h3>
-
-        <label>1st Place:</label>
-        <select id="firstPlaceSelect"></select>
-
-        <label>2nd Place:</label>
-        <select id="secondPlaceSelect"></select>
-
-        <label>3rd Place:</label>
-        <select id="thirdPlaceSelect"></select>
-
-        <button id="publishWinnersBtn" class="btn btn-primary">Publish Winners</button>
-
-        <p id="winnerMessage" style="display:none;">Winners Published!</p>
-      </div>
-
-    </div>
-  </section>
-
-
-
-  <tbody id="scoreTableBody">
-    <!-- Rows will be inserted by JS -->
-  </tbody>
-
+  <!-- Administration has been moved to the dedicated admin pages. -->
 
   <!--=========================
         FOOTER
@@ -795,7 +735,7 @@
 
           <li><a href="#"><i class="fas fa-circle-info"></i> About Us</a></li>
 
-          <li><a href="donate.html"><i class="fas fa-question-circle"></i> Sponsor a child´sPrize</a></li>
+          <li><a href="donate.html"><i class="fas fa-question-circle"></i> Sponsor a Child's Prize</a></li>
 
           <li><a href="#"><i class="fas fa-phone"></i> Contact</a></li>
 
@@ -835,13 +775,13 @@
 
         <div class="gallery">
 
-          <img src="assets/images/gallery1.jpg">
+          <img src="assets/images/gallery1.jpg" alt="Kiddysexplorer gallery image 1" loading="lazy">
 
-          <img src="assets/images/gallery2.jpg">
+          <img src="assets/images/gallery2.jpg" alt="Kiddysexplorer gallery image 2" loading="lazy">
 
-          <img src="assets/images/gallery3.jpg">
+          <img src="assets/images/gallery3.jpg" alt="Kiddysexplorer gallery image 3" loading="lazy">
 
-          <img src="assets/images/gallery4.jpg">
+          <img src="assets/images/gallery4.jpg" alt="Kiddysexplorer gallery image 4" loading="lazy">
 
         </div>
 
@@ -879,19 +819,31 @@
 
   </footer>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
   <!-- ========================================================= -->
   <!-- JS FILE -->
   <!-- ========================================================= -->
   <script>
     function openPrizeInfo() {
-      document.getElementById("prizePopup").style.display = "flex";
+      const popup = document.getElementById("prizePopup");
+      if (popup) popup.style.display = "flex";
     }
 
     function closePrizeInfo() {
-      document.getElementById("prizePopup").style.display = "none";
+      const popup = document.getElementById("prizePopup");
+      if (popup) popup.style.display = "none";
     }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const popup = document.getElementById("prizePopup");
+
+      popup?.addEventListener("click", (event) => {
+        if (event.target === popup) closePrizeInfo();
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") closePrizeInfo();
+      });
+    });
   </script>
  <!-- PDF and image export libraries -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>

@@ -4,178 +4,103 @@
 
 const AdminDashboard = {
 
-    participants: [],
-    filteredParticipants: [],
+    initialized: false,
+
+    refreshTimer: null,
 
 
     /*=====================================
-        INITIALIZE DASHBOARD
+        INITIALIZE
     ======================================*/
 
     init() {
-        if (
-            typeof ParticipantStore === "undefined" ||
-            typeof ParticipantStore.getAll !== "function"
-        ) {
-            console.error(
-                "ParticipantStore is not loaded."
-            );
 
+        if (this.initialized) {
             return;
         }
 
-        this.loadParticipants();
+        if (typeof ParticipantStore === "undefined") {
+
+            console.error(
+                "ParticipantStore not found."
+            );
+
+            return;
+
+        }
+
+        this.initialized = true;
+
         this.bindEvents();
-        this.applyFilters();
+
+        this.refreshDashboard();
+
     },
 
 
     /*=====================================
-        LOAD PARTICIPANTS
-    ======================================*/
-
-    loadParticipants() {
-        const storedParticipants =
-            ParticipantStore.getAll();
-
-        this.participants =
-            Array.isArray(storedParticipants)
-                ? storedParticipants
-                : [];
-
-        this.filteredParticipants = [
-            ...this.participants
-        ];
-    },
-
-
-    /*=====================================
-        CONNECT DASHBOARD EVENTS
+        EVENTS
     ======================================*/
 
     bindEvents() {
-        const searchInput =
-            document.getElementById(
-                "adminSearchInput"
-            );
 
-        const groupFilter =
-            document.getElementById(
-                "adminGroupFilter"
-            );
+    window.addEventListener(
+        "participants-changed",
+        () => {
 
-        const statusFilter =
-            document.getElementById(
-                "adminStatusFilter"
-            );
+            this.refreshDashboard();
 
-        const csvButton =
-            document.getElementById(
-                "exportCsvBtn"
-            );
-
-        const excelButton =
-            document.getElementById(
-                "exportExcelBtn"
-            );
-
-        const refreshButton =
-            document.getElementById(
-                "refreshAdminBtn"
-            );
-
-
-        if (searchInput) {
-            searchInput.addEventListener(
-                "input",
-                () => {
-                    this.applyFilters();
-                }
-            );
         }
+    );
 
 
-        if (groupFilter) {
-            groupFilter.addEventListener(
-                "change",
-                () => {
-                    this.applyFilters();
-                }
-            );
+    window.addEventListener(
+        "kiddysexplorer:participants-changed",
+        () => {
+
+            this.refreshDashboard();
+
         }
+    );
 
 
-        if (statusFilter) {
-            statusFilter.addEventListener(
-                "change",
-                () => {
-                    this.applyFilters();
-                }
-            );
-        }
+    window.addEventListener(
+        "storage",
+        event => {
 
+            if (
+                event.key ===
+                ParticipantStore.storageKey
+            ) {
 
-        if (csvButton) {
-            csvButton.addEventListener(
-                "click",
-                () => {
-                    this.exportCSV();
-                }
-            );
-        }
+                this.refreshDashboard();
 
-
-        if (excelButton) {
-            excelButton.addEventListener(
-                "click",
-                () => {
-                    this.exportExcel();
-                }
-            );
-        }
-
-
-        if (refreshButton) {
-            refreshButton.addEventListener(
-                "click",
-                () => {
-                    this.refreshDashboard();
-                }
-            );
-        }
-
-
-        document.addEventListener(
-            "click",
-            event => {
-
-                const viewButton =
-                    event.target.closest(
-                        ".view-btn"
-                    );
-
-                if (viewButton) {
-                    this.viewParticipant(
-                        viewButton.dataset.id
-                    );
-
-                    return;
-                }
-
-
-                const deleteButton =
-                    event.target.closest(
-                        ".delete-btn"
-                    );
-
-                if (deleteButton) {
-                    this.deleteParticipant(
-                        deleteButton.dataset.id
-                    );
-                }
             }
-        );
-    },
+
+        }
+    );
+
+
+    window.addEventListener(
+        "focus",
+        () => {
+
+            this.refreshDashboard();
+
+        }
+    );
+
+
+    window.addEventListener(
+        "pageshow",
+        () => {
+
+            this.refreshDashboard();
+
+        }
+    );
+
+},
 
 
     /*=====================================
@@ -183,839 +108,1080 @@ const AdminDashboard = {
     ======================================*/
 
     refreshDashboard() {
-        this.loadParticipants();
-        this.applyFilters();
-    },
-
-
-    /*=====================================
-        APPLY SEARCH AND FILTERS
-    ======================================*/
-
-    applyFilters() {
-        const searchInput =
-            document.getElementById(
-                "adminSearchInput"
-            );
-
-        const groupFilter =
-            document.getElementById(
-                "adminGroupFilter"
-            );
-
-        const statusFilter =
-            document.getElementById(
-                "adminStatusFilter"
-            );
-
-
-        const searchTerm =
-            searchInput
-                ? searchInput.value
-                    .trim()
-                    .toLowerCase()
-                : "";
-
-        const selectedGroup =
-            groupFilter
-                ? groupFilter.value
-                : "All";
-
-        const selectedStatus =
-            statusFilter
-                ? statusFilter.value
-                : "All";
-
-
-        this.filteredParticipants =
-            this.participants.filter(
-                participant => {
-
-                    const childName =
-                        String(
-                            participant.childName ||
-                            ""
-                        ).toLowerCase();
-
-                    const parentEmail =
-                        String(
-                            participant.parentEmail ||
-                            ""
-                        ).toLowerCase();
-
-                    const group =
-                        String(
-                            participant.group ||
-                            ""
-                        ).toUpperCase();
-
-                    const status =
-                        this.getParticipantStatus(
-                            participant
-                        );
-
-
-                    const matchesSearch =
-                        !searchTerm ||
-                        childName.includes(
-                            searchTerm
-                        ) ||
-                        parentEmail.includes(
-                            searchTerm
-                        );
-
-
-                    const matchesGroup =
-                        selectedGroup === "All" ||
-                        selectedGroup === "" ||
-                        group ===
-                        selectedGroup.toUpperCase();
-
-
-                    const matchesStatus =
-                        selectedStatus === "All" ||
-                        selectedStatus === "" ||
-                        status === selectedStatus;
-
-
-                    return (
-                        matchesSearch &&
-                        matchesGroup &&
-                        matchesStatus
-                    );
-                }
-            );
-
-
-        this.renderTable();
-        this.updateStatistics();
-    },
-
-
-    /*=====================================
-        UPDATE STATISTICS
-    ======================================*/
-
-    updateStatistics() {
-        const total =
-            this.participants.length;
-
-        const qualified =
-            this.participants.filter(
-                participant =>
-                    this.getParticipantStatus(
-                        participant
-                    ) === "Qualified"
-            ).length;
-
-        const pending =
-            this.participants.filter(
-                participant =>
-                    this.getParticipantStatus(
-                        participant
-                    ) ===
-                    "Section 2 Pending"
-            ).length;
-
-        const learning =
-            this.participants.filter(
-                participant =>
-                    this.getParticipantStatus(
-                        participant
-                    ) ===
-                    "Keep Learning"
-            ).length;
-
-
-        this.setText(
-            "totalParticipants",
-            total
-        );
-
-        this.setText(
-            "qualifiedParticipants",
-            qualified
-        );
-
-        this.setText(
-            "pendingParticipants",
-            pending
-        );
-
-        this.setText(
-            "keepLearningParticipants",
-            learning
-        );
-    },
-
-
-    /*=====================================
-        RENDER PARTICIPANT TABLE
-    ======================================*/
-
-    renderTable() {
-        const tbody =
-            document.getElementById(
-                "participantTableBody"
-            );
-
-        const emptyState =
-            document.getElementById(
-                "adminEmptyState"
-            );
-
-
-        if (!tbody) {
-            console.error(
-                "participantTableBody was not found."
-            );
-
-            return;
-        }
-
-
-        tbody.innerHTML = "";
-
 
         if (
-            this.filteredParticipants.length ===
-            0
-        ) {
-            if (emptyState) {
-                emptyState.style.display =
-                    "flex";
-            }
-
-            return;
-        }
-
-
-        if (emptyState) {
-            emptyState.style.display =
-                "none";
-        }
-
-
-        this.filteredParticipants.forEach(
-            (participant, index) => {
-
-                const status =
-                    this.getParticipantStatus(
-                        participant
-                    );
-
-                const section1Score =
-                    this.formatScore(
-                        participant.section1Score
-                    );
-
-                const section2Score =
-                    this.formatScore(
-                        participant.section2Score
-                    );
-
-                const attendance =
-                    participant.liveAttendance ||
-                    "Not Marked";
-
-                const liveScore =
-                    this.formatOptionalValue(
-                        participant.liveScore
-                    );
-
-                const position =
-                    this.formatOptionalValue(
-                        participant.finalPosition
-                    );
-
-                const prize =
-                    this.formatOptionalValue(
-                        participant.prize
-                    );
-
-                const row =
-                    document.createElement(
-                        "tr"
-                    );
-
-
-                row.innerHTML = `
-                    <td>
-                        ${index + 1}
-                    </td>
-
-                    <td>
-                        <div class="participant-info">
-
-                            <strong>
-                                ${this.escapeHTML(
-                                    participant.childName ||
-                                    "Unknown"
-                                )}
-                            </strong>
-
-                            <small>
-                                ${this.escapeHTML(
-                                    participant.parentEmail ||
-                                    ""
-                                )}
-                            </small>
-
-                        </div>
-                    </td>
-
-                    <td>
-                        ${this.escapeHTML(
-                            participant.age ??
-                            "—"
-                        )}
-                    </td>
-
-                    <td>
-                        ${this.escapeHTML(
-                            participant.group ||
-                            "—"
-                        )}
-                    </td>
-
-                    <td>
-                        ${section1Score}
-                    </td>
-
-                    <td>
-                        ${section2Score}
-                    </td>
-
-                    <td>
-                        <span
-                            class="status-badge ${this.statusClass(
-                                status
-                            )}"
-                        >
-                            ${this.escapeHTML(
-                                status
-                            )}
-                        </span>
-                    </td>
-
-                    <td>
-                        ${this.escapeHTML(
-                            attendance
-                        )}
-                    </td>
-
-                    <td>
-                        ${this.escapeHTML(
-                            liveScore
-                        )}
-                    </td>
-
-                    <td>
-                        ${this.escapeHTML(
-                            position
-                        )}
-                    </td>
-
-                    <td>
-                        ${this.escapeHTML(
-                            prize
-                        )}
-                    </td>
-
-                    <td>
-                        <div class="table-actions">
-
-                            <button
-                                type="button"
-                                class="view-btn"
-                                data-id="${this.escapeHTML(
-                                    participant.id ||
-                                    ""
-                                )}"
-                            >
-                                View
-                            </button>
-
-                            <button
-                                type="button"
-                                class="delete-btn"
-                                data-id="${this.escapeHTML(
-                                    participant.id ||
-                                    ""
-                                )}"
-                            >
-                                Delete
-                            </button>
-
-                        </div>
-                    </td>
-                `;
-
-
-                tbody.appendChild(row);
-            }
-        );
-    },
-
-
-    /*=====================================
-        DETERMINE PARTICIPANT STATUS
-    ======================================*/
-
-    getParticipantStatus(participant) {
-        if (
-            participant.status &&
-            participant.status !==
+            typeof ParticipantStore ===
             "undefined"
         ) {
-            return participant.status;
+
+            return;
+
         }
 
+        const statistics =
+            ParticipantStore.getStatistics();
 
-        if (
-            participant.qualified === true
-        ) {
-            return "Qualified";
-        }
-
-
-        if (
-            participant.section2Score !== null &&
-            participant.section2Score !==
-            undefined &&
-            participant.section2Score !== ""
-        ) {
-            return Number(
-                participant.section2Score
-            ) >= 80
-                ? "Qualified"
-                : "Keep Learning";
-        }
-
-
-        if (
-            participant.section1Score !== null &&
-            participant.section1Score !==
-            undefined &&
-            participant.section1Score !== ""
-        ) {
-            return Number(
-                participant.section1Score
-            ) >= 80
-                ? "Section 2 Pending"
-                : "Keep Learning";
-        }
-
-
-        return "Registered";
-    },
-
-
-    /*=====================================
-        STATUS CSS CLASS
-    ======================================*/
-
-    statusClass(status) {
-        switch (status) {
-            case "Qualified":
-                return "qualified";
-
-            case "Section 2 Pending":
-                return "pending";
-
-            case "Keep Learning":
-                return "learning";
-
-            default:
-                return "registered";
-        }
-    },
-
-
-    /*=====================================
-        FORMAT SCORE
-    ======================================*/
-
-    formatScore(score) {
-        if (
-            score === null ||
-            score === undefined ||
-            score === ""
-        ) {
-            return "—";
-        }
-
-        return (
-            this.escapeHTML(score) +
-            "%"
+        this.updateStatisticsCards(
+            statistics
         );
+
+        this.loadRecentParticipants();
+
+        this.loadTopPerformers();
+
+        this.loadQualificationChart();
+
+        this.loadGroupChart();
+
     },
 
 
     /*=====================================
-        FORMAT OPTIONAL VALUE
+        UPDATE CARDS
     ======================================*/
 
-    formatOptionalValue(value) {
-        if (
-            value === null ||
-            value === undefined ||
-            value === ""
-        ) {
-            return "—";
-        }
+   /*=====================================
+    UPDATE CARDS
+======================================*/
 
-        return String(value);
-    },
+updateStatisticsCards() {
 
+    const participants =
+        ParticipantStore.getAll();
+
+
+    const groupA =
+        participants.filter(
+            participant =>
+                String(
+                    participant.group || ""
+                )
+                    .trim()
+                    .toUpperCase() === "A"
+        ).length;
+
+
+    const groupB =
+        participants.filter(
+            participant =>
+                String(
+                    participant.group || ""
+                )
+                    .trim()
+                    .toUpperCase() === "B"
+        ).length;
+
+
+    const groupC =
+        participants.filter(
+            participant =>
+                String(
+                    participant.group || ""
+                )
+                    .trim()
+                    .toUpperCase() === "C"
+        ).length;
+
+
+    const qualified =
+        participants.filter(
+            participant =>
+                participant.qualified === true ||
+                String(
+                    participant.status || ""
+                )
+                    .trim()
+                    .toLowerCase() ===
+                    "qualified"
+        ).length;
+
+
+    const registered =
+        participants.filter(
+            participant => {
+
+                const status =
+                    String(
+                        participant.status ||
+                        "Registered"
+                    )
+                        .trim()
+                        .toLowerCase();
+
+                return status ===
+                    "registered";
+
+            }
+        ).length;
+
+
+    const keepLearning =
+        participants.filter(
+            participant =>
+                String(
+                    participant.status || ""
+                )
+                    .trim()
+                    .toLowerCase() ===
+                    "keep learning"
+        ).length;
+
+
+    const section2Pending =
+        participants.filter(
+            participant =>
+                String(
+                    participant.status || ""
+                )
+                    .trim()
+                    .toLowerCase() ===
+                    "section 2 pending"
+        ).length;
+
+
+    const liveCompetition =
+        participants.filter(
+            participant =>
+                participant.liveScore !== null &&
+                participant.liveScore !== undefined &&
+                participant.liveScore !== ""
+        ).length;
+
+
+    const certificates =
+        participants.filter(
+            participant =>
+                String(
+                    participant.certificateStatus ||
+                    ""
+                )
+                    .trim()
+                    .toLowerCase() ===
+                    "generated"
+        ).length;
+
+
+    this.setValue(
+        "totalParticipantsCard",
+        participants.length
+    );
+
+
+    this.setValue(
+        "groupACard",
+        groupA
+    );
+
+
+    this.setValue(
+        "groupBCard",
+        groupB
+    );
+
+
+    this.setValue(
+        "groupCCard",
+        groupC
+    );
+
+
+    this.setValue(
+        "qualifiedCard",
+        qualified
+    );
+
+
+    this.setValue(
+        "registeredCard",
+        registered
+    );
+
+
+    this.setValue(
+        "learningCard",
+        keepLearning
+    );
+
+
+    this.setValue(
+        "section2PendingCard",
+        section2Pending
+    );
+
+
+    this.setValue(
+        "liveCompetitionCard",
+        liveCompetition
+    );
+
+
+    this.setValue(
+        "certificateCard",
+        certificates
+    );
+
+},
 
     /*=====================================
-        VIEW PARTICIPANT
+        RECENT PARTICIPANTS
     ======================================*/
 
-    viewParticipant(participantId) {
-        if (
-            typeof AdminParticipants !==
-            "undefined" &&
-            typeof AdminParticipants.openParticipant ===
-            "function"
-        ) {
-            AdminParticipants.openParticipant(
-                participantId
+    loadRecentParticipants() {
+
+        const container =
+            document.getElementById(
+                "recentParticipants"
             );
 
+        if (!container) {
+
+            return;
+
+        }
+
+        const participants =
+            ParticipantStore
+                .getAll()
+
+                .sort((a,b)=>
+
+                    new Date(
+                        b.registrationDate
+                    ) -
+
+                    new Date(
+                        a.registrationDate
+                    )
+
+                )
+
+                .slice(0,5);
+
+        if (
+            participants.length === 0
+        ) {
+
+            container.innerHTML =
+
+                `<p>No participants yet.</p>`;
+
+            return;
+
+        }
+
+        container.innerHTML =
+
+            participants.map(
+
+                participant =>
+
+                `
+
+<div class="dashboard-participant">
+
+<strong>
+
+${participant.childName}
+
+</strong>
+
+<span>
+
+Group ${participant.group}
+
+</span>
+
+</div>
+
+`
+
+            ).join("");
+
+    },
+
+
+    /*=====================================
+        TOP PERFORMERS
+    ======================================*/
+
+    loadTopPerformers() {
+
+        const container =
+            document.getElementById(
+                "topPerformers"
+            );
+
+        if (!container) {
+
+            return;
+
+        }
+
+        const leaders =
+            ParticipantStore
+                .getLeaderboard()
+                .slice(0,5);
+
+        if (
+            leaders.length === 0
+        ) {
+
+            container.innerHTML =
+
+                `<p>No scores yet.</p>`;
+
+            return;
+
+        }
+
+        container.innerHTML =
+
+            leaders.map(
+
+                (participant,index)=>`
+
+<div class="leader-row">
+
+<span>
+
+${index+1}.
+
+${participant.childName}
+
+</span>
+
+<strong>
+
+${participant.liveScore ?? participant.section2Score ?? participant.section1Score ?? 0}%
+
+</strong>
+
+</div>
+
+`
+
+            ).join("");
+
+    },
+
+        /*=====================================
+        GROUP CHART
+    ======================================*/
+
+    loadGroupChart() {
+
+        const canvas =
+            document.getElementById(
+                "groupChart"
+            );
+
+        if (
+            !canvas ||
+            typeof Chart === "undefined"
+        ) {
             return;
         }
 
-        console.error(
-            "AdminParticipants is not loaded."
-        );
+        const stats =
+            ParticipantStore.getStatistics();
 
-        alert(
-            "Participant profile could not open because adminParticipants.js is not loaded."
-        );
+        if (this.groupChart) {
+            this.groupChart.destroy();
+        }
+
+        this.groupChart =
+            new Chart(canvas, {
+
+                type: "doughnut",
+
+                data: {
+
+                    labels: [
+
+                        "Group A",
+                        "Group B",
+                        "Group C"
+
+                    ],
+
+                    datasets: [{
+
+                        data: [
+
+                            stats.groupA,
+                            stats.groupB,
+                            stats.groupC
+
+                        ],
+
+                        backgroundColor: [
+
+                            "#4F46E5",
+                            "#10B981",
+                            "#F59E0B"
+
+                        ]
+
+                    }]
+
+                },
+
+                options: {
+
+                    responsive: true,
+
+                    plugins: {
+
+                        legend: {
+
+                            position: "bottom"
+
+                        }
+
+                    }
+
+                }
+
+            });
+
     },
 
 
     /*=====================================
-        DELETE PARTICIPANT
+        QUALIFICATION CHART
     ======================================*/
 
-    deleteParticipant(participantId) {
-        const participant =
-            this.participants.find(
-                item =>
-                    String(item.id) ===
-                    String(participantId)
+    loadQualificationChart() {
+
+        const canvas =
+            document.getElementById(
+                "qualificationChart"
             );
 
-        if (!participant) {
+        if (
+            !canvas ||
+            typeof Chart === "undefined"
+        ) {
             return;
         }
 
+        const stats =
+            ParticipantStore.getStatistics();
 
         if (
-            typeof AdminParticipants !==
-            "undefined" &&
-            typeof AdminParticipants.openParticipant ===
-            "function"
+            this.qualificationChart
         ) {
-            AdminParticipants.openParticipant(
-                participantId
+
+            this.qualificationChart.destroy();
+
+        }
+
+        this.qualificationChart =
+            new Chart(canvas,{
+
+                type:"bar",
+
+                data:{
+
+                    labels:[
+
+                        "Qualified",
+                        "Learning",
+                        "Registered"
+
+                    ],
+
+                    datasets:[{
+
+                        label:"Participants",
+
+                        data:[
+
+                            stats.qualified,
+                            stats.keepLearning,
+                            stats.registered
+
+                        ],
+
+                        backgroundColor:[
+
+                            "#22C55E",
+                            "#F97316",
+                            "#3B82F6"
+
+                        ]
+
+                    }]
+
+                },
+
+                options:{
+
+                    responsive:true,
+
+                    scales:{
+
+                        y:{
+
+                            beginAtZero:true
+
+                        }
+
+                    }
+
+                }
+
+            });
+
+    },
+
+
+    /*=====================================
+        REGISTRATION TREND
+    ======================================*/
+
+    loadRegistrationChart() {
+
+        const canvas =
+            document.getElementById(
+                "registrationChart"
             );
 
-            if (
-                typeof AdminParticipants.requestDelete ===
-                "function"
-            ) {
-                AdminParticipants.requestDelete();
+        if (
+            !canvas ||
+            typeof Chart === "undefined"
+        ) {
+
+            return;
+
+        }
+
+        const participants =
+            ParticipantStore.getAll();
+
+        const days = {};
+
+        participants.forEach(
+
+            participant=>{
+
+                const date =
+                    new Date(
+                        participant.registrationDate
+                    )
+
+                    .toLocaleDateString();
+
+                days[date] =
+                    (days[date]||0)+1;
+
             }
 
-            return;
-        }
-
-
-        const confirmed =
-            confirm(
-                `Delete ${participant.childName}'s record?`
-            );
-
-
-        if (!confirmed) {
-            return;
-        }
-
-
-        const removed =
-            ParticipantStore.remove(
-                participantId
-            );
-
-
-        if (!removed) {
-            alert(
-                "The participant could not be deleted."
-            );
-
-            return;
-        }
-
-
-        this.refreshDashboard();
-    },
-
-
-    /*=====================================
-        EXPORT CSV
-    ======================================*/
-
-    exportCSV() {
-        if (
-            this.filteredParticipants.length ===
-            0
-        ) {
-            alert(
-                "There are no participants to export."
-            );
-
-            return;
-        }
-
-
-        const headers = [
-            "Participant",
-            "Age",
-            "Group",
-            "Parent Email",
-            "Section 1",
-            "Section 2",
-            "Status",
-            "Attendance",
-            "Live Score",
-            "Position",
-            "Prize"
-        ];
-
-
-        const rows =
-            this.filteredParticipants.map(
-                participant => [
-                    participant.childName ||
-                    "",
-                    participant.age ?? "",
-                    participant.group || "",
-                    participant.parentEmail ||
-                    "",
-                    participant.section1Score ??
-                    "",
-                    participant.section2Score ??
-                    "",
-                    this.getParticipantStatus(
-                        participant
-                    ),
-                    participant.liveAttendance ||
-                    "",
-                    participant.liveScore ??
-                    "",
-                    participant.finalPosition ??
-                    "",
-                    participant.prize ?? ""
-                ]
-            );
-
-
-        const csvContent =
-            [headers, ...rows]
-                .map(row =>
-                    row
-                        .map(value =>
-                            this.csvEscape(
-                                value
-                            )
-                        )
-                        .join(",")
-                )
-                .join("\n");
-
-
-        this.downloadFile(
-            "\uFEFF" + csvContent,
-            "kiddysexplorer-participants.csv",
-            "text/csv;charset=utf-8;"
-        );
-    },
-
-
-    /*=====================================
-        EXPORT EXCEL
-    ======================================*/
-
-    exportExcel() {
-        if (
-            this.filteredParticipants.length ===
-            0
-        ) {
-            alert(
-                "There are no participants to export."
-            );
-
-            return;
-        }
-
-
-        if (
-            typeof XLSX === "undefined"
-        ) {
-            alert(
-                "The Excel library is not loaded."
-            );
-
-            return;
-        }
-
-
-        const exportData =
-            this.filteredParticipants.map(
-                participant => ({
-                    Participant:
-                        participant.childName ||
-                        "",
-
-                    Age:
-                        participant.age ??
-                        "",
-
-                    Group:
-                        participant.group ||
-                        "",
-
-                    "Parent Email":
-                        participant.parentEmail ||
-                        "",
-
-                    "Section 1":
-                        participant.section1Score ??
-                        "",
-
-                    "Section 2":
-                        participant.section2Score ??
-                        "",
-
-                    Status:
-                        this.getParticipantStatus(
-                            participant
-                        ),
-
-                    Attendance:
-                        participant.liveAttendance ||
-                        "",
-
-                    "Live Score":
-                        participant.liveScore ??
-                        "",
-
-                    Position:
-                        participant.finalPosition ??
-                        "",
-
-                    Prize:
-                        participant.prize ??
-                        ""
-                })
-            );
-
-
-        const worksheet =
-            XLSX.utils.json_to_sheet(
-                exportData
-            );
-
-        const workbook =
-            XLSX.utils.book_new();
-
-
-        XLSX.utils.book_append_sheet(
-            workbook,
-            worksheet,
-            "Participants"
         );
 
+        if (
+            this.registrationChart
+        ) {
 
-        XLSX.writeFile(
-            workbook,
-            "kiddysexplorer-participants.xlsx"
-        );
-    },
+            this.registrationChart.destroy();
 
+        }
 
-    /*=====================================
-        DOWNLOAD FILE
-    ======================================*/
+        this.registrationChart =
+            new Chart(canvas,{
 
-    downloadFile(
-        content,
-        filename,
-        mimeType
-    ) {
-        const blob =
-            new Blob(
-                [content],
-                {
-                    type: mimeType
+                type:"line",
+
+                data:{
+
+                    labels:
+                        Object.keys(days),
+
+                    datasets:[{
+
+                        label:
+                            "Registrations",
+
+                        data:
+                            Object.values(days),
+
+                        borderWidth:3,
+
+                        tension:.3,
+
+                        fill:false
+
+                    }]
+
+                },
+
+                options:{
+
+                    responsive:true
+
                 }
+
+            });
+
+    },
+
+
+    /*=====================================
+        RECENT ACTIVITY
+    ======================================*/
+
+    loadRecentActivity() {
+
+        const container =
+            document.getElementById(
+                "recentActivity"
             );
 
-        const url =
-            URL.createObjectURL(blob);
+        if (!container) {
 
-        const link =
-            document.createElement("a");
+            return;
 
-        link.href = url;
-        link.download = filename;
+        }
 
-        document.body.appendChild(link);
+        const participants =
+            ParticipantStore
+                .getAll()
 
-        link.click();
-        link.remove();
+                .sort(
 
-        URL.revokeObjectURL(url);
+                    (a,b)=>
+
+                        new Date(
+                            b.lastUpdated ||
+                            b.registrationDate
+                        )
+
+                        -
+
+                        new Date(
+                            a.lastUpdated ||
+                            a.registrationDate
+                        )
+
+                )
+
+                .slice(0,8);
+
+        if (
+            participants.length===0
+        ) {
+
+            container.innerHTML=
+
+                "<p>No recent activity.</p>";
+
+            return;
+
+        }
+
+        container.innerHTML=
+
+            participants.map(
+
+                participant=>`
+
+<div class="activity-row">
+
+<div>
+
+<strong>
+
+${participant.childName}
+
+</strong>
+
+</div>
+
+<div>
+
+${participant.status ||
+"Registered"}
+
+</div>
+
+</div>
+
+`
+
+            ).join("");
+
     },
 
 
     /*=====================================
-        CSV ESCAPE
+        QUICK ACTION BUTTONS
     ======================================*/
 
-    csvEscape(value) {
-        const stringValue =
-            String(value ?? "");
+    bindQuickActions() {
 
-        return (
-            '"' +
-            stringValue.replace(
-                /"/g,
-                '""'
-            ) +
-            '"'
+        this.quickAction(
+
+            "quickRegister",
+
+            "admin-participants.html"
+
         );
+
+        this.quickAction(
+
+            "quickCertificates",
+
+            "admin-certificates.html"
+
+        );
+
+        this.quickAction(
+
+            "quickPrizes",
+
+            "admin-prizes.html"
+
+        );
+
+        this.quickAction(
+
+            "quickLeaderboard",
+
+            "admin-leaderboard.html"
+
+        );
+
+        this.quickAction(
+
+            "quickReports",
+
+            "admin-reports.html"
+
+        );
+
+        this.quickAction(
+
+            "quickLive",
+
+            "admin-live-competition.html"
+
+        );
+
     },
 
 
-    /*=====================================
-        SET TEXT SAFELY
+    quickAction(id,url){
+
+        const button =
+            document.getElementById(id);
+
+        if(!button)
+            return;
+
+        button.onclick=()=>{
+
+            window.location.href=url;
+
+        };
+
+    },
+
+        /*=====================================
+        UPDATE DASHBOARD VALUE
     ======================================*/
 
-    setText(elementId, value) {
+    setValue(elementId, value) {
+
         const element =
             document.getElementById(
                 elementId
             );
 
-        if (element) {
-            element.textContent =
-                value;
+        if (!element) {
+
+            return;
+
         }
+
+        const numericValue =
+            Number(value);
+
+        if (
+            Number.isFinite(
+                numericValue
+            )
+        ) {
+
+            this.animateNumber(
+                element,
+                numericValue
+            );
+
+            return;
+
+        }
+
+        element.textContent =
+            value ?? 0;
+
+    },
+
+
+    /*=====================================
+        ANIMATE STATISTIC NUMBERS
+    ======================================*/
+
+    animateNumber(
+        element,
+        finalValue
+    ) {
+
+        const currentValue =
+            Number(
+                element.dataset.currentValue ||
+                element.textContent
+            ) || 0;
+
+        const targetValue =
+            Number(finalValue) || 0;
+
+        if (
+            currentValue ===
+            targetValue
+        ) {
+
+            element.textContent =
+                targetValue;
+
+            element.dataset.currentValue =
+                targetValue;
+
+            return;
+
+        }
+
+        const duration =
+            500;
+
+        const startTime =
+            performance.now();
+
+
+        const updateNumber =
+            currentTime => {
+
+                const elapsed =
+                    currentTime -
+                    startTime;
+
+                const progress =
+                    Math.min(
+                        elapsed / duration,
+                        1
+                    );
+
+                const animatedValue =
+                    Math.round(
+                        currentValue +
+                        (
+                            targetValue -
+                            currentValue
+                        ) *
+                        progress
+                    );
+
+                element.textContent =
+                    animatedValue;
+
+                if (
+                    progress < 1
+                ) {
+
+                    requestAnimationFrame(
+                        updateNumber
+                    );
+
+                    return;
+
+                }
+
+                element.textContent =
+                    targetValue;
+
+                element.dataset.currentValue =
+                    targetValue;
+
+            };
+
+
+        requestAnimationFrame(
+            updateNumber
+        );
+
+    },
+
+
+    /*=====================================
+        FORMAT PARTICIPANT SCORE
+    ======================================*/
+
+    getParticipantScore(
+        participant
+    ) {
+
+        const possibleScores = [
+
+            participant.liveScore,
+            participant.section2Score,
+            participant.section1Score
+
+        ];
+
+        const score =
+            possibleScores.find(
+                value =>
+                    value !== null &&
+                    value !== undefined &&
+                    value !== "" &&
+                    Number.isFinite(
+                        Number(value)
+                    )
+            );
+
+        return score === undefined
+            ? 0
+            : Number(score);
+
+    },
+
+
+    /*=====================================
+        FORMAT DATE
+    ======================================*/
+
+    formatDate(value) {
+
+        if (!value) {
+
+            return "—";
+
+        }
+
+        const date =
+            new Date(value);
+
+        if (
+            Number.isNaN(
+                date.getTime()
+            )
+        ) {
+
+            return String(value);
+
+        }
+
+        return date.toLocaleDateString(
+            "en-GB",
+            {
+                day:
+                    "2-digit",
+
+                month:
+                    "short",
+
+                year:
+                    "numeric"
+            }
+        );
+
+    },
+
+
+    /*=====================================
+        FORMAT RELATIVE TIME
+    ======================================*/
+
+    formatRelativeTime(value) {
+
+        if (!value) {
+
+            return "Date unavailable";
+
+        }
+
+        const date =
+            new Date(value);
+
+        if (
+            Number.isNaN(
+                date.getTime()
+            )
+        ) {
+
+            return "Date unavailable";
+
+        }
+
+        const difference =
+            Date.now() -
+            date.getTime();
+
+        const minutes =
+            Math.floor(
+                difference /
+                60000
+            );
+
+        if (minutes < 1) {
+
+            return "Just now";
+
+        }
+
+        if (minutes < 60) {
+
+            return `${minutes} minute${
+                minutes === 1
+                    ? ""
+                    : "s"
+            } ago`;
+
+        }
+
+        const hours =
+            Math.floor(
+                minutes / 60
+            );
+
+        if (hours < 24) {
+
+            return `${hours} hour${
+                hours === 1
+                    ? ""
+                    : "s"
+            } ago`;
+
+        }
+
+        const days =
+            Math.floor(
+                hours / 24
+            );
+
+        if (days < 7) {
+
+            return `${days} day${
+                days === 1
+                    ? ""
+                    : "s"
+            } ago`;
+
+        }
+
+        return this.formatDate(
+            value
+        );
+
     },
 
 
@@ -1024,7 +1190,10 @@ const AdminDashboard = {
     ======================================*/
 
     escapeHTML(value) {
-        return String(value ?? "")
+
+        return String(
+            value ?? ""
+        )
             .replace(
                 /&/g,
                 "&amp;"
@@ -1045,26 +1214,47 @@ const AdminDashboard = {
                 /'/g,
                 "&#039;"
             );
+
     }
+
 };
 
 
 /*=========================================
-    START ADMIN DASHBOARD
+    EXTEND THE MAIN DASHBOARD REFRESH
+==========================================*/
+
+const originalDashboardRefresh =
+    AdminDashboard
+        .refreshDashboard
+        .bind(
+            AdminDashboard
+        );
+
+
+AdminDashboard.refreshDashboard =
+    function() {
+
+        originalDashboardRefresh();
+
+        this.loadRegistrationChart();
+
+        this.loadRecentActivity();
+
+    };
+
+
+/*=========================================
+    START DASHBOARD WHEN PAGE IS READY
 ==========================================*/
 
 document.addEventListener(
     "DOMContentLoaded",
-    function () {
+    () => {
+
         AdminDashboard.init();
 
-        if (
-            typeof AdminParticipants !==
-            "undefined" &&
-            typeof AdminParticipants.init ===
-            "function"
-        ) {
-            AdminParticipants.init();
-        }
+        AdminDashboard.bindQuickActions();
+
     }
 );

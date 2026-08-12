@@ -1,0 +1,3891 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="Kiddysexplorer certificate management and certificate generator.">
+
+    <title>
+        Certificate Management | Kiddysexplorer Admin
+    </title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        :root {
+
+            --primary: #253b80;
+            --primary-dark: #172554;
+            --primary-light: #eaf0ff;
+
+            --secondary: #f28c28;
+            --secondary-dark: #d96f0b;
+
+            --success: #15803d;
+            --success-light: #dcfce7;
+
+            --warning: #b45309;
+            --warning-light: #fef3c7;
+
+            --danger: #b91c1c;
+            --danger-light: #fee2e2;
+
+            --info: #0369a1;
+            --info-light: #e0f2fe;
+
+            --gold: #d4a017;
+            --gold-light: #fff8d6;
+
+            --silver: #64748b;
+            --silver-light: #f1f5f9;
+
+            --bronze: #a16207;
+            --bronze-light: #fef3c7;
+
+            --background: #f4f7fb;
+            --surface: #ffffff;
+            --surface-soft: #f8fafc;
+
+            --text: #1e293b;
+            --text-soft: #64748b;
+            --border: #dbe2ea;
+
+            --sidebar-width: 270px;
+            --header-height: 74px;
+
+            --shadow-sm:
+                0 4px 12px rgba(15, 23, 42, 0.06);
+
+            --shadow-md:
+                0 12px 30px rgba(15, 23, 42, 0.10);
+
+            --radius-sm: 10px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+
+        }
+
+
+        * {
+
+            box-sizing: border-box;
+
+        }
+
+
+        html {
+
+            scroll-behavior: smooth;
+
+        }
+
+
+        body {
+
+            margin: 0;
+            background: var(--background);
+            color: var(--text);
+            font-family: "Inter", sans-serif;
+
+        }
+
+
+        button,
+        input,
+        select,
+        textarea {
+
+            font: inherit;
+
+        }
+
+
+        button {
+
+            cursor: pointer;
+
+        }
+
+
+        a {
+
+            color: inherit;
+            text-decoration: none;
+
+        }
+
+
+        [hidden] {
+
+            display: none !important;
+
+        }
+
+
+        .admin-layout {
+
+            min-height: 100vh;
+
+        }
+
+
+        .sidebar {
+
+            position: fixed;
+            inset: 0 auto 0 0;
+            z-index: 1000;
+
+            width: var(--sidebar-width);
+            overflow-y: auto;
+
+            background:
+                linear-gradient(180deg,
+                    #172554 0%,
+                    #253b80 60%,
+                    #1e3a8a 100%);
+
+            color: #ffffff;
+
+            box-shadow:
+                8px 0 24px rgba(15, 23, 42, 0.16);
+
+            transition:
+                transform 0.25s ease;
+
+        }
+
+
+        .sidebar-header {
+
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            min-height: var(--header-height);
+            padding: 14px 20px;
+
+            border-bottom:
+                1px solid rgba(255, 255, 255, 0.12);
+
+        }
+
+
+        .brand-logo {
+
+            display: grid;
+            place-items: center;
+
+            width: 44px;
+            height: 44px;
+
+            flex: 0 0 44px;
+
+            border-radius: 14px;
+
+            background:
+                linear-gradient(135deg,
+                    #ffffff,
+                    #dbeafe);
+
+            color: var(--primary);
+
+            font-size: 22px;
+
+        }
+
+
+        .brand-text strong {
+
+            display: block;
+            font-size: 16px;
+
+        }
+
+
+        .brand-text span {
+
+            display: block;
+            margin-top: 2px;
+
+            color:
+                rgba(255, 255, 255, 0.72);
+
+            font-size: 12px;
+
+        }
+
+
+        .sidebar-close-btn {
+
+            display: none;
+            align-items: center;
+            justify-content: center;
+
+            width: 38px;
+            height: 38px;
+
+            margin-left: auto;
+
+            border: 0;
+            border-radius: 10px;
+
+            background:
+                rgba(255, 255, 255, 0.12);
+
+            color: #ffffff;
+
+        }
+
+
+        .sidebar-nav {
+
+            padding: 18px 12px 28px;
+
+        }
+
+
+        .nav-label {
+
+            margin:
+                18px 12px 8px;
+
+            color:
+                rgba(255, 255, 255, 0.52);
+
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+
+        }
+
+
+        .nav-link {
+
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            min-height: 46px;
+            margin-bottom: 5px;
+            padding: 10px 14px;
+
+            border-radius: 12px;
+
+            color:
+                rgba(255, 255, 255, 0.82);
+
+            transition:
+                background 0.2s ease,
+                color 0.2s ease,
+                transform 0.2s ease;
+
+        }
+
+
+        .nav-link i {
+
+            width: 20px;
+            text-align: center;
+
+        }
+
+
+        .nav-link:hover {
+
+            background:
+                rgba(255, 255, 255, 0.10);
+
+            color: #ffffff;
+
+            transform:
+                translateX(3px);
+
+        }
+
+
+        .nav-link.active {
+
+            background: #ffffff;
+            color: var(--primary);
+            font-weight: 700;
+
+            box-shadow:
+                0 10px 22px rgba(15, 23, 42, 0.18);
+
+        }
+
+
+        .main-area {
+
+            min-height: 100vh;
+            margin-left: var(--sidebar-width);
+
+        }
+
+
+        .top-header {
+
+            position: sticky;
+            top: 0;
+            z-index: 900;
+
+            display: flex;
+            align-items: center;
+            gap: 16px;
+
+            min-height: var(--header-height);
+            padding: 12px 28px;
+
+            background:
+                rgba(255, 255, 255, 0.94);
+
+            border-bottom:
+                1px solid var(--border);
+
+            backdrop-filter:
+                blur(12px);
+
+        }
+
+
+        .menu-toggle {
+
+            display: none;
+            align-items: center;
+            justify-content: center;
+
+            width: 42px;
+            height: 42px;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 12px;
+
+            background: #ffffff;
+            color: var(--primary);
+
+        }
+
+
+        .header-title {
+
+            min-width: 0;
+
+        }
+
+
+        .header-title h1 {
+
+            margin: 0;
+
+            color: var(--primary-dark);
+
+            font-size:
+                clamp(20px, 2.5vw, 27px);
+
+        }
+
+
+        .header-title p {
+
+            margin:
+                4px 0 0;
+
+            color: var(--text-soft);
+            font-size: 13px;
+
+        }
+
+
+        .header-actions {
+
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            margin-left: auto;
+
+        }
+
+
+        .admin-profile {
+
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            padding:
+                6px 12px 6px 6px;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 999px;
+
+            background: #ffffff;
+
+        }
+
+
+        .admin-avatar {
+
+            display: grid;
+            place-items: center;
+
+            width: 36px;
+            height: 36px;
+
+            border-radius: 50%;
+
+            background:
+                linear-gradient(135deg,
+                    var(--secondary),
+                    #fbbf24);
+
+            color: #ffffff;
+            font-weight: 800;
+
+        }
+
+
+        .admin-profile strong {
+
+            display: block;
+            font-size: 13px;
+
+        }
+
+
+        .admin-profile span {
+
+            display: block;
+            color: var(--text-soft);
+            font-size: 11px;
+
+        }
+
+
+        .page-content {
+
+            width:
+                min(1600px, 100%);
+
+            margin: 0 auto;
+            padding: 28px;
+
+        }
+
+
+        .page-hero {
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+
+            margin-bottom: 24px;
+            padding: 26px;
+
+            border-radius: var(--radius-lg);
+
+            background:
+                linear-gradient(135deg,
+                    #172554,
+                    #253b80 55%,
+                    #3b82f6);
+
+            color: #ffffff;
+
+            box-shadow: var(--shadow-md);
+
+        }
+
+
+        .page-hero-content {
+
+            max-width: 760px;
+
+        }
+
+
+        .page-hero-badge {
+
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+
+            margin-bottom: 12px;
+            padding: 7px 12px;
+
+            border:
+                1px solid rgba(255, 255, 255, 0.22);
+
+            border-radius: 999px;
+
+            background:
+                rgba(255, 255, 255, 0.12);
+
+            font-size: 12px;
+            font-weight: 700;
+
+        }
+
+
+        .page-hero h2 {
+
+            margin: 0;
+
+            font-size:
+                clamp(25px, 4vw, 40px);
+
+            line-height: 1.1;
+
+        }
+
+
+        .page-hero p {
+
+            max-width: 680px;
+            margin:
+                12px 0 0;
+
+            color:
+                rgba(255, 255, 255, 0.82);
+
+            line-height: 1.7;
+
+        }
+
+
+        .page-hero-icon {
+
+            display: grid;
+            place-items: center;
+
+            width: 112px;
+            height: 112px;
+
+            flex: 0 0 112px;
+
+            border:
+                1px solid rgba(255, 255, 255, 0.20);
+
+            border-radius: 32px;
+
+            background:
+                rgba(255, 255, 255, 0.12);
+
+            font-size: 50px;
+
+            transform:
+                rotate(-5deg);
+
+        }
+
+
+        .button {
+
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+
+            min-height: 42px;
+            padding: 10px 16px;
+
+            border:
+                1px solid transparent;
+
+            border-radius: 11px;
+
+            font-weight: 700;
+
+            transition:
+                transform 0.18s ease,
+                box-shadow 0.18s ease,
+                background 0.18s ease;
+
+        }
+
+
+        .button:hover {
+
+            transform:
+                translateY(-1px);
+
+        }
+
+
+        .button-primary {
+
+            background: var(--primary);
+            color: #ffffff;
+
+            box-shadow:
+                0 8px 18px rgba(37, 59, 128, 0.22);
+
+        }
+
+
+        .button-primary:hover {
+
+            background: #1d4ed8;
+
+        }
+
+
+        .button-secondary {
+
+            background: var(--secondary);
+            color: #ffffff;
+
+            box-shadow:
+                0 8px 18px rgba(242, 140, 40, 0.22);
+
+        }
+
+
+        .button-secondary:hover {
+
+            background: var(--secondary-dark);
+
+        }
+
+
+        .button-light {
+
+            border-color: var(--border);
+            background: #ffffff;
+            color: var(--text);
+
+        }
+
+
+        .button-light:hover {
+
+            background: var(--surface-soft);
+
+        }
+
+
+        .button-success {
+
+            background: var(--success);
+            color: #ffffff;
+
+        }
+
+
+        .button-danger {
+
+            background: var(--danger);
+            color: #ffffff;
+
+        }
+
+
+        .button-sm {
+
+            min-height: 36px;
+            padding: 8px 12px;
+            font-size: 13px;
+
+        }
+
+
+        .button-icon {
+
+            width: 42px;
+            padding: 0;
+
+        }
+
+
+        .statistics-grid {
+
+            display: grid;
+            grid-template-columns:
+                repeat(4, minmax(0, 1fr));
+
+            gap: 18px;
+            margin-bottom: 24px;
+
+        }
+
+
+        .stat-card {
+
+            position: relative;
+            overflow: hidden;
+
+            display: flex;
+            align-items: center;
+            gap: 15px;
+
+            min-height: 126px;
+            padding: 20px;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: var(--radius-md);
+
+            background: var(--surface);
+
+            box-shadow: var(--shadow-sm);
+
+        }
+
+
+        .stat-card::after {
+
+            content: "";
+
+            position: absolute;
+            right: -30px;
+            bottom: -30px;
+
+            width: 90px;
+            height: 90px;
+
+            border-radius: 50%;
+
+            background:
+                currentColor;
+
+            opacity: 0.06;
+
+        }
+
+
+        .stat-icon {
+
+            display: grid;
+            place-items: center;
+
+            width: 54px;
+            height: 54px;
+
+            flex: 0 0 54px;
+
+            border-radius: 16px;
+
+            font-size: 23px;
+
+        }
+
+
+        .stat-card.total {
+
+            color: var(--primary);
+
+        }
+
+
+        .stat-card.total .stat-icon {
+
+            background: var(--primary-light);
+
+        }
+
+
+        .stat-card.generated {
+
+            color: var(--success);
+
+        }
+
+
+        .stat-card.generated .stat-icon {
+
+            background: var(--success-light);
+
+        }
+
+
+        .stat-card.pending {
+
+            color: var(--warning);
+
+        }
+
+
+        .stat-card.pending .stat-icon {
+
+            background: var(--warning-light);
+
+        }
+
+
+        .stat-card.printed {
+
+            color: var(--info);
+
+        }
+
+
+        .stat-card.printed .stat-icon {
+
+            background: var(--info-light);
+
+        }
+
+
+        .stat-details {
+
+            color: var(--text);
+
+        }
+
+
+        .stat-label {
+
+            margin-bottom: 6px;
+
+            color: var(--text-soft);
+
+            font-size: 13px;
+            font-weight: 600;
+
+        }
+
+
+        .stat-value {
+
+            color: var(--primary-dark);
+
+            font-size: 28px;
+            font-weight: 800;
+
+        }
+
+
+        .stat-note {
+
+            margin-top: 4px;
+
+            color: var(--text-soft);
+            font-size: 11px;
+
+        }
+
+
+        .panel {
+
+            margin-bottom: 24px;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: var(--radius-md);
+
+            background: var(--surface);
+
+            box-shadow: var(--shadow-sm);
+
+        }
+
+
+        .panel-header {
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+
+            min-height: 72px;
+            padding: 16px 20px;
+
+            border-bottom:
+                1px solid var(--border);
+
+        }
+
+
+        .panel-heading h3 {
+
+            display: flex;
+            align-items: center;
+            gap: 9px;
+
+            margin: 0;
+
+            color: var(--primary-dark);
+            font-size: 18px;
+
+        }
+
+
+        .panel-heading p {
+
+            margin:
+                5px 0 0;
+
+            color: var(--text-soft);
+            font-size: 12px;
+
+        }
+
+
+        .panel-actions {
+
+            display: flex;
+            flex-wrap: wrap;
+            gap: 9px;
+
+        }
+
+
+        .panel-body {
+
+            padding: 20px;
+
+        }
+
+
+        .batch-grid {
+
+            display: grid;
+            grid-template-columns:
+                repeat(4, minmax(0, 1fr));
+
+            gap: 14px;
+
+        }
+
+
+        .batch-option {
+
+            position: relative;
+
+            display: flex;
+            align-items: center;
+            gap: 13px;
+
+            min-height: 92px;
+            padding: 16px;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 14px;
+
+            background: var(--surface-soft);
+
+            transition:
+                border-color 0.2s ease,
+                background 0.2s ease,
+                transform 0.2s ease;
+
+        }
+
+
+        .batch-option:hover {
+
+            border-color: #93c5fd;
+            background: #eff6ff;
+            transform:
+                translateY(-2px);
+
+        }
+
+
+        .batch-option-icon {
+
+            display: grid;
+            place-items: center;
+
+            width: 44px;
+            height: 44px;
+
+            flex: 0 0 44px;
+
+            border-radius: 13px;
+
+            background: var(--primary-light);
+            color: var(--primary);
+
+            font-size: 19px;
+
+        }
+
+
+        .batch-option strong {
+
+            display: block;
+            color: var(--primary-dark);
+            font-size: 14px;
+
+        }
+
+
+        .batch-option span {
+
+            display: block;
+            margin-top: 4px;
+
+            color: var(--text-soft);
+            font-size: 11px;
+            line-height: 1.4;
+
+        }
+
+
+        .filters-grid {
+
+            display: grid;
+            grid-template-columns:
+                minmax(220px, 1.6fr) repeat(3, minmax(150px, 1fr)) auto;
+
+            gap: 12px;
+            align-items: end;
+
+        }
+
+
+        .form-group {
+
+            min-width: 0;
+
+        }
+
+
+        .form-group label {
+
+            display: block;
+            margin-bottom: 7px;
+
+            color: #334155;
+
+            font-size: 12px;
+            font-weight: 700;
+
+        }
+
+
+        .form-control {
+
+            width: 100%;
+            min-height: 44px;
+            padding: 10px 12px;
+
+            border:
+                1px solid #cbd5e1;
+
+            border-radius: 10px;
+
+            background: #ffffff;
+            color: var(--text);
+
+            outline: none;
+
+            transition:
+                border-color 0.18s ease,
+                box-shadow 0.18s ease;
+
+        }
+
+
+        .form-control:focus {
+
+            border-color: #60a5fa;
+
+            box-shadow:
+                0 0 0 4px rgba(59, 130, 246, 0.12);
+
+        }
+
+
+        textarea.form-control {
+
+            min-height: 105px;
+            resize: vertical;
+
+        }
+
+
+        .search-field {
+
+            position: relative;
+
+        }
+
+
+        .search-field i {
+
+            position: absolute;
+            top: 50%;
+            left: 13px;
+
+            color: #94a3b8;
+
+            transform:
+                translateY(-50%);
+
+            pointer-events: none;
+
+        }
+
+
+        .search-field .form-control {
+
+            padding-left: 39px;
+
+        }
+
+
+        .certificate-workspace {
+
+            display: grid;
+            grid-template-columns:
+                minmax(0, 1.25fr) minmax(340px, 0.75fr);
+
+            gap: 22px;
+            align-items: start;
+
+        }
+
+
+        .table-container {
+
+            overflow-x: auto;
+
+        }
+
+
+        .data-table {
+
+            width: 100%;
+            min-width: 1020px;
+
+            border-collapse: collapse;
+
+        }
+
+
+        .data-table th {
+
+            padding: 13px 14px;
+
+            border-bottom:
+                1px solid var(--border);
+
+            background: var(--surface-soft);
+
+            color: #475569;
+
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.04em;
+            text-align: left;
+            text-transform: uppercase;
+
+            white-space: nowrap;
+
+        }
+
+
+        .data-table td {
+
+            padding: 14px;
+
+            border-bottom:
+                1px solid #edf2f7;
+
+            color: #334155;
+
+            font-size: 13px;
+            vertical-align: middle;
+
+        }
+
+
+        .data-table tbody tr:hover {
+
+            background: #f8fbff;
+
+        }
+
+
+        .participant-cell {
+
+            display: flex;
+            align-items: center;
+            gap: 11px;
+
+        }
+
+
+        .participant-avatar {
+
+            display: grid;
+            place-items: center;
+
+            width: 39px;
+            height: 39px;
+
+            flex: 0 0 39px;
+
+            border-radius: 50%;
+
+            background:
+                linear-gradient(135deg,
+                    #dbeafe,
+                    #bfdbfe);
+
+            color: var(--primary);
+            font-size: 12px;
+            font-weight: 800;
+
+        }
+
+
+        .participant-cell strong {
+
+            display: block;
+            color: var(--primary-dark);
+
+        }
+
+
+        .participant-cell small {
+
+            display: block;
+            margin-top: 3px;
+
+            color: var(--text-soft);
+
+        }
+
+
+        .badge {
+
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+
+            min-height: 26px;
+            padding: 4px 9px;
+
+            border-radius: 999px;
+
+            font-size: 11px;
+            font-weight: 800;
+
+            white-space: nowrap;
+
+        }
+
+
+        .badge-group {
+
+            background: var(--primary-light);
+            color: var(--primary);
+
+        }
+
+
+        .badge-gold {
+
+            background: var(--gold-light);
+            color: var(--gold);
+
+        }
+
+
+        .badge-silver {
+
+            background: var(--silver-light);
+            color: var(--silver);
+
+        }
+
+
+        .badge-bronze {
+
+            background: var(--bronze-light);
+            color: var(--bronze);
+
+        }
+
+
+        .badge-participation {
+
+            background: var(--info-light);
+            color: var(--info);
+
+        }
+
+
+        .badge-success {
+
+            background: var(--success-light);
+            color: var(--success);
+
+        }
+
+
+        .badge-warning {
+
+            background: var(--warning-light);
+            color: var(--warning);
+
+        }
+
+
+        .badge-info {
+
+            background: var(--info-light);
+            color: var(--info);
+
+        }
+
+
+        .table-actions {
+
+            display: flex;
+            align-items: center;
+            gap: 6px;
+
+        }
+
+
+        .icon-btn {
+
+            display: inline-grid;
+            place-items: center;
+
+            width: 35px;
+            height: 35px;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 9px;
+
+            background: #ffffff;
+            color: #475569;
+
+            transition:
+                background 0.18s ease,
+                color 0.18s ease,
+                border-color 0.18s ease;
+
+        }
+
+
+        .icon-btn:hover {
+
+            border-color: #93c5fd;
+            background: #eff6ff;
+            color: var(--primary);
+
+        }
+
+
+        .icon-btn.danger:hover {
+
+            border-color: #fecaca;
+            background: #fff1f2;
+            color: var(--danger);
+
+        }
+
+
+        .result-summary {
+
+            padding:
+                14px 20px;
+
+            border-top:
+                1px solid var(--border);
+
+            color: var(--text-soft);
+            font-size: 12px;
+
+        }
+
+
+        .empty-state {
+
+            padding: 52px 24px;
+            text-align: center;
+
+        }
+
+
+        .empty-state-icon {
+
+            display: grid;
+            place-items: center;
+
+            width: 72px;
+            height: 72px;
+
+            margin: 0 auto 16px;
+
+            border-radius: 22px;
+
+            background: var(--primary-light);
+            color: var(--primary);
+
+            font-size: 30px;
+
+        }
+
+
+        .empty-state h4 {
+
+            margin:
+                0 0 8px;
+
+            color: var(--primary-dark);
+            font-size: 18px;
+
+        }
+
+
+        .empty-state p {
+
+            max-width: 460px;
+            margin:
+                0 auto 18px;
+
+            color: var(--text-soft);
+            line-height: 1.6;
+
+        }
+
+
+        .preview-panel {
+
+            position: sticky;
+            top:
+                calc(var(--header-height) + 20px);
+
+        }
+
+
+        .certificate-preview-wrapper {
+
+            padding: 18px;
+
+            background:
+                linear-gradient(135deg,
+                    #edf2f7,
+                    #f8fafc);
+
+        }
+
+
+        .certificate-preview {
+
+            position: relative;
+            overflow: hidden;
+
+            width: 100%;
+            aspect-ratio: 1.414 / 1;
+
+            padding: 28px;
+
+            border:
+                10px solid #f7d774;
+
+            outline:
+                3px solid #9a6700;
+
+            outline-offset: -16px;
+
+            background:
+                linear-gradient(135deg,
+                    #fffdf4,
+                    #ffffff 45%,
+                    #fff9df);
+
+            color: #172554;
+
+            box-shadow:
+                0 16px 35px rgba(15, 23, 42, 0.15);
+
+            text-align: center;
+
+        }
+
+
+        .certificate-preview::before,
+        .certificate-preview::after {
+
+            content: "";
+
+            position: absolute;
+
+            width: 180px;
+            height: 180px;
+
+            border:
+                3px solid rgba(212, 160, 23, 0.18);
+
+            border-radius: 50%;
+
+        }
+
+
+        .certificate-preview::before {
+
+            top: -95px;
+            left: -95px;
+
+        }
+
+
+        .certificate-preview::after {
+
+            right: -95px;
+            bottom: -95px;
+
+        }
+
+
+        .certificate-logo {
+
+            display: grid;
+            place-items: center;
+
+            width: 52px;
+            height: 52px;
+
+            margin: 0 auto 8px;
+
+            border-radius: 50%;
+
+            background: var(--primary);
+            color: #ffffff;
+
+            font-size: 24px;
+
+        }
+
+
+        .certificate-organization {
+
+            margin-bottom: 6px;
+
+            color: var(--primary);
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+
+        }
+
+
+        .certificate-title {
+
+            margin: 4px 0;
+
+            font-family:
+                "Playfair Display",
+                serif;
+
+            font-size:
+                clamp(20px, 2.6vw, 34px);
+
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+
+        }
+
+
+        .certificate-subtitle {
+
+            margin:
+                5px 0 12px;
+
+            color: #64748b;
+
+            font-size: 10px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+
+        }
+
+
+        .certificate-presented {
+
+            margin: 0;
+            color: #64748b;
+            font-size: 10px;
+
+        }
+
+
+        .certificate-name {
+
+            min-height: 46px;
+            margin:
+                4px auto 6px;
+
+            font-family:
+                "Great Vibes",
+                cursive;
+
+            color: #9a6700;
+
+            font-size:
+                clamp(28px, 4.2vw, 52px);
+
+            line-height: 1.1;
+
+        }
+
+
+        .certificate-description {
+
+            max-width: 82%;
+            margin: 0 auto;
+
+            color: #475569;
+
+            font-size:
+                clamp(8px, 1vw, 12px);
+
+            line-height: 1.55;
+
+        }
+
+
+        .certificate-highlight {
+
+            color: var(--primary);
+            font-weight: 800;
+
+        }
+
+
+        .certificate-footer {
+
+            position: absolute;
+            right: 34px;
+            bottom: 26px;
+            left: 34px;
+
+            display: grid;
+            grid-template-columns:
+                1fr auto 1fr;
+
+            gap: 16px;
+            align-items: end;
+
+        }
+
+
+        .signature-block {
+
+            text-align: center;
+
+        }
+
+
+        .signature-line {
+
+            height: 1px;
+            margin-bottom: 5px;
+
+            background: #94a3b8;
+
+        }
+
+
+        .signature-name {
+
+            font-size: 9px;
+            font-weight: 700;
+
+        }
+
+
+        .signature-role {
+
+            color: #64748b;
+            font-size: 8px;
+
+        }
+
+
+        .certificate-seal {
+
+            display: grid;
+            place-items: center;
+
+            width: 58px;
+            height: 58px;
+
+            border:
+                3px double #c28a00;
+
+            border-radius: 50%;
+
+            background:
+                radial-gradient(circle,
+                    #fff9cf,
+                    #f7d774);
+
+            color: #9a6700;
+
+            font-size: 8px;
+            font-weight: 800;
+            line-height: 1.2;
+            text-align: center;
+            text-transform: uppercase;
+
+        }
+
+
+        .certificate-number {
+
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+
+            color: #64748b;
+
+            font-size: 7px;
+            letter-spacing: 0.08em;
+
+            transform:
+                translateX(-50%);
+
+        }
+
+
+        .preview-placeholder {
+
+            display: grid;
+            place-items: center;
+
+            min-height: 440px;
+            padding: 30px;
+
+            border:
+                2px dashed #cbd5e1;
+
+            border-radius: 14px;
+
+            color: var(--text-soft);
+            text-align: center;
+
+        }
+
+
+        .preview-placeholder i {
+
+            margin-bottom: 14px;
+
+            color: var(--primary);
+            font-size: 42px;
+
+        }
+
+
+        .preview-placeholder strong {
+
+            display: block;
+            margin-bottom: 7px;
+
+            color: var(--primary-dark);
+
+        }
+
+
+        .preview-actions {
+
+            display: grid;
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+
+            gap: 10px;
+            padding: 16px 18px 18px;
+
+            border-top:
+                1px solid var(--border);
+
+        }
+
+
+        .modal {
+
+            position: fixed;
+            inset: 0;
+            z-index: 2000;
+
+            display: grid;
+            place-items: center;
+
+            padding: 20px;
+
+            background:
+                rgba(15, 23, 42, 0.68);
+
+            backdrop-filter:
+                blur(5px);
+
+        }
+
+
+        .modal-dialog {
+
+            width:
+                min(760px, 100%);
+
+            max-height:
+                calc(100vh - 40px);
+
+            overflow-y: auto;
+
+            border-radius: 20px;
+
+            background: #ffffff;
+
+            box-shadow:
+                0 28px 70px rgba(15, 23, 42, 0.30);
+
+        }
+
+
+        .modal-dialog.large {
+
+            width:
+                min(1020px, 100%);
+
+        }
+
+
+        .modal-header {
+
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+
+            padding: 20px 22px;
+
+            border-bottom:
+                1px solid var(--border);
+
+        }
+
+
+        .modal-header h3 {
+
+            margin: 0;
+
+            color: var(--primary-dark);
+
+        }
+
+
+        .modal-header p {
+
+            margin:
+                5px 0 0;
+
+            color: var(--text-soft);
+            font-size: 12px;
+
+        }
+
+
+        .modal-close {
+
+            display: grid;
+            place-items: center;
+
+            width: 38px;
+            height: 38px;
+
+            flex: 0 0 38px;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 10px;
+
+            background: #ffffff;
+            color: #64748b;
+
+        }
+
+
+        .modal-body {
+
+            padding: 22px;
+
+        }
+
+
+        .modal-footer {
+
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+
+            padding: 16px 22px;
+
+            border-top:
+                1px solid var(--border);
+
+            background: var(--surface-soft);
+
+        }
+
+
+        .form-grid {
+
+            display: grid;
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+
+            gap: 16px;
+
+        }
+
+
+        .full-width {
+
+            grid-column: 1 / -1;
+
+        }
+
+
+        .checkbox-row {
+
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            min-height: 44px;
+
+        }
+
+
+        .checkbox-row input {
+
+            width: 18px;
+            height: 18px;
+
+        }
+
+
+        .participant-preview-card {
+
+            display: flex;
+            align-items: center;
+            gap: 13px;
+
+            padding: 15px;
+
+            border:
+                1px solid #bfdbfe;
+
+            border-radius: 13px;
+
+            background: #eff6ff;
+
+        }
+
+
+        .participant-preview-avatar {
+
+            display: grid;
+            place-items: center;
+
+            width: 46px;
+            height: 46px;
+
+            flex: 0 0 46px;
+
+            border-radius: 50%;
+
+            background: var(--primary);
+            color: #ffffff;
+
+            font-size: 13px;
+            font-weight: 800;
+
+        }
+
+
+        .participant-preview-card strong {
+
+            display: block;
+
+            color: var(--primary-dark);
+
+        }
+
+
+        .participant-preview-card span {
+
+            display: block;
+            margin-top: 4px;
+
+            color: var(--text-soft);
+            font-size: 12px;
+
+        }
+
+
+        .sidebar-overlay {
+
+            position: fixed;
+            inset: 0;
+            z-index: 950;
+
+            display: none;
+
+            background:
+                rgba(15, 23, 42, 0.58);
+
+        }
+
+
+        @media (max-width: 1280px) {
+
+            .statistics-grid {
+
+                grid-template-columns:
+                    repeat(2, minmax(0, 1fr));
+
+            }
+
+            .batch-grid {
+
+                grid-template-columns:
+                    repeat(2, minmax(0, 1fr));
+
+            }
+
+            .filters-grid {
+
+                grid-template-columns:
+                    repeat(2, minmax(0, 1fr));
+
+            }
+
+            .certificate-workspace {
+
+                grid-template-columns: 1fr;
+
+            }
+
+            .preview-panel {
+
+                position: static;
+
+            }
+
+        }
+
+
+        @media (max-width: 900px) {
+
+            :root {
+
+                --sidebar-width: 270px;
+
+            }
+
+            .sidebar {
+
+                transform:
+                    translateX(-100%);
+
+            }
+
+            .sidebar.open {
+
+                transform:
+                    translateX(0);
+
+            }
+
+            .sidebar-close-btn,
+            .menu-toggle {
+
+                display: inline-flex;
+
+            }
+
+            .sidebar-overlay.active {
+
+                display: block;
+
+            }
+
+            .main-area {
+
+                margin-left: 0;
+
+            }
+
+            .top-header {
+
+                padding:
+                    12px 18px;
+
+            }
+
+            .page-content {
+
+                padding: 20px;
+
+            }
+
+        }
+
+
+        @media (max-width: 650px) {
+
+            .admin-profile-text {
+
+                display: none;
+
+            }
+
+            .admin-profile {
+
+                padding:
+                    4px;
+
+            }
+
+            .page-hero {
+
+                padding: 22px;
+
+            }
+
+            .page-hero-icon {
+
+                display: none;
+
+            }
+
+            .statistics-grid,
+            .batch-grid,
+            .filters-grid,
+            .form-grid {
+
+                grid-template-columns: 1fr;
+
+            }
+
+            .panel-header {
+
+                align-items: flex-start;
+                flex-direction: column;
+
+            }
+
+            .panel-actions {
+
+                width: 100%;
+
+            }
+
+            .panel-actions .button {
+
+                flex: 1;
+
+            }
+
+            .preview-actions {
+
+                grid-template-columns: 1fr;
+
+            }
+
+            .modal-footer {
+
+                flex-direction: column-reverse;
+
+            }
+
+            .modal-footer .button {
+
+                width: 100%;
+
+            }
+
+        }
+
+
+        @media print {
+
+            body {
+
+                background: #ffffff;
+
+            }
+
+            .sidebar,
+            .top-header,
+            .page-hero,
+            .statistics-grid,
+            .batch-panel,
+            .filters-panel,
+            .certificate-list-panel,
+            .preview-actions,
+            .sidebar-overlay {
+
+                display: none !important;
+
+            }
+
+            .main-area {
+
+                margin: 0;
+
+            }
+
+            .page-content {
+
+                width: 100%;
+                padding: 0;
+
+            }
+
+            .certificate-workspace {
+
+                display: block;
+
+            }
+
+            .preview-panel {
+
+                border: 0;
+                box-shadow: none;
+
+            }
+
+            .preview-panel .panel-header {
+
+                display: none;
+
+            }
+
+            .certificate-preview-wrapper {
+
+                padding: 0;
+                background: #ffffff;
+
+            }
+
+            .certificate-preview {
+
+                width: 297mm;
+                height: 210mm;
+                aspect-ratio: auto;
+
+                margin: 0 auto;
+
+                box-shadow: none;
+
+                page-break-inside: avoid;
+
+            }
+
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="admin-layout">
+
+        <aside class="sidebar" id="adminSidebar">
+
+            <div class="sidebar-header">
+
+                <div class="brand-logo">
+
+                    <i class="fas fa-child-reaching"></i>
+
+                </div>
+
+                <div class="brand-text">
+
+                    <strong>
+                        Kiddysexplorer
+                    </strong>
+
+                    <span>
+                        Competition Admin
+                    </span>
+
+                </div>
+
+                <button class="sidebar-close-btn" id="sidebarCloseBtn" type="button" aria-label="Close navigation">
+
+                    <i class="fas fa-xmark"></i>
+
+                </button>
+
+            </div>
+
+
+            <nav class="sidebar-nav">
+
+                <div class="nav-label">
+                    Main
+                </div>
+
+                <a class="nav-link" href="admin-dashboard.html">
+
+                    <i class="fas fa-chart-pie"></i>
+
+                    <span>
+                        Dashboard
+                    </span>
+
+                </a>
+
+                <a class="nav-link" href="admin-participants.html">
+
+                    <i class="fas fa-users"></i>
+
+                    <span>
+                        Participants
+                    </span>
+
+                </a>
+
+
+                <div class="nav-label">
+                    Competition
+                </div>
+
+                <a class="nav-link" href="admin-live-competition.html">
+
+                    <i class="fas fa-trophy"></i>
+
+                    <span>
+                        Live Competition
+                    </span>
+
+                </a>
+
+                <a class="nav-link" href="admin-leaderboard.html">
+
+                    <i class="fas fa-ranking-star"></i>
+
+                    <span>
+                        Leaderboard
+                    </span>
+
+                </a>
+
+                <a class="nav-link" href="admin-prizes.html">
+
+                    <i class="fas fa-gift"></i>
+
+                    <span>
+                        Prize Management
+                    </span>
+
+                </a>
+
+                <a class="nav-link active" href="admin-certificates.html">
+
+                    <i class="fas fa-certificate"></i>
+
+                    <span>
+                        Certificates
+                    </span>
+
+                </a>
+
+
+                <div class="nav-label">
+                    Other
+                </div>
+
+                <a class="nav-link" href="index.html" target="_blank">
+
+                    <i class="fas fa-globe"></i>
+
+                    <span>
+                        View Website
+                    </span>
+
+                </a>
+
+                <a class="nav-link" href="quiz.html" target="_blank">
+
+                    <i class="fas fa-circle-question"></i>
+
+                    <span>
+                        Open Quiz
+                    </span>
+
+                </a>
+
+            </nav>
+
+        </aside>
+
+
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+
+        <main class="main-area">
+
+            <header class="top-header">
+
+                <button class="menu-toggle" id="menuToggleBtn" type="button" aria-label="Open navigation">
+
+                    <i class="fas fa-bars"></i>
+
+                </button>
+
+                <div class="header-title">
+
+                    <h1>
+                        Certificate Management
+                    </h1>
+
+                    <p>
+                        Generate, preview, print and manage certificates.
+                    </p>
+
+                </div>
+
+                <div class="header-actions">
+
+                    <button class="button button-light button-icon" id="refreshCertificatesBtn" type="button"
+                        title="Refresh certificates">
+
+                        <i class="fas fa-rotate"></i>
+
+                    </button>
+
+                    <div class="admin-profile">
+
+                        <div class="admin-avatar">
+                            AD
+                        </div>
+
+                        <div class="admin-profile-text">
+
+                            <strong>
+                                Administrator
+                            </strong>
+
+                            <span>
+                                Certificate Manager
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </header>
+
+
+            <div class="page-content">
+
+                <section class="page-hero">
+
+                    <div class="page-hero-content">
+
+                        <div class="page-hero-badge">
+
+                            <i class="fas fa-award"></i>
+
+                            Official Certificate Centre
+
+                        </div>
+
+                        <h2>
+                            Celebrate Every Achievement
+                        </h2>
+
+                        <p>
+                            Create professional certificates for competition
+                            winners, finalists and every participating child.
+                            Certificate details are automatically connected
+                            to the participant, leaderboard and prize records.
+                        </p>
+
+                    </div>
+
+                    <div class="page-hero-icon">
+
+                        <i class="fas fa-certificate"></i>
+
+                    </div>
+
+                </section>
+
+
+                <section class="statistics-grid">
+
+                    <article class="stat-card total">
+
+                        <div class="stat-icon">
+
+                            <i class="fas fa-users"></i>
+
+                        </div>
+
+                        <div class="stat-details">
+
+                            <div class="stat-label">
+                                Eligible Participants
+                            </div>
+
+                            <div class="stat-value" id="eligibleCertificateCount">
+                                0
+                            </div>
+
+                            <div class="stat-note">
+                                Available for certificates
+                            </div>
+
+                        </div>
+
+                    </article>
+
+
+                    <article class="stat-card generated">
+
+                        <div class="stat-icon">
+
+                            <i class="fas fa-certificate"></i>
+
+                        </div>
+
+                        <div class="stat-details">
+
+                            <div class="stat-label">
+                                Generated
+                            </div>
+
+                            <div class="stat-value" id="generatedCertificateCount">
+                                0
+                            </div>
+
+                            <div class="stat-note">
+                                Certificates created
+                            </div>
+
+                        </div>
+
+                    </article>
+
+
+                    <article class="stat-card pending">
+
+                        <div class="stat-icon">
+
+                            <i class="fas fa-hourglass-half"></i>
+
+                        </div>
+
+                        <div class="stat-details">
+
+                            <div class="stat-label">
+                                Pending
+                            </div>
+
+                            <div class="stat-value" id="pendingCertificateCount">
+                                0
+                            </div>
+
+                            <div class="stat-note">
+                                Not generated yet
+                            </div>
+
+                        </div>
+
+                    </article>
+
+
+                    <article class="stat-card printed">
+
+                        <div class="stat-icon">
+
+                            <i class="fas fa-print"></i>
+
+                        </div>
+
+                        <div class="stat-details">
+
+                            <div class="stat-label">
+                                Printed or Downloaded
+                            </div>
+
+                            <div class="stat-value" id="printedCertificateCount">
+                                0
+                            </div>
+
+                            <div class="stat-note">
+                                Completed certificate actions
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                </section>
+
+                <section class="panel batch-panel">
+
+                    <div class="panel-header">
+
+                        <div class="panel-heading">
+
+                            <h3>
+
+                                <i class="fas fa-layer-group"></i>
+
+                                Batch Certificate Generator
+
+                            </h3>
+
+                            <p>
+
+                                Generate certificates for multiple participants with one click.
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <div class="panel-body">
+
+                        <div class="batch-grid">
+
+                            <button class="batch-option" id="generateAllCertificatesBtn" type="button">
+
+                                <div class="batch-option-icon">
+
+                                    <i class="fas fa-users"></i>
+
+                                </div>
+
+                                <div>
+
+                                    <strong>
+                                        All Participants
+                                    </strong>
+
+                                    <span>
+
+                                        Generate certificates for every registered participant.
+
+                                    </span>
+
+                                </div>
+
+                            </button>
+
+
+                            <button class="batch-option" id="generateWinnerCertificatesBtn" type="button">
+
+                                <div class="batch-option-icon">
+
+                                    <i class="fas fa-trophy"></i>
+
+                                </div>
+
+                                <div>
+
+                                    <strong>
+                                        Winners Only
+                                    </strong>
+
+                                    <span>
+
+                                        Generate certificates for 1st, 2nd and 3rd positions.
+
+                                    </span>
+
+                                </div>
+
+                            </button>
+
+
+                            <button class="batch-option" id="generateFinalistsBtn" type="button">
+
+                                <div class="batch-option-icon">
+
+                                    <i class="fas fa-star"></i>
+
+                                </div>
+
+                                <div>
+
+                                    <strong>
+                                        Finalists
+                                    </strong>
+
+                                    <span>
+
+                                        Generate certificates for finalists only.
+
+                                    </span>
+
+                                </div>
+
+                            </button>
+
+
+                            <button class="batch-option" id="generateGroupCertificatesBtn" type="button">
+
+                                <div class="batch-option-icon">
+
+                                    <i class="fas fa-object-group"></i>
+
+                                </div>
+
+                                <div>
+
+                                    <strong>
+                                        Group Certificates
+                                    </strong>
+
+                                    <span>
+
+                                        Generate certificates for one competition group.
+
+                                    </span>
+
+                                </div>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+
+                <section class="panel filters-panel">
+
+                    <div class="panel-header">
+
+                        <div class="panel-heading">
+
+                            <h3>
+
+                                <i class="fas fa-filter"></i>
+
+                                Search & Filters
+
+                            </h3>
+
+                            <p>
+
+                                Quickly find participants before generating certificates.
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <div class="panel-body">
+
+                        <div class="filters-grid">
+
+                            <div class="form-group">
+
+                                <label>
+
+                                    Search
+
+                                </label>
+
+                                <div class="search-field">
+
+                                    <i class="fas fa-search"></i>
+
+                                    <input id="certificateSearchInput" class="form-control" type="search"
+                                        placeholder="Search participant...">
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label>
+
+                                    Group
+
+                                </label>
+
+                                <select id="certificateGroupFilter" class="form-control">
+
+                                    <option value="">
+
+                                        All Groups
+
+                                    </option>
+
+                                    <option value="A">
+
+                                        Group A
+
+                                    </option>
+
+                                    <option value="B">
+
+                                        Group B
+
+                                    </option>
+
+                                    <option value="C">
+
+                                        Group C
+
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label>
+
+                                    Certificate Type
+
+                                </label>
+
+                                <select id="certificateTypeFilter" class="form-control">
+
+                                    <option value="">
+
+                                        All Types
+
+                                    </option>
+
+                                    <option>
+
+                                        Gold Certificate
+
+                                    </option>
+
+                                    <option>
+
+                                        Silver Certificate
+
+                                    </option>
+
+                                    <option>
+
+                                        Bronze Certificate
+
+                                    </option>
+
+                                    <option>
+
+                                        Participation Certificate
+
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label>
+
+                                    Status
+
+                                </label>
+
+                                <select id="certificateStatusFilter" class="form-control">
+
+                                    <option value="">
+
+                                        All
+
+                                    </option>
+
+                                    <option>
+
+                                        Generated
+
+                                    </option>
+
+                                    <option>
+
+                                        Pending
+
+                                    </option>
+
+                                    <option>
+
+                                        Printed
+
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <button id="resetCertificateFiltersBtn" class="button button-light" type="button">
+
+                                    <i class="fas fa-rotate-left"></i>
+
+                                    Reset
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+
+                <section class="certificate-workspace">
+
+
+
+                    <section class="panel certificate-list-panel">
+
+                        <div class="panel-header">
+
+                            <div class="panel-heading">
+
+                                <h3>
+
+                                    <i class="fas fa-list"></i>
+
+                                    Participant Certificates
+
+                                </h3>
+
+                                <p>
+
+                                    Generate, preview and print certificates.
+
+                                </p>
+
+                            </div>
+
+                            <div class="panel-actions">
+
+                                <button id="exportCertificatesBtn" class="button button-light button-sm" type="button">
+
+                                    <i class="fas fa-file-csv"></i>
+
+                                    Export CSV
+
+                                </button>
+
+                                <button id="printCertificatesBtn" class="button button-light button-sm" type="button">
+
+                                    <i class="fas fa-print"></i>
+
+                                    Print
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                        <div class="table-container" id="certificateTableContainer">
+
+                            <table class="data-table">
+
+                                <thead>
+
+                                    <tr>
+
+                                        <th>
+
+                                            Participant
+
+                                        </th>
+
+                                        <th>
+
+                                            Group
+
+                                        </th>
+
+                                        <th>
+
+                                            Position
+
+                                        </th>
+
+                                        <th>
+
+                                            Certificate
+
+                                        </th>
+
+                                        <th>
+
+                                            Number
+
+                                        </th>
+
+                                        <th>
+
+                                            Status
+
+                                        </th>
+
+                                        <th>
+
+                                            Actions
+
+                                        </th>
+
+                                    </tr>
+
+                                </thead>
+
+                                <tbody id="certificateTableBody"></tbody>
+
+                            </table>
+
+                        </div>
+
+                        <div id="certificateEmptyState" class="empty-state" hidden>
+
+                            <div class="empty-state-icon">
+
+                                <i class="fas fa-certificate"></i>
+
+                            </div>
+
+                            <h4>
+
+                                No certificates found
+
+                            </h4>
+
+                            <p>
+
+                                Try changing your search or filter options.
+
+                            </p>
+
+                        </div>
+
+                        <div class="result-summary" id="certificateResultSummary">
+
+                            Showing 0 participants
+
+                        </div>
+
+                    </section>
+
+
+
+                    <aside class="panel preview-panel">
+
+                        <div class="panel-header">
+
+                            <div class="panel-heading">
+
+                                <h3>
+
+                                    <i class="fas fa-eye"></i>
+
+                                    Live Preview
+
+                                </h3>
+
+                                <p>
+
+                                    Certificate updates instantly.
+
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        <div class="certificate-preview-wrapper" id="certificatePreviewWrapper">
+
+                            <div class="preview-placeholder" id="certificatePlaceholder">
+
+                                <div>
+
+                                    <i class="fas fa-certificate"></i>
+
+                                    <strong>
+
+                                        Select a participant
+
+                                    </strong>
+
+                                    <p>
+
+                                        A beautiful certificate preview will appear here.
+
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                            <div id="certificatePreview" class="certificate-preview" hidden>
+
+                                                                <div class="certificate-logo">
+
+                                    <i class="fas fa-child-reaching"></i>
+
+                                </div>
+
+                                <div class="certificate-organization">
+
+                                    Kiddysexplorer Quiz Competition
+
+                                </div>
+
+                                <h2
+                                    class="certificate-title"
+                                    id="previewCertificateTitle"
+                                >
+
+                                    Certificate of Participation
+
+                                </h2>
+
+                                <div class="certificate-subtitle">
+
+                                    Proudly Presented To
+
+                                </div>
+
+                                <p class="certificate-presented">
+
+                                    This certificate is awarded to
+
+                                </p>
+
+                                <div
+                                    class="certificate-name"
+                                    id="previewParticipantName"
+                                >
+
+                                    Participant Name
+
+                                </div>
+
+                                <p
+                                    class="certificate-description"
+                                    id="previewCertificateDescription"
+                                >
+
+                                    For taking part in the Kiddysexplorer Quiz Competition
+                                    and demonstrating enthusiasm, confidence and a love of learning.
+
+                                </p>
+
+                                <div class="certificate-footer">
+
+                                    <div class="signature-block">
+
+                                        <div class="signature-line"></div>
+
+                                        <div
+                                            class="signature-name"
+                                            id="previewOrganizerName"
+                                        >
+
+                                            Competition Coordinator
+
+                                        </div>
+
+                                        <div class="signature-role">
+
+                                            Organizer Signature
+
+                                        </div>
+
+                                    </div>
+
+                                    <div class="certificate-seal">
+
+                                        Official
+                                        <br>
+                                        Certificate
+                                        <br>
+                                        Seal
+
+                                    </div>
+
+                                    <div class="signature-block">
+
+                                        <div class="signature-line"></div>
+
+                                        <div
+                                            class="signature-name"
+                                            id="previewCertificateDate"
+                                        >
+
+                                            Competition Date
+
+                                        </div>
+
+                                        <div class="signature-role">
+
+                                            Date Awarded
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <div
+                                    class="certificate-number"
+                                    id="previewCertificateNumber"
+                                >
+
+                                    Certificate No: KX-2026-0001
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="preview-actions">
+
+                            <button
+                                id="generateSelectedCertificateBtn"
+                                class="button button-primary"
+                                type="button"
+                                disabled
+                            >
+
+                                <i class="fas fa-certificate"></i>
+
+                                Generate
+
+                            </button>
+
+                            <button
+                                id="editSelectedCertificateBtn"
+                                class="button button-light"
+                                type="button"
+                                disabled
+                            >
+
+                                <i class="fas fa-pen"></i>
+
+                                Edit Details
+
+                            </button>
+
+                            <button
+                                id="printSelectedCertificateBtn"
+                                class="button button-light"
+                                type="button"
+                                disabled
+                            >
+
+                                <i class="fas fa-print"></i>
+
+                                Print
+
+                            </button>
+
+                            <button
+                                id="downloadSelectedCertificateBtn"
+                                class="button button-secondary"
+                                type="button"
+                                disabled
+                            >
+
+                                <i class="fas fa-download"></i>
+
+                                Download
+
+                            </button>
+
+                        </div>
+
+                    </aside>
+
+                </section>
+
+            </div>
+
+        </main>
+
+    </div>
+
+
+
+    <div
+        class="modal"
+        id="certificateModal"
+        hidden
+    >
+
+        <div class="modal-dialog large">
+
+            <div class="modal-header">
+
+                <div>
+
+                    <h3 id="certificateModalTitle">
+
+                        Generate Certificate
+
+                    </h3>
+
+                    <p>
+
+                        Review and update the certificate information before generating it.
+
+                    </p>
+
+                </div>
+
+                <button
+                    class="modal-close"
+                    id="closeCertificateModalBtn"
+                    type="button"
+                    aria-label="Close certificate modal"
+                >
+
+                    <i class="fas fa-xmark"></i>
+
+                </button>
+
+            </div>
+
+            <form id="certificateForm">
+
+                <div class="modal-body">
+
+                    <input
+                        id="certificateRecordId"
+                        type="hidden"
+                    >
+
+                    <input
+                        id="certificateParticipantId"
+                        type="hidden"
+                    >
+
+                    <div
+                        class="participant-preview-card"
+                        id="certificateParticipantPreview"
+                    >
+
+                        <div
+                            class="participant-preview-avatar"
+                            id="certificateParticipantInitials"
+                        >
+
+                            PN
+
+                        </div>
+
+                        <div>
+
+                            <strong
+                                id="certificateParticipantPreviewName"
+                            >
+
+                                Participant Name
+
+                            </strong>
+
+                            <span
+                                id="certificateParticipantPreviewDetails"
+                            >
+
+                                Group — • Position —
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <div
+                        class="form-grid"
+                        style="margin-top: 20px;"
+                    >
+
+                        <div class="form-group">
+
+                            <label for="certificateType">
+
+                                Certificate Type
+
+                            </label>
+
+                            <select
+                                id="certificateType"
+                                class="form-control"
+                                required
+                            >
+
+                                <option value="Gold Certificate">
+
+                                    Gold Certificate
+
+                                </option>
+
+                                <option value="Silver Certificate">
+
+                                    Silver Certificate
+
+                                </option>
+
+                                <option value="Bronze Certificate">
+
+                                    Bronze Certificate
+
+                                </option>
+
+                                <option value="Participation Certificate">
+
+                                    Participation Certificate
+
+                                </option>
+
+                                <option value="Finalist Certificate">
+
+                                    Finalist Certificate
+
+                                </option>
+
+                                <option value="Appreciation Certificate">
+
+                                    Appreciation Certificate
+
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label for="certificateNumber">
+
+                                Certificate Number
+
+                            </label>
+
+                            <input
+                                id="certificateNumber"
+                                class="form-control"
+                                type="text"
+                                required
+                            >
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label for="certificateGroup">
+
+                                Competition Group
+
+                            </label>
+
+                            <select
+                                id="certificateGroup"
+                                class="form-control"
+                            >
+
+                                <option value="">
+
+                                    Select Group
+
+                                </option>
+
+                                <option value="A">
+
+                                    Group A
+
+                                </option>
+
+                                <option value="B">
+
+                                    Group B
+
+                                </option>
+
+                                <option value="C">
+
+                                    Group C
+
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label for="certificatePosition">
+
+                                Position
+
+                            </label>
+
+                            <input
+                                id="certificatePosition"
+                                class="form-control"
+                                type="number"
+                                min="1"
+                                placeholder="Example: 1"
+                            >
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label for="certificateAwardDate">
+
+                                Award Date
+
+                            </label>
+
+                            <input
+                                id="certificateAwardDate"
+                                class="form-control"
+                                type="date"
+                                required
+                            >
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label for="certificateOrganizer">
+
+                                Organizer Name
+
+                            </label>
+
+                            <input
+                                id="certificateOrganizer"
+                                class="form-control"
+                                type="text"
+                                value="Kiddysexplorer Coordinator"
+                                required
+                            >
+
+                        </div>
+
+                        <div class="form-group full-width">
+
+                            <label for="certificateDescription">
+
+                                Certificate Description
+
+                            </label>
+
+                            <textarea
+                                id="certificateDescription"
+                                class="form-control"
+                                required
+                            ></textarea>
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label for="certificateStatus">
+
+                                Status
+
+                            </label>
+
+                            <select
+                                id="certificateStatus"
+                                class="form-control"
+                            >
+
+                                <option value="Generated">
+
+                                    Generated
+
+                                </option>
+
+                                <option value="Printed">
+
+                                    Printed
+
+                                </option>
+
+                                <option value="Downloaded">
+
+                                    Downloaded
+
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label for="certificateFormat">
+
+                                Preferred Format
+
+                            </label>
+
+                            <select
+                                id="certificateFormat"
+                                class="form-control"
+                            >
+
+                                <option value="PDF">
+
+                                    PDF
+
+                                </option>
+
+                                <option value="PNG">
+
+                                    PNG
+
+                                </option>
+
+                                <option value="JPG">
+
+                                    JPG
+
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                        <div class="form-group full-width">
+
+                            <label class="checkbox-row">
+
+                                <input
+                                    id="includeCertificateSeal"
+                                    type="checkbox"
+                                    checked
+                                >
+
+                                <span>
+
+                                    Include the official certificate seal
+
+                                </span>
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button
+                        class="button button-light"
+                        id="cancelCertificateBtn"
+                        type="button"
+                    >
+
+                        Cancel
+
+                    </button>
+
+                    <button
+                        class="button button-primary"
+                        type="submit"
+                    >
+
+                        <i class="fas fa-certificate"></i>
+
+                        Save Certificate
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+
+    <div
+        class="modal"
+        id="groupCertificateModal"
+        hidden
+    >
+
+        <div class="modal-dialog">
+
+            <div class="modal-header">
+
+                <div>
+
+                    <h3>
+
+                        Generate Group Certificates
+
+                    </h3>
+
+                    <p>
+
+                        Select the group whose certificates should be generated.
+
+                    </p>
+
+                </div>
+
+                <button
+                    class="modal-close"
+                    id="closeGroupCertificateModalBtn"
+                    type="button"
+                    aria-label="Close group certificate modal"
+                >
+
+                    <i class="fas fa-xmark"></i>
+
+                </button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <div class="form-group">
+
+                    <label for="batchCertificateGroup">
+
+                        Competition Group
+
+                    </label>
+
+                    <select
+                        id="batchCertificateGroup"
+                        class="form-control"
+                    >
+
+                        <option value="">
+
+                            Select a group
+
+                        </option>
+
+                        <option value="A">
+
+                            Group A
+
+                        </option>
+
+                        <option value="B">
+
+                            Group B
+
+                        </option>
+
+                        <option value="C">
+
+                            Group C
+
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button
+                    id="cancelGroupCertificateBtn"
+                    class="button button-light"
+                    type="button"
+                >
+
+                    Cancel
+
+                </button>
+
+                <button
+                    id="confirmGroupCertificatesBtn"
+                    class="button button-primary"
+                    type="button"
+                >
+
+                    <i class="fas fa-layer-group"></i>
+
+                    Generate Certificates
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <script src="assets/js/adminCommon.js"></script>
+
+    <script src="assets/js/participantStore.js"></script>
+
+    <script src="assets/js/adminCertificates.js"></script>
+
+</body>
+
+</html>

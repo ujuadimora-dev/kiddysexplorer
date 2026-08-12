@@ -42,33 +42,53 @@ const ParticipantStore = {
         SAVE ALL PARTICIPANTS
     ======================================*/
 
-    saveAll(participants) {
-        try {
-            if (!Array.isArray(participants)) {
-                console.error(
-                    "Participants must be an array."
-                );
+   saveAll(participants) {
 
-                return false;
-            }
+    try {
 
+        if (!Array.isArray(participants)) {
 
-            localStorage.setItem(
-                this.storageKey,
-                JSON.stringify(participants)
-            );
-
-            return true;
-
-        } catch (error) {
             console.error(
-                "Could not save participants:",
-                error
+                "Participants must be an array."
             );
 
             return false;
         }
-    },
+
+
+        localStorage.setItem(
+            this.storageKey,
+            JSON.stringify(participants)
+        );
+
+
+        window.dispatchEvent(
+            new CustomEvent(
+                "participants-changed",
+                {
+                    detail: {
+                        participants:
+                            [...participants]
+                    }
+                }
+            )
+        );
+
+
+        return true;
+
+    } catch (error) {
+
+        console.error(
+            "Could not save participants:",
+            error
+        );
+
+        return false;
+
+    }
+
+},
 
 
     /*=====================================
@@ -368,7 +388,7 @@ const ParticipantStore = {
 
         const currentParticipant =
             participants[
-                participantIndex
+            participantIndex
             ];
 
 
@@ -967,28 +987,45 @@ const ParticipantStore = {
         CLEAR ALL PARTICIPANTS
     ======================================*/
 
-    clearAll() {
-        try {
-            localStorage.removeItem(
-                this.storageKey
-            );
+   clearAll() {
 
-            localStorage.removeItem(
-                "currentParticipantId"
-            );
+    try {
 
-            return true;
+        localStorage.removeItem(
+            this.storageKey
+        );
 
-        } catch (error) {
-            console.error(
-                "Could not clear participants:",
-                error
-            );
+        localStorage.removeItem(
+            "currentParticipantId"
+        );
 
-            return false;
-        }
-    },
 
+        window.dispatchEvent(
+            new CustomEvent(
+                "participants-changed",
+                {
+                    detail: {
+                        participants: []
+                    }
+                }
+            )
+        );
+
+
+        return true;
+
+    } catch (error) {
+
+        console.error(
+            "Could not clear participants:",
+            error
+        );
+
+        return false;
+
+    }
+
+},
 
     /*=====================================
         VALIDATE EMAIL
@@ -1077,5 +1114,155 @@ const ParticipantStore = {
 
 
         return String(value).trim();
-    }
+    },
+
+    /*=====================================
+    GET PARTICIPANTS BY GROUP
+=====================================*/
+
+    getParticipantsByGroup(group) {
+
+        group = String(group || "")
+            .trim()
+            .toUpperCase();
+
+        return this.getAll().filter(
+
+            participant =>
+
+                participant.group === group
+
+        );
+
+    },
+
+
+    /*=====================================
+        GET QUALIFIED PARTICIPANTS
+    =====================================*/
+
+    getQualifiedParticipants() {
+
+        return this.getAll().filter(
+
+            participant =>
+
+                participant.qualified === true ||
+
+                participant.status === "Qualified"
+
+        );
+
+    },
+
+
+    /*=====================================
+        GET LEADERBOARD
+    =====================================*/
+
+    getLeaderboard(group = null) {
+
+        let participants = this.getAll();
+
+        if (group) {
+
+            participants = participants.filter(
+
+                participant =>
+
+                    participant.group ===
+                    String(group).toUpperCase()
+
+            );
+
+        }
+
+        return participants.sort(
+
+            (a, b) => {
+
+                const scoreA =
+                    a.liveScore ??
+                    a.section2Score ??
+                    a.section1Score ??
+                    0;
+
+                const scoreB =
+                    b.liveScore ??
+                    b.section2Score ??
+                    b.section1Score ??
+                    0;
+
+                return scoreB - scoreA;
+
+            }
+
+        );
+
+    },
+
+
+    /*=====================================
+        GET TOP THREE
+    =====================================*/
+
+    getTopThree(group = null) {
+
+        return this.getLeaderboard(group)
+            .slice(0, 3);
+
+    },
+
+
+    /*=====================================
+        GET STATISTICS
+    =====================================*/
+
+    getStatistics() {
+
+        const participants =
+            this.getAll();
+
+        return {
+
+            totalParticipants:
+                participants.length,
+
+            qualifiedParticipants:
+                participants.filter(
+
+                    p => p.qualified
+
+                ).length,
+
+            section1Completed:
+                participants.filter(
+
+                    p =>
+
+                        p.section1Score !== null
+
+                ).length,
+
+            section2Completed:
+                participants.filter(
+
+                    p =>
+
+                        p.section2Score !== null
+
+                ).length,
+
+            liveCompleted:
+                participants.filter(
+
+                    p =>
+
+                        p.liveScore !== null
+
+                ).length
+
+        };
+
+    },
 };

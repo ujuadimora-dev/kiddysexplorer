@@ -1,0 +1,4530 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Kiddysexplorer Quiz Competition Prize Management"
+    >
+
+    <title>
+        Prize Management | Kiddysexplorer Admin
+    </title>
+
+
+    <!-- Font Awesome -->
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+
+    <!-- Admin Stylesheet -->
+
+    <link
+        rel="stylesheet"
+        href="assets/css/admin.css"
+    >
+
+
+    <style>
+
+        /*====================================================
+          PRIZE MANAGEMENT PAGE
+        ====================================================*/
+
+        :root {
+
+            --prize-primary:
+                #253b80;
+
+            --prize-primary-dark:
+                #172554;
+
+            --prize-secondary:
+                #f59e0b;
+
+            --prize-success:
+                #16a34a;
+
+            --prize-danger:
+                #dc2626;
+
+            --prize-warning:
+                #d97706;
+
+            --prize-info:
+                #0284c7;
+
+            --prize-purple:
+                #7c3aed;
+
+            --prize-light:
+                #f8fafc;
+
+            --prize-border:
+                #e2e8f0;
+
+            --prize-text:
+                #1e293b;
+
+            --prize-muted:
+                #64748b;
+
+            --prize-white:
+                #ffffff;
+
+            --prize-shadow:
+                0 10px 30px
+                rgba(
+                    15,
+                    23,
+                    42,
+                    0.08
+                );
+
+            --prize-radius:
+                18px;
+
+        }
+
+
+        * {
+
+            box-sizing:
+                border-box;
+
+        }
+
+
+        body {
+
+            margin:
+                0;
+
+            background:
+                #f1f5f9;
+
+            color:
+                var(
+                    --prize-text
+                );
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+        }
+
+
+        button,
+        input,
+        select,
+        textarea {
+
+            font:
+                inherit;
+
+        }
+
+
+        button {
+
+            cursor:
+                pointer;
+
+        }
+
+
+        [hidden] {
+
+            display:
+                none !important;
+
+        }
+
+
+        /*====================================================
+          PAGE LAYOUT
+        ====================================================*/
+
+        .admin-page {
+
+            min-height:
+                100vh;
+
+            display:
+                flex;
+
+        }
+
+
+        .admin-sidebar {
+
+            width:
+                270px;
+
+            min-height:
+                100vh;
+
+            position:
+                fixed;
+
+            top:
+                0;
+
+            left:
+                0;
+
+            z-index:
+                1000;
+
+            display:
+                flex;
+
+            flex-direction:
+                column;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    #172554 0%,
+                    #1e3a8a 100%
+                );
+
+            color:
+                #ffffff;
+
+            box-shadow:
+                6px 0 25px
+                rgba(
+                    15,
+                    23,
+                    42,
+                    0.12
+                );
+
+            transition:
+                transform
+                0.3s ease;
+
+        }
+
+
+        .sidebar-brand {
+
+            padding:
+                24px 20px;
+
+            border-bottom:
+                1px solid
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.12
+                );
+
+        }
+
+
+        .sidebar-brand h1 {
+
+            margin:
+                0;
+
+            font-size:
+                22px;
+
+            line-height:
+                1.2;
+
+        }
+
+
+        .sidebar-brand p {
+
+            margin:
+                6px 0 0;
+
+            color:
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.72
+                );
+
+            font-size:
+                13px;
+
+        }
+
+
+        .sidebar-nav {
+
+            flex:
+                1;
+
+            padding:
+                18px 12px;
+
+            overflow-y:
+                auto;
+
+        }
+
+
+        .sidebar-link {
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            gap:
+                12px;
+
+            width:
+                100%;
+
+            margin-bottom:
+                7px;
+
+            padding:
+                13px 15px;
+
+            border-radius:
+                12px;
+
+            color:
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.82
+                );
+
+            text-decoration:
+                none;
+
+            transition:
+                0.2s ease;
+
+        }
+
+
+        .sidebar-link i {
+
+            width:
+                22px;
+
+            text-align:
+                center;
+
+            font-size:
+                17px;
+
+        }
+
+
+        .sidebar-link:hover {
+
+            background:
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.1
+                );
+
+            color:
+                #ffffff;
+
+        }
+
+
+        .sidebar-link.active {
+
+            background:
+                #ffffff;
+
+            color:
+                var(
+                    --prize-primary
+                );
+
+            font-weight:
+                700;
+
+            box-shadow:
+                0 8px 18px
+                rgba(
+                    0,
+                    0,
+                    0,
+                    0.14
+                );
+
+        }
+
+
+        .sidebar-footer {
+
+            padding:
+                18px;
+
+            border-top:
+                1px solid
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.12
+                );
+
+            color:
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.7
+                );
+
+            font-size:
+                12px;
+
+            text-align:
+                center;
+
+        }
+
+
+        .admin-main {
+
+            width:
+                calc(
+                    100% - 270px
+                );
+
+            min-height:
+                100vh;
+
+            margin-left:
+                270px;
+
+        }
+
+
+        .admin-header {
+
+            position:
+                sticky;
+
+            top:
+                0;
+
+            z-index:
+                900;
+
+            min-height:
+                76px;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                space-between;
+
+            gap:
+                20px;
+
+            padding:
+                14px 30px;
+
+            background:
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.95
+                );
+
+            border-bottom:
+                1px solid
+                var(
+                    --prize-border
+                );
+
+            backdrop-filter:
+                blur(
+                    12px
+                );
+
+        }
+
+
+        .admin-menu-button {
+
+            display:
+                none;
+
+            width:
+                44px;
+
+            height:
+                44px;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            border:
+                none;
+
+            border-radius:
+                12px;
+
+            background:
+                #eef2ff;
+
+            color:
+                var(
+                    --prize-primary
+                );
+
+            font-size:
+                18px;
+
+        }
+
+
+        .admin-header-title {
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            gap:
+                13px;
+
+        }
+
+
+        .admin-header-icon {
+
+            width:
+                46px;
+
+            height:
+                46px;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            border-radius:
+                14px;
+
+            background:
+                #fff7ed;
+
+            color:
+                #ea580c;
+
+            font-size:
+                20px;
+
+        }
+
+
+        .admin-header-title h2 {
+
+            margin:
+                0;
+
+            font-size:
+                22px;
+
+        }
+
+
+        .admin-header-title p {
+
+            margin:
+                4px 0 0;
+
+            color:
+                var(
+                    --prize-muted
+                );
+
+            font-size:
+                13px;
+
+        }
+
+
+        .admin-user {
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            gap:
+                12px;
+
+        }
+
+
+        .admin-avatar {
+
+            width:
+                42px;
+
+            height:
+                42px;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            border-radius:
+                50%;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #f59e0b,
+                    #ea580c
+                );
+
+            color:
+                #ffffff;
+
+            font-weight:
+                800;
+
+        }
+
+
+        .admin-user-text {
+
+            line-height:
+                1.25;
+
+        }
+
+
+        .admin-user-text strong {
+
+            display:
+                block;
+
+            font-size:
+                14px;
+
+        }
+
+
+        .admin-user-text span {
+
+            color:
+                var(
+                    --prize-muted
+                );
+
+            font-size:
+                12px;
+
+        }
+
+
+        .admin-content {
+
+            padding:
+                30px;
+
+        }
+
+
+        .admin-overlay {
+
+            display:
+                none;
+
+            position:
+                fixed;
+
+            inset:
+                0;
+
+            z-index:
+                950;
+
+            background:
+                rgba(
+                    15,
+                    23,
+                    42,
+                    0.58
+                );
+
+        }
+
+
+        .admin-overlay.overlay-visible {
+
+            display:
+                block;
+
+        }
+
+
+        /*====================================================
+          PAGE INTRO
+        ====================================================*/
+
+        .page-intro {
+
+            display:
+                flex;
+
+            align-items:
+                flex-start;
+
+            justify-content:
+                space-between;
+
+            gap:
+                20px;
+
+            margin-bottom:
+                24px;
+
+        }
+
+
+        .page-intro h2 {
+
+            margin:
+                0;
+
+            font-size:
+                28px;
+
+            color:
+                var(
+                    --prize-primary-dark
+                );
+
+        }
+
+
+        .page-intro p {
+
+            max-width:
+                720px;
+
+            margin:
+                8px 0 0;
+
+            color:
+                var(
+                    --prize-muted
+                );
+
+            line-height:
+                1.6;
+
+        }
+
+
+        .page-actions {
+
+            display:
+                flex;
+
+            flex-wrap:
+                wrap;
+
+            justify-content:
+                flex-end;
+
+            gap:
+                10px;
+
+        }
+
+
+        /*====================================================
+          BUTTONS
+        ====================================================*/
+
+        .btn {
+
+            min-height:
+                42px;
+
+            display:
+                inline-flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            gap:
+                8px;
+
+            padding:
+                10px 15px;
+
+            border:
+                1px solid
+                transparent;
+
+            border-radius:
+                11px;
+
+            font-weight:
+                700;
+
+            text-decoration:
+                none;
+
+            transition:
+                0.2s ease;
+
+        }
+
+
+        .btn:hover {
+
+            transform:
+                translateY(
+                    -1px
+                );
+
+        }
+
+
+        .btn-primary {
+
+            background:
+                var(
+                    --prize-primary
+                );
+
+            color:
+                #ffffff;
+
+        }
+
+
+        .btn-primary:hover {
+
+            background:
+                var(
+                    --prize-primary-dark
+                );
+
+        }
+
+
+        .btn-secondary {
+
+            background:
+                #ffffff;
+
+            color:
+                var(
+                    --prize-text
+                );
+
+            border-color:
+                var(
+                    --prize-border
+                );
+
+        }
+
+
+        .btn-secondary:hover {
+
+            border-color:
+                #94a3b8;
+
+            background:
+                #f8fafc;
+
+        }
+
+
+        .btn-success {
+
+            background:
+                var(
+                    --prize-success
+                );
+
+            color:
+                #ffffff;
+
+        }
+
+
+        .btn-warning {
+
+            background:
+                var(
+                    --prize-warning
+                );
+
+            color:
+                #ffffff;
+
+        }
+
+
+        .btn-danger {
+
+            background:
+                var(
+                    --prize-danger
+                );
+
+            color:
+                #ffffff;
+
+        }
+
+
+        .btn-info {
+
+            background:
+                var(
+                    --prize-info
+                );
+
+            color:
+                #ffffff;
+
+        }
+
+
+        .btn-sm {
+
+            min-height:
+                34px;
+
+            padding:
+                7px 10px;
+
+            font-size:
+                12px;
+
+            border-radius:
+                9px;
+
+        }
+
+
+        .icon-btn {
+
+            width:
+                36px;
+
+            height:
+                36px;
+
+            display:
+                inline-flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            border:
+                1px solid
+                var(
+                    --prize-border
+                );
+
+            border-radius:
+                9px;
+
+            background:
+                #ffffff;
+
+            color:
+                var(
+                    --prize-text
+                );
+
+        }
+
+
+        .icon-btn:hover {
+
+            background:
+                #f8fafc;
+
+            border-color:
+                #94a3b8;
+
+        }
+
+
+        /*====================================================
+          STATISTICS
+        ====================================================*/
+
+        .statistics-grid {
+
+            display:
+                grid;
+
+            grid-template-columns:
+                repeat(
+                    6,
+                    minmax(
+                        0,
+                        1fr
+                    )
+                );
+
+            gap:
+                16px;
+
+            margin-bottom:
+                24px;
+
+        }
+
+
+        .stat-card {
+
+            min-height:
+                138px;
+
+            padding:
+                18px;
+
+            border:
+                1px solid
+                var(
+                    --prize-border
+                );
+
+            border-radius:
+                var(
+                    --prize-radius
+                );
+
+            background:
+                var(
+                    --prize-white
+                );
+
+            box-shadow:
+                var(
+                    --prize-shadow
+                );
+
+        }
+
+
+        .stat-card-top {
+
+            display:
+                flex;
+
+            align-items:
+                flex-start;
+
+            justify-content:
+                space-between;
+
+            gap:
+                12px;
+
+        }
+
+
+        .stat-icon {
+
+            width:
+                45px;
+
+            height:
+                45px;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            border-radius:
+                13px;
+
+            font-size:
+                19px;
+
+        }
+
+
+        .stat-icon.total {
+
+            background:
+                #eff6ff;
+
+            color:
+                #2563eb;
+
+        }
+
+
+        .stat-icon.gold {
+
+            background:
+                #fffbeb;
+
+            color:
+                #d97706;
+
+        }
+
+
+        .stat-icon.silver {
+
+            background:
+                #f1f5f9;
+
+            color:
+                #64748b;
+
+        }
+
+
+        .stat-icon.bronze {
+
+            background:
+                #fff7ed;
+
+            color:
+                #c2410c;
+
+        }
+
+
+        .stat-icon.pending {
+
+            background:
+                #fef3c7;
+
+            color:
+                #b45309;
+
+        }
+
+
+        .stat-icon.collected {
+
+            background:
+                #dcfce7;
+
+            color:
+                #15803d;
+
+        }
+
+
+        .stat-number {
+
+            margin-top:
+                17px;
+
+            font-size:
+                28px;
+
+            font-weight:
+                800;
+
+            color:
+                var(
+                    --prize-primary-dark
+                );
+
+        }
+
+
+        .stat-label {
+
+            margin-top:
+                4px;
+
+            color:
+                var(
+                    --prize-muted
+                );
+
+            font-size:
+                13px;
+
+        }
+
+
+        /*====================================================
+          TOP WINNERS
+        ====================================================*/
+
+        .section-card {
+
+            margin-bottom:
+                24px;
+
+            border:
+                1px solid
+                var(
+                    --prize-border
+                );
+
+            border-radius:
+                var(
+                    --prize-radius
+                );
+
+            background:
+                #ffffff;
+
+            box-shadow:
+                var(
+                    --prize-shadow
+                );
+
+            overflow:
+                hidden;
+
+        }
+
+
+        .section-header {
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                space-between;
+
+            gap:
+                20px;
+
+            padding:
+                20px 22px;
+
+            border-bottom:
+                1px solid
+                var(
+                    --prize-border
+                );
+
+        }
+
+
+        .section-header h3 {
+
+            margin:
+                0;
+
+            font-size:
+                18px;
+
+            color:
+                var(
+                    --prize-primary-dark
+                );
+
+        }
+
+
+        .section-header p {
+
+            margin:
+                5px 0 0;
+
+            color:
+                var(
+                    --prize-muted
+                );
+
+            font-size:
+                13px;
+
+        }
+
+
+        .winner-cards {
+
+            display:
+                grid;
+
+            grid-template-columns:
+                repeat(
+                    3,
+                    minmax(
+                        0,
+                        1fr
+                    )
+                );
+
+            gap:
+                18px;
+
+            padding:
+                22px;
+
+        }
+
+
+        .winner-card {
+
+            position:
+                relative;
+
+            min-height:
+                250px;
+
+            padding:
+                22px;
+
+            border:
+                1px solid
+                var(
+                    --prize-border
+                );
+
+            border-radius:
+                18px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #ffffff,
+                    #f8fafc
+                );
+
+            text-align:
+                center;
+
+            overflow:
+                hidden;
+
+        }
+
+
+        .winner-card::before {
+
+            content:
+                "";
+
+            position:
+                absolute;
+
+            top:
+                -55px;
+
+            right:
+                -45px;
+
+            width:
+                130px;
+
+            height:
+                130px;
+
+            border-radius:
+                50%;
+
+            opacity:
+                0.13;
+
+        }
+
+
+        .winner-card.gold::before {
+
+            background:
+                #f59e0b;
+
+        }
+
+
+        .winner-card.silver::before {
+
+            background:
+                #64748b;
+
+        }
+
+
+        .winner-card.bronze::before {
+
+            background:
+                #c2410c;
+
+        }
+
+
+        .winner-medal {
+
+            width:
+                68px;
+
+            height:
+                68px;
+
+            margin:
+                0 auto 14px;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            border-radius:
+                50%;
+
+            font-size:
+                31px;
+
+        }
+
+
+        .winner-card.gold
+        .winner-medal {
+
+            background:
+                #fef3c7;
+
+            color:
+                #d97706;
+
+        }
+
+
+        .winner-card.silver
+        .winner-medal {
+
+            background:
+                #e2e8f0;
+
+            color:
+                #64748b;
+
+        }
+
+
+        .winner-card.bronze
+        .winner-medal {
+
+            background:
+                #ffedd5;
+
+            color:
+                #c2410c;
+
+        }
+
+
+        .winner-position {
+
+            color:
+                var(
+                    --prize-muted
+                );
+
+            font-size:
+                12px;
+
+            font-weight:
+                800;
+
+            letter-spacing:
+                0.8px;
+
+            text-transform:
+                uppercase;
+
+        }
+
+
+        .winner-name {
+
+            margin:
+                8px 0 4px;
+
+            font-size:
+                20px;
+
+            font-weight:
+                800;
+
+            color:
+                var(
+                    --prize-primary-dark
+                );
+
+        }
+
+
+        .winner-group {
+
+            color:
+                var(
+                    --prize-muted
+                );
+
+            font-size:
+                13px;
+
+        }
+
+
+        .winner-prize {
+
+            display:
+                inline-flex;
+
+            align-items:
+                center;
+
+            gap:
+                7px;
+
+            margin-top:
+                16px;
+
+            padding:
+                8px 12px;
+
+            border-radius:
+                999px;
+
+            background:
+                #f1f5f9;
+
+            color:
+                var(
+                    --prize-text
+                );
+
+            font-size:
+                12px;
+
+            font-weight:
+                700;
+
+        }
+
+
+        .winner-empty {
+
+            margin:
+                18px 0 0;
+
+            color:
+                var(
+                    --prize-muted
+                );
+
+            font-size:
+                13px;
+
+        }
+
+
+        /*====================================================
+          TOOLBAR
+        ====================================================*/
+
+        .toolbar {
+
+            display:
+                grid;
+
+            grid-template-columns:
+                minmax(
+                    220px,
+                    1.6fr
+                )
+                repeat(
+                    3,
+                    minmax(
+                        150px,
+                        0.7fr
+                    )
+                )
+                auto;
+
+            gap:
+                12px;
+
+            padding:
+                20px 22px;
+
+            border-bottom:
+                1px solid
+                var(
+                    --prize-border
+                );
+
+            background:
+                #f8fafc;
+
+        }
+
+
+        .search-box {
+
+            position:
+                relative;
+
+        }
+
+
+        .search-box i {
+
+            position:
+                absolute;
+
+            left:
+                14px;
+
+            top:
+                50%;
+
+            transform:
+                translateY(
+                    -50%
+                );
+
+            color:
+                #94a3b8;
+
+        }
+
+
+        .search-box input {
+
+            padding-left:
+                40px;
+
+        }
+
+
+        .form-control {
+
+            width:
+                100%;
+
+            min-height:
+                43px;
+
+            padding:
+                10px 12px;
+
+            border:
+                1px solid
+                #cbd5e1;
+
+            border-radius:
+                10px;
+
+            background:
+                #ffffff;
+
+            color:
+                var(
+                    --prize-text
+                );
+
+            outline:
+                none;
+
+            transition:
+                0.2s ease;
+
+        }
+
+
+        .form-control:focus {
+
+            border-color:
+                #2563eb;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(
+                    37,
+                    99,
+                    235,
+                    0.12
+                );
+
+        }
+
+
+        textarea.form-control {
+
+            min-height:
+                100px;
+
+            resize:
+                vertical;
+
+        }
+
+
+        /*====================================================
+          TABLE
+        ====================================================*/
+
+        .table-wrapper {
+
+            width:
+                100%;
+
+            overflow-x:
+                auto;
+
+        }
+
+
+        .prize-table {
+
+            width:
+                100%;
+
+            min-width:
+                1200px;
+
+            border-collapse:
+                collapse;
+
+        }
+
+
+        .prize-table th {
+
+            padding:
+                14px 16px;
+
+            background:
+                #f8fafc;
+
+            color:
+                #475569;
+
+            border-bottom:
+                1px solid
+                var(
+                    --prize-border
+                );
+
+            font-size:
+                12px;
+
+            font-weight:
+                800;
+
+            letter-spacing:
+                0.3px;
+
+            text-align:
+                left;
+
+            text-transform:
+                uppercase;
+
+            white-space:
+                nowrap;
+
+        }
+
+
+        .prize-table td {
+
+            padding:
+                15px 16px;
+
+            border-bottom:
+                1px solid
+                #edf2f7;
+
+            vertical-align:
+                middle;
+
+            font-size:
+                14px;
+
+        }
+
+
+        .prize-table tbody tr:hover {
+
+            background:
+                #fafcff;
+
+        }
+
+
+        .participant-cell {
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            gap:
+                11px;
+
+        }
+
+
+        .participant-avatar {
+
+            width:
+                40px;
+
+            height:
+                40px;
+
+            flex:
+                0 0 40px;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            border-radius:
+                50%;
+
+            background:
+                #e0e7ff;
+
+            color:
+                #3730a3;
+
+            font-weight:
+                800;
+
+        }
+
+
+        .participant-cell strong {
+
+            display:
+                block;
+
+            color:
+                var(
+                    --prize-primary-dark
+                );
+
+        }
+
+
+        .participant-cell small {
+
+            display:
+                block;
+
+            margin-top:
+                3px;
+
+            color:
+                var(
+                    --prize-muted
+                );
+
+        }
+
+
+        .group-badge,
+        .position-badge,
+        .status-badge,
+        .prize-badge {
+
+            display:
+                inline-flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            gap:
+                6px;
+
+            padding:
+                7px 10px;
+
+            border-radius:
+                999px;
+
+            font-size:
+                11px;
+
+            font-weight:
+                800;
+
+            white-space:
+                nowrap;
+
+        }
+
+
+        .group-badge {
+
+            background:
+                #e0f2fe;
+
+            color:
+                #0369a1;
+
+        }
+
+
+        .position-badge.position-1 {
+
+            background:
+                #fef3c7;
+
+            color:
+                #b45309;
+
+        }
+
+
+        .position-badge.position-2 {
+
+            background:
+                #e2e8f0;
+
+            color:
+                #475569;
+
+        }
+
+
+        .position-badge.position-3 {
+
+            background:
+                #ffedd5;
+
+            color:
+                #c2410c;
+
+        }
+
+
+        .position-badge.other {
+
+            background:
+                #ede9fe;
+
+            color:
+                #6d28d9;
+
+        }
+
+
+        .status-badge.pending {
+
+            background:
+                #fef3c7;
+
+            color:
+                #92400e;
+
+        }
+
+
+        .status-badge.ready {
+
+            background:
+                #dbeafe;
+
+            color:
+                #1d4ed8;
+
+        }
+
+
+        .status-badge.collected {
+
+            background:
+                #dcfce7;
+
+            color:
+                #166534;
+
+        }
+
+
+        .status-badge.delivered {
+
+            background:
+                #ede9fe;
+
+            color:
+                #6d28d9;
+
+        }
+
+
+        .prize-badge {
+
+            background:
+                #fff7ed;
+
+            color:
+                #c2410c;
+
+        }
+
+
+        .table-actions {
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            gap:
+                7px;
+
+        }
+
+
+        .table-footer {
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                space-between;
+
+            gap:
+                15px;
+
+            padding:
+                16px 22px;
+
+            color:
+                var(
+                    --prize-muted
+                );
+
+            font-size:
+                13px;
+
+        }
+
+
+        /*====================================================
+          EMPTY STATE
+        ====================================================*/
+
+        .empty-state {
+
+            padding:
+                55px 25px;
+
+            text-align:
+                center;
+
+        }
+
+
+        .empty-state-icon {
+
+            width:
+                76px;
+
+            height:
+                76px;
+
+            margin:
+                0 auto 17px;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            border-radius:
+                50%;
+
+            background:
+                #fff7ed;
+
+            color:
+                #ea580c;
+
+            font-size:
+                31px;
+
+        }
+
+
+        .empty-state h3 {
+
+            margin:
+                0 0 8px;
+
+            color:
+                var(
+                    --prize-primary-dark
+                );
+
+        }
+
+
+        .empty-state p {
+
+            max-width:
+                500px;
+
+            margin:
+                0 auto;
+
+            color:
+                var(
+                    --prize-muted
+                );
+
+            line-height:
+                1.6;
+
+        }
+
+
+        /*====================================================
+          MODAL
+        ====================================================*/
+
+        .modal-backdrop {
+
+            position:
+                fixed;
+
+            inset:
+                0;
+
+            z-index:
+                2000;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            padding:
+                20px;
+
+            background:
+                rgba(
+                    15,
+                    23,
+                    42,
+                    0.66
+                );
+
+        }
+
+
+        .modal-panel {
+
+            width:
+                min(
+                    720px,
+                    100%
+                );
+
+            max-height:
+                calc(
+                    100vh - 40px
+                );
+
+            overflow-y:
+                auto;
+
+            border-radius:
+                20px;
+
+            background:
+                #ffffff;
+
+            box-shadow:
+                0 25px 70px
+                rgba(
+                    15,
+                    23,
+                    42,
+                    0.28
+                );
+
+        }
+
+
+        .modal-header {
+
+            display:
+                flex;
+
+            align-items:
+                flex-start;
+
+            justify-content:
+                space-between;
+
+            gap:
+                20px;
+
+            padding:
+                21px 23px;
+
+            border-bottom:
+                1px solid
+                var(
+                    --prize-border
+                );
+
+        }
+
+
+        .modal-header h3 {
+
+            margin:
+                0;
+
+            color:
+                var(
+                    --prize-primary-dark
+                );
+
+            font-size:
+                20px;
+
+        }
+
+
+        .modal-header p {
+
+            margin:
+                5px 0 0;
+
+            color:
+                var(
+                    --prize-muted
+                );
+
+            font-size:
+                13px;
+
+        }
+
+
+        .modal-close {
+
+            width:
+                38px;
+
+            height:
+                38px;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            border:
+                none;
+
+            border-radius:
+                10px;
+
+            background:
+                #f1f5f9;
+
+            color:
+                #475569;
+
+            font-size:
+                17px;
+
+        }
+
+
+        .modal-body {
+
+            padding:
+                23px;
+
+        }
+
+
+        .form-grid {
+
+            display:
+                grid;
+
+            grid-template-columns:
+                repeat(
+                    2,
+                    minmax(
+                        0,
+                        1fr
+                    )
+                );
+
+            gap:
+                17px;
+
+        }
+
+
+        .form-group {
+
+            display:
+                flex;
+
+            flex-direction:
+                column;
+
+            gap:
+                7px;
+
+        }
+
+
+        .form-group.full-width {
+
+            grid-column:
+                1 / -1;
+
+        }
+
+
+        .form-group label {
+
+            color:
+                #334155;
+
+            font-size:
+                13px;
+
+            font-weight:
+                800;
+
+        }
+
+
+        .required {
+
+            color:
+                var(
+                    --prize-danger
+                );
+
+        }
+
+
+        .modal-footer {
+
+            display:
+                flex;
+
+            justify-content:
+                flex-end;
+
+            gap:
+                10px;
+
+            padding:
+                18px 23px;
+
+            border-top:
+                1px solid
+                var(
+                    --prize-border
+                );
+
+            background:
+                #f8fafc;
+
+        }
+
+
+        .participant-preview {
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            gap:
+                13px;
+
+            margin-bottom:
+                20px;
+
+            padding:
+                15px;
+
+            border:
+                1px solid
+                #dbeafe;
+
+            border-radius:
+                13px;
+
+            background:
+                #eff6ff;
+
+        }
+
+
+        .participant-preview-icon {
+
+            width:
+                46px;
+
+            height:
+                46px;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            border-radius:
+                50%;
+
+            background:
+                #2563eb;
+
+            color:
+                #ffffff;
+
+            font-weight:
+                800;
+
+        }
+
+
+        .participant-preview strong {
+
+            display:
+                block;
+
+            color:
+                #1e3a8a;
+
+        }
+
+
+        .participant-preview span {
+
+            display:
+                block;
+
+            margin-top:
+                4px;
+
+            color:
+                #64748b;
+
+            font-size:
+                12px;
+
+        }
+
+
+        /*====================================================
+          TOAST
+        ====================================================*/
+
+        .admin-toast-container {
+
+            position:
+                fixed;
+
+            top:
+                90px;
+
+            right:
+                22px;
+
+            z-index:
+                4000;
+
+            display:
+                flex;
+
+            flex-direction:
+                column;
+
+            gap:
+                10px;
+
+            width:
+                min(
+                    360px,
+                    calc(
+                        100vw - 44px
+                    )
+                );
+
+        }
+
+
+        .admin-toast {
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            gap:
+                11px;
+
+            padding:
+                14px 16px;
+
+            border-radius:
+                12px;
+
+            background:
+                #ffffff;
+
+            color:
+                #1e293b;
+
+            border-left:
+                5px solid
+                #0284c7;
+
+            box-shadow:
+                0 16px 35px
+                rgba(
+                    15,
+                    23,
+                    42,
+                    0.16
+                );
+
+            opacity:
+                0;
+
+            transform:
+                translateX(
+                    25px
+                );
+
+            transition:
+                0.3s ease;
+
+        }
+
+
+        .admin-toast.show {
+
+            opacity:
+                1;
+
+            transform:
+                translateX(
+                    0
+                );
+
+        }
+
+
+        .admin-toast.success {
+
+            border-left-color:
+                #16a34a;
+
+        }
+
+
+        .admin-toast.error {
+
+            border-left-color:
+                #dc2626;
+
+        }
+
+
+        .admin-toast.warning {
+
+            border-left-color:
+                #d97706;
+
+        }
+
+
+        .admin-toast.info {
+
+            border-left-color:
+                #0284c7;
+
+        }
+
+
+        /*====================================================
+          RESPONSIVE
+        ====================================================*/
+
+        @media (
+            max-width:
+            1300px
+        ) {
+
+            .statistics-grid {
+
+                grid-template-columns:
+                    repeat(
+                        3,
+                        minmax(
+                            0,
+                            1fr
+                        )
+                    );
+
+            }
+
+
+            .toolbar {
+
+                grid-template-columns:
+                    repeat(
+                        2,
+                        minmax(
+                            0,
+                            1fr
+                        )
+                    );
+
+            }
+
+
+            .toolbar .search-box {
+
+                grid-column:
+                    1 / -1;
+
+            }
+
+        }
+
+
+        @media (
+            max-width:
+            1024px
+        ) {
+
+            .admin-sidebar {
+
+                transform:
+                    translateX(
+                        -100%
+                    );
+
+            }
+
+
+            .admin-sidebar.sidebar-open {
+
+                transform:
+                    translateX(
+                        0
+                    );
+
+            }
+
+
+            .admin-main {
+
+                width:
+                    100%;
+
+                margin-left:
+                    0;
+
+            }
+
+
+            .admin-menu-button {
+
+                display:
+                    inline-flex;
+
+            }
+
+
+            .winner-cards {
+
+                grid-template-columns:
+                    1fr;
+
+            }
+
+        }
+
+
+        @media (
+            max-width:
+            760px
+        ) {
+
+            .admin-header {
+
+                padding:
+                    12px 16px;
+
+            }
+
+
+            .admin-user-text {
+
+                display:
+                    none;
+
+            }
+
+
+            .admin-content {
+
+                padding:
+                    20px 15px;
+
+            }
+
+
+            .page-intro {
+
+                flex-direction:
+                    column;
+
+            }
+
+
+            .page-actions {
+
+                width:
+                    100%;
+
+                justify-content:
+                    flex-start;
+
+            }
+
+
+            .statistics-grid {
+
+                grid-template-columns:
+                    repeat(
+                        2,
+                        minmax(
+                            0,
+                            1fr
+                        )
+                    );
+
+            }
+
+
+            .toolbar {
+
+                grid-template-columns:
+                    1fr;
+
+            }
+
+
+            .toolbar .search-box {
+
+                grid-column:
+                    auto;
+
+            }
+
+
+            .form-grid {
+
+                grid-template-columns:
+                    1fr;
+
+            }
+
+
+            .form-group.full-width {
+
+                grid-column:
+                    auto;
+
+            }
+
+
+            .section-header {
+
+                align-items:
+                    flex-start;
+
+                flex-direction:
+                    column;
+
+            }
+
+
+            .table-footer {
+
+                align-items:
+                    flex-start;
+
+                flex-direction:
+                    column;
+
+            }
+
+        }
+
+
+        @media (
+            max-width:
+            480px
+        ) {
+
+            .statistics-grid {
+
+                grid-template-columns:
+                    1fr;
+
+            }
+
+
+            .page-actions .btn {
+
+                width:
+                    100%;
+
+            }
+
+
+            .modal-footer {
+
+                flex-direction:
+                    column-reverse;
+
+            }
+
+
+            .modal-footer .btn {
+
+                width:
+                    100%;
+
+            }
+
+        }
+
+
+        /*====================================================
+          PRINT
+        ====================================================*/
+
+        @media print {
+
+            body {
+
+                background:
+                    #ffffff;
+
+            }
+
+
+            .admin-sidebar,
+            .admin-header,
+            .page-actions,
+            .toolbar,
+            .table-actions,
+            .admin-overlay,
+            .modal-backdrop {
+
+                display:
+                    none !important;
+
+            }
+
+
+            .admin-main {
+
+                width:
+                    100%;
+
+                margin:
+                    0;
+
+            }
+
+
+            .admin-content {
+
+                padding:
+                    0;
+
+            }
+
+
+            .section-card,
+            .stat-card,
+            .winner-card {
+
+                box-shadow:
+                    none;
+
+                break-inside:
+                    avoid;
+
+            }
+
+
+            .prize-table {
+
+                min-width:
+                    100%;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+    <div class="admin-page">
+
+
+        <!--===============================================
+          SIDEBAR
+        =================================================-->
+
+        <aside
+            class="admin-sidebar"
+            id="adminSidebar"
+        >
+
+            <div class="sidebar-brand">
+
+                <h1>
+                    Kiddysexplorer
+                </h1>
+
+                <p>
+                    Quiz Competition Admin
+                </p>
+
+            </div>
+
+
+            <nav
+                class="sidebar-nav"
+                aria-label="Admin navigation"
+            >
+
+                <a
+                    href="admin-dashboard.html"
+                    class="sidebar-link"
+                >
+
+                    <i class="fas fa-chart-pie"></i>
+
+                    <span>
+                        Dashboard
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="admin-participants.html"
+                    class="sidebar-link"
+                >
+
+                    <i class="fas fa-users"></i>
+
+                    <span>
+                        Participants
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="admin-live-competition.html"
+                    class="sidebar-link"
+                >
+
+                    <i class="fas fa-bolt"></i>
+
+                    <span>
+                        Live Competition
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="admin-leaderboard.html"
+                    class="sidebar-link"
+                >
+
+                    <i class="fas fa-ranking-star"></i>
+
+                    <span>
+                        Leaderboard
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="admin-prizes.html"
+                    class="sidebar-link active"
+                    aria-current="page"
+                >
+
+                    <i class="fas fa-gift"></i>
+
+                    <span>
+                        Prize Management
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="admin-certificates.html"
+                    class="sidebar-link"
+                >
+
+                    <i class="fas fa-certificate"></i>
+
+                    <span>
+                        Certificates
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="admin-reports.html"
+                    class="sidebar-link"
+                >
+
+                    <i class="fas fa-chart-column"></i>
+
+                    <span>
+                        Reports
+                    </span>
+
+                </a>
+
+            </nav>
+
+
+            <div class="sidebar-footer">
+
+                &copy;
+
+                <span id="adminCurrentYear"></span>
+
+                Kiddysexplorer
+
+            </div>
+
+        </aside>
+
+
+        <!--===============================================
+          OVERLAY
+        =================================================-->
+
+        <div
+            class="admin-overlay"
+            id="adminOverlay"
+            aria-hidden="true"
+        ></div>
+
+
+        <!--===============================================
+          MAIN CONTENT
+        =================================================-->
+
+        <main class="admin-main">
+
+
+            <!--===========================================
+              HEADER
+            ============================================-->
+
+            <header class="admin-header">
+
+                <div class="admin-header-title">
+
+                    <button
+                        type="button"
+                        class="admin-menu-button"
+                        id="adminMenuBtn"
+                        aria-label="Open navigation menu"
+                        aria-expanded="false"
+                    >
+
+                        <i class="fas fa-bars"></i>
+
+                    </button>
+
+
+                    <div class="admin-header-icon">
+
+                        <i class="fas fa-gift"></i>
+
+                    </div>
+
+
+                    <div>
+
+                        <h2>
+                            Prize Management
+                        </h2>
+
+                        <p>
+                            Assign, monitor and record prize collection
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="admin-user">
+
+                    <div class="admin-avatar">
+                        AD
+                    </div>
+
+                    <div class="admin-user-text">
+
+                        <strong>
+                            Administrator
+                        </strong>
+
+                        <span>
+                            Competition Manager
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </header>
+
+
+            <!--===========================================
+              CONTENT
+            ============================================-->
+
+            <div class="admin-content">
+
+
+                <!--=======================================
+                  INTRO
+                ========================================-->
+
+                <section class="page-intro">
+
+                    <div>
+
+                        <h2>
+                            Competition Prizes
+                        </h2>
+
+                        <p>
+                            Manage prizes for competition winners,
+                            update collection details and print or
+                            export the complete prize distribution list.
+                        </p>
+
+                    </div>
+
+
+                    <div class="page-actions">
+
+                        <button
+                            type="button"
+                            class="btn btn-secondary"
+                            id="printPrizeListBtn"
+                        >
+
+                            <i class="fas fa-print"></i>
+
+                            Print List
+
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="btn btn-secondary"
+                            id="exportPrizeCSVBtn"
+                        >
+
+                            <i class="fas fa-file-csv"></i>
+
+                            Export CSV
+
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="btn btn-primary"
+                            id="assignPrizeBtn"
+                        >
+
+                            <i class="fas fa-plus"></i>
+
+                            Assign Prize
+
+                        </button>
+
+                    </div>
+
+                </section>
+
+
+                <!--=======================================
+                  STATISTICS
+                ========================================-->
+
+                <section
+                    class="statistics-grid"
+                    aria-label="Prize statistics"
+                >
+
+                    <article class="stat-card">
+
+                        <div class="stat-card-top">
+
+                            <div class="stat-icon total">
+
+                                <i class="fas fa-trophy"></i>
+
+                            </div>
+
+                        </div>
+
+                        <div
+                            class="stat-number"
+                            id="totalPrizeWinners"
+                        >
+                            0
+                        </div>
+
+                        <div class="stat-label">
+                            Total Prize Winners
+                        </div>
+
+                    </article>
+
+
+                    <article class="stat-card">
+
+                        <div class="stat-card-top">
+
+                            <div class="stat-icon gold">
+
+                                <i class="fas fa-medal"></i>
+
+                            </div>
+
+                        </div>
+
+                        <div
+                            class="stat-number"
+                            id="goldPrizeCount"
+                        >
+                            0
+                        </div>
+
+                        <div class="stat-label">
+                            Gold Prizes
+                        </div>
+
+                    </article>
+
+
+                    <article class="stat-card">
+
+                        <div class="stat-card-top">
+
+                            <div class="stat-icon silver">
+
+                                <i class="fas fa-medal"></i>
+
+                            </div>
+
+                        </div>
+
+                        <div
+                            class="stat-number"
+                            id="silverPrizeCount"
+                        >
+                            0
+                        </div>
+
+                        <div class="stat-label">
+                            Silver Prizes
+                        </div>
+
+                    </article>
+
+
+                    <article class="stat-card">
+
+                        <div class="stat-card-top">
+
+                            <div class="stat-icon bronze">
+
+                                <i class="fas fa-medal"></i>
+
+                            </div>
+
+                        </div>
+
+                        <div
+                            class="stat-number"
+                            id="bronzePrizeCount"
+                        >
+                            0
+                        </div>
+
+                        <div class="stat-label">
+                            Bronze Prizes
+                        </div>
+
+                    </article>
+
+
+                    <article class="stat-card">
+
+                        <div class="stat-card-top">
+
+                            <div class="stat-icon pending">
+
+                                <i class="fas fa-hourglass-half"></i>
+
+                            </div>
+
+                        </div>
+
+                        <div
+                            class="stat-number"
+                            id="pendingPrizeCount"
+                        >
+                            0
+                        </div>
+
+                        <div class="stat-label">
+                            Pending Collection
+                        </div>
+
+                    </article>
+
+
+                    <article class="stat-card">
+
+                        <div class="stat-card-top">
+
+                            <div class="stat-icon collected">
+
+                                <i class="fas fa-circle-check"></i>
+
+                            </div>
+
+                        </div>
+
+                        <div
+                            class="stat-number"
+                            id="collectedPrizeCount"
+                        >
+                            0
+                        </div>
+
+                        <div class="stat-label">
+                            Collected or Delivered
+                        </div>
+
+                    </article>
+
+                </section>
+
+
+                <!--=======================================
+                  TOP THREE WINNERS
+                ========================================-->
+
+                <section class="section-card">
+
+                    <div class="section-header">
+
+                        <div>
+
+                            <h3>
+                                Top Prize Winners
+                            </h3>
+
+                            <p>
+                                The first three positions from the
+                                published competition results.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="winner-cards">
+
+
+                        <!-- First Place -->
+
+                        <article
+                            class="winner-card gold"
+                            id="goldWinnerCard"
+                        >
+
+                            <div class="winner-medal">
+
+                                <i class="fas fa-medal"></i>
+
+                            </div>
+
+                            <div class="winner-position">
+                                First Position
+                            </div>
+
+                            <div
+                                class="winner-name"
+                                id="goldWinnerName"
+                            >
+                                Not assigned
+                            </div>
+
+                            <div
+                                class="winner-group"
+                                id="goldWinnerGroup"
+                            >
+                                —
+                            </div>
+
+                            <div
+                                class="winner-prize"
+                                id="goldWinnerPrize"
+                            >
+
+                                <i class="fas fa-gift"></i>
+
+                                Gold Medal
+
+                            </div>
+
+                            <p
+                                class="winner-empty"
+                                id="goldWinnerEmpty"
+                            >
+                                No first-place winner has been published.
+                            </p>
+
+                        </article>
+
+
+                        <!-- Second Place -->
+
+                        <article
+                            class="winner-card silver"
+                            id="silverWinnerCard"
+                        >
+
+                            <div class="winner-medal">
+
+                                <i class="fas fa-medal"></i>
+
+                            </div>
+
+                            <div class="winner-position">
+                                Second Position
+                            </div>
+
+                            <div
+                                class="winner-name"
+                                id="silverWinnerName"
+                            >
+                                Not assigned
+                            </div>
+
+                            <div
+                                class="winner-group"
+                                id="silverWinnerGroup"
+                            >
+                                —
+                            </div>
+
+                            <div
+                                class="winner-prize"
+                                id="silverWinnerPrize"
+                            >
+
+                                <i class="fas fa-gift"></i>
+
+                                Silver Medal
+
+                            </div>
+
+                            <p
+                                class="winner-empty"
+                                id="silverWinnerEmpty"
+                            >
+                                No second-place winner has been published.
+                            </p>
+
+                        </article>
+
+
+                        <!-- Third Place -->
+
+                        <article
+                            class="winner-card bronze"
+                            id="bronzeWinnerCard"
+                        >
+
+                            <div class="winner-medal">
+
+                                <i class="fas fa-medal"></i>
+
+                            </div>
+
+                            <div class="winner-position">
+                                Third Position
+                            </div>
+
+                            <div
+                                class="winner-name"
+                                id="bronzeWinnerName"
+                            >
+                                Not assigned
+                            </div>
+
+                            <div
+                                class="winner-group"
+                                id="bronzeWinnerGroup"
+                            >
+                                —
+                            </div>
+
+                            <div
+                                class="winner-prize"
+                                id="bronzeWinnerPrize"
+                            >
+
+                                <i class="fas fa-gift"></i>
+
+                                Bronze Medal
+
+                            </div>
+
+                            <p
+                                class="winner-empty"
+                                id="bronzeWinnerEmpty"
+                            >
+                                No third-place winner has been published.
+                            </p>
+
+                        </article>
+
+                    </div>
+
+                </section>
+
+
+                <!--=======================================
+                  PRIZE TABLE
+                ========================================-->
+
+                <section class="section-card">
+
+                    <div class="section-header">
+
+                        <div>
+
+                            <h3>
+                                Prize Distribution Records
+                            </h3>
+
+                            <p>
+                                Search, edit and track every assigned prize.
+                            </p>
+
+                        </div>
+
+
+                        <button
+                            type="button"
+                            class="btn btn-secondary btn-sm"
+                            id="resetPrizeFiltersBtn"
+                        >
+
+                            <i class="fas fa-rotate-left"></i>
+
+                            Reset Filters
+
+                        </button>
+
+                    </div>
+
+
+                    <!-- Filters -->
+
+                    <div class="toolbar">
+
+                        <div class="search-box">
+
+                            <i class="fas fa-search"></i>
+
+                            <input
+                                type="search"
+                                class="form-control"
+                                id="prizeSearchInput"
+                                placeholder="Search participant, parent, prize or phone..."
+                                autocomplete="off"
+                            >
+
+                        </div>
+
+
+                        <select
+                            class="form-control"
+                            id="prizeGroupFilter"
+                            aria-label="Filter prizes by group"
+                        >
+
+                            <option value="">
+                                All Groups
+                            </option>
+
+                            <option value="A">
+                                Group A
+                            </option>
+
+                            <option value="B">
+                                Group B
+                            </option>
+
+                            <option value="C">
+                                Group C
+                            </option>
+
+                        </select>
+
+
+                        <select
+                            class="form-control"
+                            id="prizeTypeFilter"
+                            aria-label="Filter by prize type"
+                        >
+
+                            <option value="">
+                                All Prize Types
+                            </option>
+
+                            <option value="Gold Medal">
+                                Gold Medal
+                            </option>
+
+                            <option value="Silver Medal">
+                                Silver Medal
+                            </option>
+
+                            <option value="Bronze Medal">
+                                Bronze Medal
+                            </option>
+
+                            <option value="Participation Medal">
+                                Participation Medal
+                            </option>
+
+                            <option value="Certificate">
+                                Certificate
+                            </option>
+
+                            <option value="Gift Pack">
+                                Gift Pack
+                            </option>
+
+                            <option value="School Bag">
+                                School Bag
+                            </option>
+
+                            <option value="Books">
+                                Books
+                            </option>
+
+                            <option value="Cash Prize">
+                                Cash Prize
+                            </option>
+
+                            <option value="Custom Prize">
+                                Custom Prize
+                            </option>
+
+                        </select>
+
+
+                        <select
+                            class="form-control"
+                            id="prizeStatusFilter"
+                            aria-label="Filter by collection status"
+                        >
+
+                            <option value="">
+                                All Collection Statuses
+                            </option>
+
+                            <option value="Pending">
+                                Pending
+                            </option>
+
+                            <option value="Ready">
+                                Ready for Collection
+                            </option>
+
+                            <option value="Collected">
+                                Collected
+                            </option>
+
+                            <option value="Delivered">
+                                Delivered
+                            </option>
+
+                        </select>
+
+
+                        <button
+                            type="button"
+                            class="btn btn-info"
+                            id="refreshPrizeBtn"
+                        >
+
+                            <i class="fas fa-arrows-rotate"></i>
+
+                            Refresh
+
+                        </button>
+
+                    </div>
+
+
+                    <!-- Table -->
+
+                    <div
+                        class="table-wrapper"
+                        id="prizeTableWrapper"
+                    >
+
+                        <table class="prize-table">
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>
+                                        Position
+                                    </th>
+
+                                    <th>
+                                        Participant
+                                    </th>
+
+                                    <th>
+                                        Group
+                                    </th>
+
+                                    <th>
+                                        Prize
+                                    </th>
+
+                                    <th>
+                                        Status
+                                    </th>
+
+                                    <th>
+                                        Parent / Guardian
+                                    </th>
+
+                                    <th>
+                                        Collection Date
+                                    </th>
+
+                                    <th>
+                                        Actions
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody id="prizeTableBody">
+
+                                <!-- Generated by adminPrizes.js -->
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+
+                    <!-- Empty State -->
+
+                    <div
+                        class="empty-state"
+                        id="prizeEmptyState"
+                        hidden
+                    >
+
+                        <div class="empty-state-icon">
+
+                            <i class="fas fa-gift"></i>
+
+                        </div>
+
+                        <h3>
+                            No prize records found
+                        </h3>
+
+                        <p>
+                            Publish winners from the Live Competition
+                            page or use the Assign Prize button to
+                            create a prize record.
+                        </p>
+
+                    </div>
+
+
+                    <div class="table-footer">
+
+                        <span id="prizeResultSummary">
+                            Showing 0 prize records
+                        </span>
+
+                        <span>
+                            Records are saved in this browser.
+                        </span>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+        </main>
+
+    </div>
+
+
+    <!--===============================================
+      ASSIGN / EDIT PRIZE MODAL
+    =================================================-->
+
+    <div
+        class="modal-backdrop"
+        id="prizeModal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="prizeModalTitle"
+        hidden
+    >
+
+        <div class="modal-panel">
+
+            <div class="modal-header">
+
+                <div>
+
+                    <h3 id="prizeModalTitle">
+                        Assign Prize
+                    </h3>
+
+                    <p>
+                        Select a participant and enter the prize details.
+                    </p>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="modal-close"
+                    id="closePrizeModalBtn"
+                    aria-label="Close prize form"
+                >
+
+                    <i class="fas fa-times"></i>
+
+                </button>
+
+            </div>
+
+
+            <form id="prizeForm">
+
+                <div class="modal-body">
+
+
+                    <input
+                        type="hidden"
+                        id="prizeRecordId"
+                    >
+
+
+                    <div
+                        class="participant-preview"
+                        id="prizeParticipantPreview"
+                        hidden
+                    >
+
+                        <div
+                            class="participant-preview-icon"
+                            id="prizeParticipantInitials"
+                        >
+                            —
+                        </div>
+
+                        <div>
+
+                            <strong id="prizeParticipantPreviewName">
+                                Participant
+                            </strong>
+
+                            <span id="prizeParticipantPreviewDetails">
+                                Group and position
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-grid">
+
+
+                        <!-- Participant -->
+
+                        <div class="form-group full-width">
+
+                            <label for="prizeParticipantId">
+
+                                Participant
+
+                                <span class="required">
+                                    *
+                                </span>
+
+                            </label>
+
+                            <select
+                                class="form-control"
+                                id="prizeParticipantId"
+                                required
+                            >
+
+                                <option value="">
+                                    Select a participant
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- Position -->
+
+                        <div class="form-group">
+
+                            <label for="prizePosition">
+
+                                Competition Position
+
+                            </label>
+
+                            <input
+                                type="number"
+                                class="form-control"
+                                id="prizePosition"
+                                min="1"
+                                placeholder="Example: 1"
+                            >
+
+                        </div>
+
+
+                        <!-- Group -->
+
+                        <div class="form-group">
+
+                            <label for="prizeGroup">
+
+                                Group
+
+                            </label>
+
+                            <select
+                                class="form-control"
+                                id="prizeGroup"
+                            >
+
+                                <option value="">
+                                    Select group
+                                </option>
+
+                                <option value="A">
+                                    Group A
+                                </option>
+
+                                <option value="B">
+                                    Group B
+                                </option>
+
+                                <option value="C">
+                                    Group C
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- Prize Type -->
+
+                        <div class="form-group">
+
+                            <label for="prizeType">
+
+                                Prize Type
+
+                                <span class="required">
+                                    *
+                                </span>
+
+                            </label>
+
+                            <select
+                                class="form-control"
+                                id="prizeType"
+                                required
+                            >
+
+                                <option value="">
+                                    Select prize
+                                </option>
+
+                                <option value="Gold Medal">
+                                    Gold Medal
+                                </option>
+
+                                <option value="Silver Medal">
+                                    Silver Medal
+                                </option>
+
+                                <option value="Bronze Medal">
+                                    Bronze Medal
+                                </option>
+
+                                <option value="Participation Medal">
+                                    Participation Medal
+                                </option>
+
+                                <option value="Certificate">
+                                    Certificate
+                                </option>
+
+                                <option value="Gift Pack">
+                                    Gift Pack
+                                </option>
+
+                                <option value="School Bag">
+                                    School Bag
+                                </option>
+
+                                <option value="Books">
+                                    Books
+                                </option>
+
+                                <option value="Cash Prize">
+                                    Cash Prize
+                                </option>
+
+                                <option value="Custom Prize">
+                                    Custom Prize
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- Custom Prize -->
+
+                        <div class="form-group">
+
+                            <label for="customPrizeName">
+
+                                Custom Prize Name
+
+                            </label>
+
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="customPrizeName"
+                                placeholder="Enter custom prize"
+                            >
+
+                        </div>
+
+
+                        <!-- Collection Status -->
+
+                        <div class="form-group">
+
+                            <label for="prizeCollectionStatus">
+
+                                Collection Status
+
+                                <span class="required">
+                                    *
+                                </span>
+
+                            </label>
+
+                            <select
+                                class="form-control"
+                                id="prizeCollectionStatus"
+                                required
+                            >
+
+                                <option value="Pending">
+                                    Pending
+                                </option>
+
+                                <option value="Ready">
+                                    Ready for Collection
+                                </option>
+
+                                <option value="Collected">
+                                    Collected
+                                </option>
+
+                                <option value="Delivered">
+                                    Delivered
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- Collection Date -->
+
+                        <div class="form-group">
+
+                            <label for="prizeCollectionDate">
+
+                                Collection Date
+
+                            </label>
+
+                            <input
+                                type="date"
+                                class="form-control"
+                                id="prizeCollectionDate"
+                            >
+
+                        </div>
+
+
+                        <!-- Parent Name -->
+
+                        <div class="form-group">
+
+                            <label for="prizeParentName">
+
+                                Parent / Guardian Name
+
+                            </label>
+
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="prizeParentName"
+                                placeholder="Enter parent or guardian name"
+                            >
+
+                        </div>
+
+
+                        <!-- Phone -->
+
+                        <div class="form-group">
+
+                            <label for="prizeParentPhone">
+
+                                Phone Number
+
+                            </label>
+
+                            <input
+                                type="tel"
+                                class="form-control"
+                                id="prizeParentPhone"
+                                placeholder="Enter phone number"
+                            >
+
+                        </div>
+
+
+                        <!-- Collected By -->
+
+                        <div class="form-group">
+
+                            <label for="prizeCollectedBy">
+
+                                Collected By
+
+                            </label>
+
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="prizeCollectedBy"
+                                placeholder="Name of the person who received it"
+                            >
+
+                        </div>
+
+
+                        <!-- Prize Value -->
+
+                        <div class="form-group">
+
+                            <label for="prizeValue">
+
+                                Prize Value
+
+                            </label>
+
+                            <input
+                                type="number"
+                                class="form-control"
+                                id="prizeValue"
+                                min="0"
+                                step="0.01"
+                                placeholder="Example: 50"
+                            >
+
+                        </div>
+
+
+                        <!-- Currency -->
+
+                        <div class="form-group">
+
+                            <label for="prizeCurrency">
+
+                                Currency
+
+                            </label>
+
+                            <select
+                                class="form-control"
+                                id="prizeCurrency"
+                            >
+
+                                <option value="EUR">
+                                    EUR — Euro
+                                </option>
+
+                                <option value="NGN">
+                                    NGN — Nigerian Naira
+                                </option>
+
+                                <option value="USD">
+                                    USD — US Dollar
+                                </option>
+
+                                <option value="GBP">
+                                    GBP — British Pound
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- Remarks -->
+
+                        <div class="form-group full-width">
+
+                            <label for="prizeRemarks">
+
+                                Remarks
+
+                            </label>
+
+                            <textarea
+                                class="form-control"
+                                id="prizeRemarks"
+                                placeholder="Add collection notes or other information"
+                            ></textarea>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="modal-footer">
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        id="cancelPrizeBtn"
+                    >
+
+                        Cancel
+
+                    </button>
+
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                        id="savePrizeBtn"
+                    >
+
+                        <i class="fas fa-floppy-disk"></i>
+
+                        Save Prize
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!--===============================================
+      VIEW PRIZE DETAILS MODAL
+    =================================================-->
+
+    <div
+        class="modal-backdrop"
+        id="prizeDetailsModal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="prizeDetailsTitle"
+        hidden
+    >
+
+        <div class="modal-panel">
+
+            <div class="modal-header">
+
+                <div>
+
+                    <h3 id="prizeDetailsTitle">
+                        Prize Details
+                    </h3>
+
+                    <p>
+                        Complete prize and collection information.
+                    </p>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="modal-close"
+                    id="closePrizeDetailsBtn"
+                    aria-label="Close prize details"
+                >
+
+                    <i class="fas fa-times"></i>
+
+                </button>
+
+            </div>
+
+
+            <div
+                class="modal-body"
+                id="prizeDetailsContent"
+            >
+
+                <!-- Generated by adminPrizes.js -->
+
+            </div>
+
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    id="closePrizeDetailsFooterBtn"
+                >
+
+                    Close
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="btn btn-primary"
+                    id="printPrizeDetailsBtn"
+                >
+
+                    <i class="fas fa-print"></i>
+
+                    Print Details
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!--===============================================
+      JAVASCRIPT
+    =================================================-->
+
+    <script src="assets/js/adminCommon.js"></script>
+
+    <script src="assets/js/participantStore.js"></script>
+
+    <script src="assets/js/adminPrizes.js"></script>
+
+</body>
+
+</html>
