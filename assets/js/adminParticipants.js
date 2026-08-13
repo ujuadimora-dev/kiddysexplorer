@@ -907,6 +907,44 @@ const AdminParticipants = {
             }
         );
 
+        /*---------------------------------
+    EXPORT CSV
+---------------------------------*/
+
+        const exportCsvBtn =
+            document.getElementById(
+                "exportCsvBtn"
+            );
+
+
+        exportCsvBtn?.addEventListener(
+            "click",
+            () => {
+
+                this.exportParticipantsCSV();
+
+            }
+        );
+
+        /*---------------------------------
+    EXPORT EXCEL
+---------------------------------*/
+
+        const exportExcelBtn =
+            document.getElementById(
+                "exportExcelBtn"
+            );
+
+
+        exportExcelBtn?.addEventListener(
+            "click",
+            () => {
+
+                this.exportParticipantsExcel();
+
+            }
+        );
+
 
         /*---------------------------------
             PARTICIPANT DATA CHANGES
@@ -1872,6 +1910,470 @@ const AdminParticipants = {
         );
 
     },
+
+    /*=====================================
+    EXPORT PARTICIPANTS CSV
+=====================================*/
+
+    exportParticipantsCSV() {
+
+        const participants =
+            this.loadParticipants();
+
+
+        const filteredParticipants =
+            this.filterParticipants(
+                participants
+            );
+
+
+        if (
+            filteredParticipants.length === 0
+        ) {
+
+            this.showToast(
+                "There are no participants to export.",
+                "error"
+            );
+
+            return;
+
+        }
+
+
+        const headers = [
+
+            "Participant ID",
+
+            "Child Name",
+
+            "Parent Email",
+
+            "Age",
+
+            "Group",
+
+            "Section 1 Score",
+
+            "Section 2 Score",
+
+            "Status",
+
+            "Attendance",
+
+            "Live Score",
+
+            "Final Position",
+
+            "Prize",
+
+            "Registration Date"
+
+        ];
+
+
+        const rows =
+            filteredParticipants.map(
+                participant => [
+
+                    participant.id || "",
+
+                    participant.childName ||
+                    participant.name ||
+                    "",
+
+                    participant.parentEmail ||
+                    participant.email ||
+                    "",
+
+                    participant.age ?? "",
+
+                    participant.group || "",
+
+                    this.formatCSVScore(
+                        participant.section1Score
+                    ),
+
+                    this.formatCSVScore(
+                        participant.section2Score
+                    ),
+
+                    this.getStatus(
+                        participant
+                    ),
+
+                    this.getAttendanceText(
+                        participant.liveAttendance
+                    ),
+
+                    this.formatCSVScore(
+                        participant.liveScore ??
+                        participant.competitionScore
+                    ),
+
+                    participant.finalPosition ??
+                    participant.position ??
+                    "",
+
+                    participant.prize ??
+                    participant.prizeName ??
+                    "",
+
+                    this.formatDate(
+                        participant.registrationDate ??
+                        participant.createdAt
+                    )
+
+                ]
+            );
+
+
+        const csvRows = [
+
+            headers,
+
+            ...rows
+
+        ];
+
+
+        const csv =
+            csvRows
+                .map(
+                    row =>
+                        row
+                            .map(
+                                value =>
+                                    this.escapeCSVValue(
+                                        value
+                                    )
+                            )
+                            .join(",")
+                )
+                .join("\r\n");
+
+
+        const blob =
+            new Blob(
+                [
+                    "\uFEFF",
+                    csv
+                ],
+                {
+                    type:
+                        "text/csv;charset=utf-8"
+                }
+            );
+
+
+        const url =
+            URL.createObjectURL(
+                blob
+            );
+
+
+        const link =
+            document.createElement(
+                "a"
+            );
+
+
+        const date =
+            new Date()
+                .toISOString()
+                .slice(
+                    0,
+                    10
+                );
+
+
+        link.href =
+            url;
+
+
+        link.download =
+            `kiddysexplorer-participants-${date}.csv`;
+
+
+        document.body.appendChild(
+            link
+        );
+
+
+        link.click();
+
+
+        link.remove();
+
+
+        window.setTimeout(
+            () => {
+
+                URL.revokeObjectURL(
+                    url
+                );
+
+            },
+            1000
+        );
+
+
+        this.showToast(
+            `${filteredParticipants.length} participant record(s) exported successfully.`,
+            "success"
+        );
+
+    },
+
+    /*=====================================
+    FORMAT SCORE FOR CSV
+=====================================*/
+
+    formatCSVScore(value) {
+
+        const score =
+            this.parseScore(
+                value
+            );
+
+
+        return score === null
+            ? ""
+            : score;
+
+    },
+
+
+    /*=====================================
+        ESCAPE CSV VALUE
+    =====================================*/
+
+    escapeCSVValue(value) {
+
+        const text =
+            String(
+                value ?? ""
+            );
+
+
+        return `"${text.replace(
+            /"/g,
+            '""'
+        )}"`;
+
+    },
+
+    /*=====================================
+    EXPORT PARTICIPANTS EXCEL
+=====================================*/
+
+    exportParticipantsExcel() {
+
+        if (
+            typeof XLSX ===
+            "undefined"
+        ) {
+
+            this.showToast(
+                "Excel export library is not available.",
+                "error"
+            );
+
+            return;
+
+        }
+
+
+        const participants =
+            this.loadParticipants();
+
+
+        const filteredParticipants =
+            this.filterParticipants(
+                participants
+            );
+
+
+        if (
+            filteredParticipants.length === 0
+        ) {
+
+            this.showToast(
+                "There are no participants to export.",
+                "error"
+            );
+
+            return;
+
+        }
+
+
+        const excelRows =
+            filteredParticipants.map(
+                participant => {
+
+                    return {
+
+                        "Participant ID":
+                            participant.id || "",
+
+                        "Child Name":
+                            participant.childName ||
+                            participant.name ||
+                            "",
+
+                        "Parent Email":
+                            participant.parentEmail ||
+                            participant.email ||
+                            "",
+
+                        "Age":
+                            participant.age ?? "",
+
+                        "Group":
+                            participant.group || "",
+
+                        "Section 1 Score":
+                            this.formatExcelScore(
+                                participant.section1Score
+                            ),
+
+                        "Section 2 Score":
+                            this.formatExcelScore(
+                                participant.section2Score
+                            ),
+
+                        "Status":
+                            this.getStatus(
+                                participant
+                            ),
+
+                        "Attendance":
+                            this.getAttendanceText(
+                                participant.liveAttendance
+                            ),
+
+                        "Live Score":
+                            this.formatExcelScore(
+                                participant.liveScore ??
+                                participant.competitionScore
+                            ),
+
+                        "Final Position":
+                            participant.finalPosition ??
+                            participant.position ??
+                            "",
+
+                        "Prize":
+                            participant.prize ??
+                            participant.prizeName ??
+                            "",
+
+                        "Registration Date":
+                            this.formatDate(
+                                participant.registrationDate ??
+                                participant.createdAt
+                            )
+
+                    };
+
+                }
+            );
+
+
+        const worksheet =
+            XLSX.utils.json_to_sheet(
+                excelRows
+            );
+
+
+        worksheet["!cols"] = [
+
+            { wch: 26 },
+
+            { wch: 24 },
+
+            { wch: 32 },
+
+            { wch: 8 },
+
+            { wch: 10 },
+
+            { wch: 18 },
+
+            { wch: 18 },
+
+            { wch: 22 },
+
+            { wch: 16 },
+
+            { wch: 14 },
+
+            { wch: 16 },
+
+            { wch: 22 },
+
+            { wch: 22 }
+
+        ];
+
+
+        const workbook =
+            XLSX.utils.book_new();
+
+
+        XLSX.utils.book_append_sheet(
+            workbook,
+            worksheet,
+            "Participants"
+        );
+
+
+        const date =
+            new Date()
+                .toISOString()
+                .slice(
+                    0,
+                    10
+                );
+
+
+        const filename =
+            `kiddysexplorer-participants-${date}.xlsx`;
+
+
+        XLSX.writeFile(
+            workbook,
+            filename
+        );
+
+
+        this.showToast(
+            `${filteredParticipants.length} participant record(s) exported to Excel successfully.`,
+            "success"
+        );
+
+    },
+
+    /*=====================================
+    FORMAT SCORE FOR EXCEL
+=====================================*/
+
+    formatExcelScore(value) {
+
+        const score =
+            this.parseScore(
+                value
+            );
+
+
+        return score === null
+            ? ""
+            : score;
+
+    },
+
+
     /*=====================================
         SHOW MODAL
     =====================================*/

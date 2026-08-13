@@ -258,6 +258,32 @@ const AdminCertificates = {
                     "cancelCertificateBtn"
                 ),
 
+
+            /*---------------------------------
+                DELETE CERTIFICATE MODAL
+            ---------------------------------*/
+
+            deleteCertificateModal:
+                document.getElementById(
+                    "deleteCertificateModal"
+                ),
+
+            deleteCertificateParticipantName:
+                document.getElementById(
+                    "deleteCertificateParticipantName"
+                ),
+
+            cancelDeleteCertificateBtn:
+                document.getElementById(
+                    "cancelDeleteCertificateBtn"
+                ),
+
+            confirmDeleteCertificateBtn:
+                document.getElementById(
+                    "confirmDeleteCertificateBtn"
+                ),
+
+
             certificateForm:
                 document.getElementById(
                     "certificateForm"
@@ -277,7 +303,6 @@ const AdminCertificates = {
                 document.getElementById(
                     "certificateParticipantInitials"
                 ),
-
             participantPreviewName:
                 document.getElementById(
                     "certificateParticipantPreviewName"
@@ -366,7 +391,7 @@ const AdminCertificates = {
         };
 
     },
-        bindEvents() {
+    bindEvents() {
 
         if (this.eventsBound) {
 
@@ -734,6 +759,10 @@ const AdminCertificates = {
             );
 
 
+        /*=====================================
+     CERTIFICATE MODAL EVENTS
+ =====================================*/
+
         this.elements.closeCertificateModalBtn
             ?.addEventListener(
                 "click",
@@ -773,6 +802,49 @@ const AdminCertificates = {
                 }
             );
 
+
+        /*=====================================
+            DELETE CERTIFICATE MODAL EVENTS
+        =====================================*/
+
+        this.elements.cancelDeleteCertificateBtn
+            ?.addEventListener(
+                "click",
+                () => {
+
+                    this.closeDeleteCertificateModal();
+
+                }
+            );
+
+
+        this.elements.confirmDeleteCertificateBtn
+            ?.addEventListener(
+                "click",
+                () => {
+
+                    this.confirmDeleteCertificate();
+
+                }
+            );
+
+
+        this.elements.deleteCertificateModal
+            ?.addEventListener(
+                "click",
+                event => {
+
+                    if (
+                        event.target ===
+                        this.elements.deleteCertificateModal
+                    ) {
+
+                        this.closeDeleteCertificateModal();
+
+                    }
+
+                }
+            );
 
         this.elements.certificateForm
             ?.addEventListener(
@@ -883,13 +955,13 @@ const AdminCertificates = {
 
                 }
 
-
                 this.closeCertificateModal();
+
+                this.closeDeleteCertificateModal();
 
                 this.closeGroupModal();
 
                 this.closeSidebar();
-
             }
         );
 
@@ -962,7 +1034,7 @@ const AdminCertificates = {
         );
 
     },
-        refresh() {
+    refresh() {
 
         /*
         ========================================
@@ -1398,7 +1470,7 @@ const AdminCertificates = {
         return section2Score >= 80;
 
     },
-        loadPrizeRecords() {
+    loadPrizeRecords() {
 
         const records =
             AdminCommon.safeJSONParse(
@@ -1719,20 +1791,20 @@ const AdminCertificates = {
 
         return (
             descriptions[
-                certificateType
+            certificateType
             ] ||
             descriptions[
-                "Participation Certificate"
+            "Participation Certificate"
             ]
         );
 
     },
-        applyFilters() {
+    applyFilters() {
 
         const keyword =
             (this.elements.searchInput?.value || "")
-            .trim()
-            .toLowerCase();
+                .trim()
+                .toLowerCase();
 
         const group =
             this.elements.groupFilter?.value || "";
@@ -1765,8 +1837,8 @@ const AdminCertificates = {
                         participant.email
 
                     ]
-                    .join(" ")
-                    .toLowerCase();
+                        .join(" ")
+                        .toLowerCase();
 
                     if (!searchText.includes(keyword)) {
 
@@ -1970,8 +2042,8 @@ const AdminCertificates = {
 <td>
 
 ${certificate
-    ? '<span class="badge badge-success">Generated</span>'
-    : '<span class="badge badge-warning">Pending</span>'}
+                            ? '<span class="badge badge-success">Generated</span>'
+                            : '<span class="badge badge-warning">Pending</span>'}
 
 </td>
 
@@ -1986,16 +2058,16 @@ Preview
 
 </button>
 
+${!certificate ? `
 <button
 class="btn btn-sm btn-success"
-data-certificate-action="${
-certificate ? "edit" : "generate"
-}"
+data-certificate-action="generate"
 data-participant-id="${participant.id}">
 
-${certificate ? "Edit" : "Generate"}
+Generate
 
 </button>
+` : ""}
 
 <button
 class="btn btn-sm btn-secondary"
@@ -2025,14 +2097,17 @@ Delete
 
     },
 
-        selectParticipant(
-        participantId
-    ) {
+    /*=====================================
+    SELECT PARTICIPANT
+=====================================*/
+
+    selectParticipant(participantId) {
 
         const participant =
             this.findParticipant(
                 participantId
             );
+
 
         if (!participant) {
 
@@ -2047,13 +2122,18 @@ Delete
 
         }
 
+
         this.selectedParticipantId =
-            String(participant.id);
+            String(
+                participant.id
+            );
+
 
         const certificate =
             this.findCertificate(
                 participant.id
             );
+
 
         this.renderPreview(
             participant,
@@ -2063,21 +2143,48 @@ Delete
     },
 
 
+    /*=====================================
+        RENDER CERTIFICATE PREVIEW
+    =====================================*/
+
     renderPreview(
         participant,
         certificate = null
     ) {
 
-        if (
-            !participant ||
-            !this.elements.preview
-        ) {
-
-            this.clearPreview();
+        if (!participant) {
 
             return;
 
         }
+
+
+        const preview =
+            document.getElementById(
+                "certificatePreview"
+            );
+
+
+        const placeholder =
+            document.getElementById(
+                "certificatePlaceholder"
+            );
+
+
+        if (!preview) {
+
+            console.error(
+                "certificatePreview element was not found."
+            );
+
+            return;
+
+        }
+
+
+        /*---------------------------------
+            CERTIFICATE INFORMATION
+        ---------------------------------*/
 
         const certificateType =
             certificate?.type ||
@@ -2086,16 +2193,19 @@ Delete
                 participant
             );
 
+
         const description =
             certificate?.description ||
             this.defaultDescription(
                 participant
             );
 
+
         const organizer =
             certificate?.organizer ||
             certificate?.organizerName ||
             "Kiddysexplorer";
+
 
         const awardDate =
             certificate?.awardDate ||
@@ -2103,41 +2213,63 @@ Delete
             certificate?.createdAt ||
             new Date().toISOString();
 
+
         const certificateNumber =
             certificate?.number ||
             certificate?.certificateNumber ||
             participant.certificateNumber ||
             "Not generated";
 
-        if (this.elements.previewTitle) {
+
+        /*---------------------------------
+            UPDATE CERTIFICATE CONTENT
+        ---------------------------------*/
+
+        if (
+            this.elements.previewTitle
+        ) {
 
             this.elements.previewTitle.textContent =
                 certificateType;
 
         }
 
-        if (this.elements.previewName) {
+
+        if (
+            this.elements.previewName
+        ) {
 
             this.elements.previewName.textContent =
-                participant.name;
+                participant.name ||
+                participant.childName ||
+                "Participant";
 
         }
 
-        if (this.elements.previewDescription) {
+
+        if (
+            this.elements.previewDescription
+        ) {
 
             this.elements.previewDescription.textContent =
                 description;
 
         }
 
-        if (this.elements.previewOrganizer) {
+
+        if (
+            this.elements.previewOrganizer
+        ) {
 
             this.elements.previewOrganizer.textContent =
                 organizer;
 
         }
 
-        if (this.elements.previewDate) {
+
+        if (
+            this.elements.previewDate
+        ) {
 
             this.elements.previewDate.textContent =
                 this.formatDate(
@@ -2146,40 +2278,70 @@ Delete
 
         }
 
-        if (this.elements.previewNumber) {
+
+        if (
+            this.elements.previewNumber
+        ) {
 
             this.elements.previewNumber.textContent =
                 certificateNumber;
 
         }
 
-        this.elements.previewPlaceholder
-            ?.classList.add(
-                "hidden"
-            );
 
-        this.elements.preview
-            ?.classList.remove(
-                "hidden"
-            );
+        /*---------------------------------
+            SHOW CERTIFICATE
+        ---------------------------------*/
+
+        if (placeholder) {
+
+            placeholder.hidden =
+                true;
+
+            placeholder.style.display =
+                "none";
+
+        }
+
+
+        preview.hidden =
+            false;
+
+        preview.style.display =
+            "block";
+
+
+        /*---------------------------------
+            ACTION BUTTONS
+        ---------------------------------*/
 
         if (
             this.elements.generateSelectedBtn
         ) {
 
+            this.elements.generateSelectedBtn.disabled =
+                false;
+
             this.elements.generateSelectedBtn.hidden =
-                Boolean(certificate);
+                Boolean(
+                    certificate
+                );
 
         }
+
 
         if (
             this.elements.editSelectedBtn
         ) {
 
-            this.elements.editSelectedBtn.hidden =
+            this.elements.editSelectedBtn.disabled =
                 !certificate;
 
+            this.elements.editSelectedBtn.hidden =
+                false;
+
         }
+
 
         if (
             this.elements.printSelectedBtn
@@ -2189,6 +2351,7 @@ Delete
                 !certificate;
 
         }
+
 
         if (
             this.elements.downloadSelectedBtn
@@ -2201,20 +2364,41 @@ Delete
 
     },
 
+    /*=====================================
+     CLEAR CERTIFICATE PREVIEW
+ =====================================*/
 
     clearPreview() {
 
-        this.selectedParticipantId = null;
+        this.selectedParticipantId =
+            null;
 
-        this.elements.preview
-            ?.classList.add(
-                "hidden"
-            );
 
-        this.elements.previewPlaceholder
-            ?.classList.remove(
-                "hidden"
-            );
+        /* Hide the certificate preview */
+
+        if (
+            this.elements.preview
+        ) {
+
+            this.elements.preview.hidden =
+                true;
+
+        }
+
+
+        /* Show the placeholder */
+
+        if (
+            this.elements.previewPlaceholder
+        ) {
+
+            this.elements.previewPlaceholder.hidden =
+                false;
+
+        }
+
+
+        /* Generate button */
 
         if (
             this.elements.generateSelectedBtn
@@ -2225,6 +2409,9 @@ Delete
 
         }
 
+
+        /* Edit button */
+
         if (
             this.elements.editSelectedBtn
         ) {
@@ -2234,6 +2421,9 @@ Delete
 
         }
 
+
+        /* Print button */
+
         if (
             this.elements.printSelectedBtn
         ) {
@@ -2242,6 +2432,9 @@ Delete
                 true;
 
         }
+
+
+        /* Download button */
 
         if (
             this.elements.downloadSelectedBtn
@@ -2253,7 +2446,6 @@ Delete
         }
 
     },
-
 
     openCertificateModal(
         participantId,
@@ -2620,7 +2812,7 @@ Delete
             );
 
     },
-        saveCertificate() {
+    saveCertificate() {
 
         const participantId =
             this.elements.certificateParticipantId.value;
@@ -2847,33 +3039,161 @@ Delete
 
             Math.random()
                 .toString(36)
-                .substring(2,10)
+                .substring(2, 10)
 
         );
 
     },
 
 
-    deleteCertificate(
-        participantId
-    ) {
+    /*=====================================
+     OPEN DELETE CERTIFICATE MODAL
+ =====================================*/
 
-        if (
-            !confirm(
-                "Delete this certificate?"
-            )
-        ) {
+    deleteCertificate(participantId) {
+
+        const participant =
+            this.findParticipant(
+                participantId
+            );
+
+
+        if (!participant) {
+
+            AdminCommon.showToast(
+                "Participant could not be found.",
+                "error"
+            );
 
             return;
 
         }
 
 
+        const certificate =
+            this.findCertificate(
+                participantId
+            );
+
+
+        if (!certificate) {
+
+            AdminCommon.showToast(
+                "Certificate could not be found.",
+                "warning"
+            );
+
+            return;
+
+        }
+
+
+        this.pendingDeleteCertificateParticipantId =
+            String(
+                participantId
+            );
+
+
+        if (
+            this.elements.deleteCertificateParticipantName
+        ) {
+
+            this.elements.deleteCertificateParticipantName.textContent =
+                participant.name ||
+                participant.childName ||
+                "this participant";
+
+        }
+
+
+        if (
+            this.elements.deleteCertificateModal
+        ) {
+
+            this.elements.deleteCertificateModal.hidden =
+                false;
+
+            this.elements.deleteCertificateModal.setAttribute(
+                "aria-hidden",
+                "false"
+            );
+
+        }
+
+
+        document.body.classList.add(
+            "modal-open"
+        );
+
+    },
+
+
+    /*=====================================
+        CLOSE DELETE CERTIFICATE MODAL
+    =====================================*/
+
+    closeDeleteCertificateModal() {
+
+        if (
+            this.elements.deleteCertificateModal
+        ) {
+
+            this.elements.deleteCertificateModal.hidden =
+                true;
+
+            this.elements.deleteCertificateModal.setAttribute(
+                "aria-hidden",
+                "true"
+            );
+
+        }
+
+
+        this.pendingDeleteCertificateParticipantId =
+            null;
+
+
+        document.body.classList.remove(
+            "modal-open"
+        );
+
+    },
+
+
+    /*=====================================
+        CONFIRM DELETE CERTIFICATE
+    =====================================*/
+
+    confirmDeleteCertificate() {
+
+        const participantId =
+            this.pendingDeleteCertificateParticipantId;
+
+
+        if (!participantId) {
+
+            this.closeDeleteCertificateModal();
+
+            return;
+
+        }
+
+
+        const participant =
+            this.findParticipant(
+                participantId
+            );
+
+
         this.certificateRecords =
             this.certificateRecords.filter(
                 certificate =>
-                    String(certificate.participantId) !==
-                    String(participantId)
+                    String(
+                        certificate.participantId
+                    ) !==
+                    String(
+                        participantId
+                    )
             );
 
 
@@ -2882,11 +3202,6 @@ Delete
         ) {
 
             try {
-
-                const participant =
-                    this.findParticipant(
-                        participantId
-                    );
 
                 if (
                     participant &&
@@ -2897,24 +3212,25 @@ Delete
                     ParticipantStore.updateParticipant(
                         participantId,
                         {
-
                             ...participant,
 
-                            certificateIssued: false,
+                            certificateIssued:
+                                false,
 
-                            certificateNumber: "",
+                            certificateNumber:
+                                "",
 
-                            certificateIssuedDate: "",
+                            certificateIssuedDate:
+                                "",
 
-                            certificateType: ""
-
+                            certificateType:
+                                ""
                         }
                     );
 
                 }
 
             }
-
             catch (error) {
 
                 console.error(
@@ -2928,17 +3244,20 @@ Delete
 
         this.saveCertificateRecords();
 
+        this.closeDeleteCertificateModal();
+
         this.refresh();
 
         this.clearPreview();
 
+
         AdminCommon.showToast(
-            "Certificate deleted.",
+            "Certificate deleted successfully.",
             "success"
         );
 
     },
-        batchGenerate(
+    batchGenerate(
         participants,
         label = "participants"
     ) {
@@ -3462,8 +3781,8 @@ content="width=device-width, initial-scale=1.0"
 
 <title>
 ${this.escapeHTML(
-    participant.name
-)} Certificate
+            participant.name
+        )} Certificate
 </title>
 
 <style>
@@ -3743,8 +4062,8 @@ Kiddysexplorer
 
 <h1 class="certificate-title">
 ${this.escapeHTML(
-    certificate.type
-)}
+            certificate.type
+        )}
 </h1>
 
 <p class="presented-text">
@@ -3753,14 +4072,14 @@ This certificate is proudly presented to
 
 <div class="participant-name">
 ${this.escapeHTML(
-    participant.name
-)}
+            participant.name
+        )}
 </div>
 
 <p class="certificate-description">
 ${this.escapeHTML(
-    certificate.description
-)}
+            certificate.description
+        )}
 </p>
 
 <div class="certificate-details">
@@ -3769,13 +4088,13 @@ ${this.escapeHTML(
 Group:
 <strong>
 ${this.escapeHTML(
-    certificate.group || "-"
-)}
+            certificate.group || "-"
+        )}
 </strong>
 </span>
 
 ${position
-    ? `
+                ? `
         <span>
             Position:
             <strong>
@@ -3783,16 +4102,16 @@ ${position
             </strong>
         </span>
     `
-    : ""}
+                : ""}
 
 <span>
 Date:
 <strong>
 ${this.escapeHTML(
-    this.formatDate(
-        certificate.awardDate
-    )
-)}
+                    this.formatDate(
+                        certificate.awardDate
+                    )
+                )}
 </strong>
 </span>
 
@@ -3806,8 +4125,8 @@ ${this.escapeHTML(
 
 <div>
 ${this.escapeHTML(
-    certificate.organizer
-)}
+                    certificate.organizer
+                )}
 </div>
 
 <small>
@@ -3821,8 +4140,8 @@ Competition Organizer
 Certificate No.
 <strong>
 ${this.escapeHTML(
-    certificate.number
-)}
+                    certificate.number
+                )}
 </strong>
 
 </div>
@@ -4019,7 +4338,7 @@ ${sealHTML}
         }
 
         switch (
-            numericPosition % 10
+        numericPosition % 10
         ) {
 
             case 1:
